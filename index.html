@@ -615,6 +615,37 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   .top{position:static}
   .filters{top:0}
 }
+/* ---------- Handy ---------- */
+#b-zoom{display:none}
+@media (hover:none){
+  .ins::before{opacity:.35}
+  .ins span{opacity:.9}
+}
+@media (max-width: 760px){
+  body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+  .brand small{display:none}
+  .top-in{padding-top:8px;padding-bottom:8px}
+  .nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0;
+    background:var(--surface);border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+  .nav a{flex-direction:column;gap:3px;padding:6px 2px;font-size:11.5px;text-align:center;border-radius:10px;line-height:1.15}
+  .nav a span{display:block}
+  .nav a .ic{width:22px;height:22px}
+  #toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  #b-zoom{display:inline-flex}
+  .docbar{gap:8px}
+  .docbar .doc-title{flex:1 1 100%;order:-1}
+  .side{order:0}
+  #b-desk.m-big{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  body.m-sel .nav{display:none}
+  body.m-sel #b-side{position:fixed;left:0;right:0;bottom:0;z-index:45;max-height:58vh;overflow:auto;background:var(--bg);
+    padding:0 12px calc(14px + env(safe-area-inset-bottom,0px));border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);border-top:1px solid var(--line)}
+  body.m-sel #b-side .ph{position:sticky;top:0;z-index:2;background:var(--surface);margin:0 -16px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  body.m-sel #b-side::before{content:"";display:block;width:40px;height:4px;border-radius:9px;background:var(--line2);margin:8px auto 6px}
+  body.m-sel #b-desk{padding-bottom:58vh}
+  #jahr-f{display:flex;max-width:100%;overflow-x:auto}
+  #jahr-f button{white-space:nowrap}
+  dialog{max-width:calc(100vw - 16px)}
+}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 
 @page{size:A4;margin:12mm 14mm}
@@ -3747,6 +3778,43 @@ document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('#b-
 function fitPrintRoot(){$('#print-root').querySelectorAll(':scope > .paper').forEach(p=>{if(!p.querySelector(':scope > .blk'))return;
     p.style.zoom='';const r=fitScale(measurePaper(p.outerHTML));if(r.s<1)p.style.zoom=r.s})}
 printHTML=function(html){$('#print-root').innerHTML=html;fitPrintRoot();setTimeout(()=>window.print(),80)};
+
+
+/* =========================================================
+   Handy: Leiste unten, Einstellungen als Blatt von unten, Lupe fürs Arbeitsblatt
+   ========================================================= */
+const isPhone=()=>matchMedia('(max-width:760px)').matches;
+const isTouch=()=>matchMedia('(hover:none)').matches;
+
+/* Lupe: ganzes Blatt oder größer (dann seitlich schieben) */
+(()=>{const p=$('#b-print');if(p&&!$('#b-zoom'))p.insertAdjacentHTML('beforebegin','<button class="btn" id="b-zoom" type="button"></button>')})();
+function updZoomBtn(){const b=$('#b-zoom');if(!b)return;b.innerHTML=UI.mBig?`${icon('search')}Ganzes Blatt`:`${icon('search')}Größer`;b.setAttribute('aria-pressed',UI.mBig?'true':'false')}
+$('#b-zoom')&&($('#b-zoom').onclick=()=>{UI.mBig=!UI.mBig;saveUI();updZoomBtn();fitPaper()});
+const _fpMob=fitPaper;fitPaper=function(){_fpMob();const d=$('#b-desk');if(!d)return;
+  d.classList.toggle('m-big',isPhone()&&!!UI.mBig);
+  if(isPhone()&&UI.mBig){const p=d.querySelector('.paper');if(p)p.style.zoom='0.8'}};
+updZoomBtn();
+
+/* ausgewählter Teil: Einstellungen gleiten von unten herein */
+const _rsMob=renderSide;renderSide=function(){_rsMob();
+  document.body.classList.toggle('m-sel',!!selBlock());
+  if(isTouch()&&!selBlock()){const el=$('#b-side');el.innerHTML=el.innerHTML
+    .replace('Fahre mit der Maus zwischen zwei Aufgaben. Dort erscheint „+ Hier einfügen“.','Tippe zwischen zwei Aufgaben auf „+ Hier einfügen“.')
+    .replace(/Klicke/g,'Tippe').replace(/klicken/g,'tippen')}};
+const _selMob=select;select=function(id){_selMob(id);
+  if(isPhone()&&id){const el=$(`#b-desk .blk[data-id="${id}"]`);if(el){const r=el.getBoundingClientRect();
+    if(r.top>innerHeight*0.4||r.top<0)scrollBy({top:r.top-80,behavior:'smooth'})}}};
+const _routeMob=route;route=function(){_routeMob();if(S.view!=='blatt')document.body.classList.remove('m-sel')};
+
+/* iPhone/iPad: Hinweis, wie man Blattwerk auf den Home-Bildschirm legt */
+(()=>{const ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  const standalone=navigator.standalone||matchMedia('(display-mode: standalone)').matches;
+  if(!ios||standalone||!/^https:/.test(location.protocol))return;
+  let no=false;try{no=localStorage.getItem('ios-hint-no')}catch(e){}if(no)return;
+  const show=()=>{const t=$('#bk-start');if(!t||$('#ios-ban'))return;
+    t.insertAdjacentHTML('beforebegin',`<div id="ios-ban" class="bkban" style="background:var(--pri-soft);border-color:var(--pri)"><span class="tile">${icon('save')}</span><div><b>Blattwerk wie eine App öffnen</b><span>Tippe unten in Safari auf <b>Teilen</b> (Viereck mit Pfeil) und dann auf <b>„Zum Home-Bildschirm“</b>. Dann hast du ein eigenes Symbol.</span></div><div class="bkacts"><button class="btn" id="ios-no">Verstanden</button></div></div>`);
+    $('#ios-no').onclick=()=>{$('#ios-ban').remove();try{localStorage.setItem('ios-hint-no','1')}catch(e){}}};
+  const _rsI=renderStart;renderStart=function(){_rsI();show()};if(S.view==='start')show()})();
 
 window.addEventListener('hashchange',route);
 route();
