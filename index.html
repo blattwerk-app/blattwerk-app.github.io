@@ -107,7 +107,8 @@ textarea{resize:vertical;min-height:80px;line-height:1.45}
 /* ---------- Start ---------- */
 .hero h1{font-size:34px;line-height:1.15;margin:0 0 6px}
 .hero p{margin:0 0 24px;color:var(--muted);font-size:18px}
-.bigacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.bigacts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1250px){.bigacts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .bigact{display:flex;gap:16px;align-items:flex-start;text-align:left;text-decoration:none;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
 .bigact:hover{border-color:var(--pri);transform:translateY(-2px)}
 .bigact .tile{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:none;background:var(--pri-soft);color:var(--pri)}
@@ -446,6 +447,65 @@ table.bingo.s4 td{height:16mm;font-size:11.5pt}
 .bkacts{display:flex;gap:6px;flex-wrap:wrap}
 @media (max-width:760px){.bkban{grid-template-columns:1fr}.bkban .tile{display:none}}
 
+.paper.ent{font-family:var(--ui);font-size:10.8pt;line-height:1.5}
+.es-deck{margin-bottom:6mm}
+.es-ub{font-weight:700;color:#5d6779;margin-top:1mm}
+.es-title{font-size:18pt;line-height:1.2;margin:1.5mm 0 4mm}
+.es-sub{margin:-2mm 0 4mm;color:#5d6779}
+.es-meta th{width:42mm}
+.es{margin-bottom:5mm;break-inside:auto}
+.es-h{font-size:12.5pt;margin:0 0 2mm;display:flex;gap:2.5mm;align-items:baseline}
+.es-n{color:#2747b5;min-width:5mm}
+.es-t{white-space:pre-wrap;min-height:6mm}
+.editing .es-t:empty::before{content:"Hier schreiben …";color:#9aa3b2}
+.es-box{border:1px solid #c6cdd8;border-radius:1.5mm;padding:2mm 3mm;min-height:22mm;margin-bottom:4mm}
+.editing .es-box:empty::before{content:attr(data-ph);color:#9aa3b2}
+.es-reihe{margin:1mm 0 3mm}
+.es-vt td{font-size:9.6pt}
+.es-sum{font-size:9.5pt;color:#5d6779;margin-bottom:1.5mm;text-align:right}
+.es-sum.bad{color:#b4441a;font-weight:700}
+.es-img{max-width:100%;margin-top:3mm;border:1px solid #c6cdd8;border-radius:1.5mm}
+.es-att{margin:2mm 0 0;padding-left:5mm}
+.pages{display:flex;flex-direction:column;gap:2px;font-size:14.5px}
+.pages span{color:var(--muted);font-size:13.5px}
+.pages .warn{color:var(--warn);font-weight:700}
+.pages .ok{color:var(--su);font-weight:700}
+.tips.lead{gap:6px;font-size:14px}
+.tips.lead li{padding-left:16px;position:relative}
+.tips.lead li::before{content:"?";position:absolute;left:0;font-weight:700;color:var(--pri)}
+.phr-h{font-weight:700;font-size:14px}
+.phr-h small{font-weight:400;color:var(--muted)}
+.phr{display:flex;flex-direction:column;gap:6px}
+.phrb{text-align:left;border:1.5px solid var(--line2);background:var(--surface2);border-radius:9px;padding:7px 10px;font-size:13.5px;line-height:1.35}
+.phrb:hover{border-color:var(--pri);background:var(--pri-soft)}
+details.panel>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+details.panel>summary::after{content:"+";font-size:20px;color:var(--muted)}
+details.panel[open]>summary::after{content:"–"}
+details.panel>summary h3{margin:0}
+.mut{color:var(--muted);font-size:14px;margin:0}
+.seclist,.attlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.seclist li{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.chk2{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
+.chk2 input{margin-top:3px;accent-color:var(--pri)}
+.seclist .rc button{border:0;background:var(--surface2);border-radius:6px;padding:2px 7px;color:var(--ink)}
+.tblwrap{overflow-x:auto;background:var(--surface);border:1.5px solid var(--line);border-radius:14px}
+.ubt{width:100%;border-collapse:collapse;font-size:14.5px}
+.ubt th,.ubt td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ubt th{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.ubt tr:last-child td{border-bottom:0}
+.due{font-size:12.5px;color:var(--muted);margin-left:4px;white-space:nowrap}
+.due.soon{color:var(--warn);font-weight:700}
+.due.late{color:#fff;background:var(--warn);border-radius:99px;padding:1px 8px}
+.st{font-size:12.5px;font-weight:700;border-radius:99px;padding:2px 9px;white-space:nowrap}
+.st-geplant{background:var(--mark-soft);color:#8a6a00}
+.st-abgegeben{background:var(--pri-soft);color:var(--pri)}
+.st-gehalten{background:var(--su-soft);color:var(--su)}
+.grp{margin-bottom:14px}
+.grp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.grp-prev{background:var(--surface2);border-radius:10px;padding:10px 12px;font-size:14px}
+.grp-prev div{color:var(--muted);margin-top:4px}
+.ref-steps{margin-bottom:8px}
+
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
 .editing [contenteditable]:hover{outline:1.5px dashed #8aa0c8;outline-offset:1px}
@@ -576,6 +636,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="M21 16l-5-5-9 9"/></symbol>
   <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.1 8.1L20 20M8.1 15.9L20 4"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/><path d="M7 13h2M11 13h2M15 13h2M7 17h2M11 17h2" stroke-width="2.4"/></symbol>
+  <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v6"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
 </svg>
 
@@ -589,6 +650,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       <a href="#start" data-nav="start"><svg class="ic"><use href="#i-home"/></svg><span>Start</span></a>
       <a href="#themen" data-nav="themen"><svg class="ic"><use href="#i-book"/></svg><span>Themen</span></a>
       <a href="#sachen" data-nav="sachen"><svg class="ic"><use href="#i-folder"/></svg><span>Meine Sachen</span></a>
+      <a href="#ref" data-nav="ref"><svg class="ic"><use href="#i-grad"/></svg><span>Referendariat</span></a>
       <a href="#hilfe" data-nav="hilfe"><svg class="ic"><use href="#i-help"/></svg><span>Hilfe</span></a>
     </nav>
   </div>
@@ -602,6 +664,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="bigacts">
       <a class="bigact" href="#themen" data-mode="blatt"><span class="tile"><svg class="ic lg"><use href="#i-sheet"/></svg></span><div><b>Arbeitsblatt erstellen</b><span id="cnt-topics">Aus fertigen Themen wählen und anpassen.</span></div></a>
       <a class="bigact g" href="#themen" data-mode="stunde"><span class="tile"><svg class="ic lg"><use href="#i-plan"/></svg></span><div><b>Stunde planen</b><span>Stundenverlauf und Unterrichtsreihe als fertige Vorlage.</span></div></a>
+      <a class="bigact" href="#ref" style="--x:1"><span class="tile" style="background:var(--de-soft);color:var(--de)"><svg class="ic lg"><use href="#i-grad"/></svg></span><div><b>Unterrichtsentwurf</b><span>Für Unterrichtsbesuche: Rohentwurf mit Leitfragen, Verlaufsplan und Word-Export.</span></div></a>
       <button class="bigact y" data-act="blank-sheet"><span class="tile"><svg class="ic lg"><use href="#i-plus"/></svg></span><div><b>Leeres Arbeitsblatt</b><span>Ganz von vorn beginnen und selbst zusammenstellen.</span></div></button>
     </div>
     <div class="welcome" id="welcome" hidden>
@@ -681,7 +744,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="page-head"><h1>Meine Sachen</h1><p>Alles, was du erstellt hast. Es wird automatisch gespeichert, hier in diesem Browser.</p></div>
     <div id="bk-sachen"></div>
     <div class="sa-bar">
-      <div class="seg" id="sa-tabs"><button data-v="sheet" aria-pressed="true">Arbeitsblätter <span></span></button><button data-v="plan">Stundenplanungen <span></span></button></div>
+      <div class="seg" id="sa-tabs"><button data-v="sheet" aria-pressed="true">Arbeitsblätter <span></span></button><button data-v="plan">Stundenplanungen <span></span></button><button data-v="ent">Unterrichtsentwürfe <span></span></button></div>
       <div class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="sa-q" placeholder="Suchen" aria-label="In meinen Sachen suchen"></div>
     </div>
     <div class="cards" id="sa-list"></div>
@@ -699,6 +762,36 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div id="jahr-free" class="jfree-wrap"></div>
   </section>
 
+  <!-- REFERENDARIAT -->
+  <section id="v-ref" class="view" hidden>
+    <div class="page-head ph-row"><div><h1>Referendariat</h1><p>Unterrichtsentwürfe schreiben, Unterrichtsbesuche im Blick behalten und deine Lerngruppen einmal beschreiben.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-act="ent-from-topic"><svg class="ic"><use href="#i-book"/></svg>Entwurf aus einem Thema</button><button class="btn" data-act="ent-new-blank"><svg class="ic"><use href="#i-plus"/></svg>Leerer Entwurf</button></div></div>
+    <div class="ref-steps panel tip"><h3>So entsteht dein Entwurf</h3><ol class="wsteps"><li><div><b>Lerngruppe beschreiben</b>Einmal unten anlegen, dann wandert die Beschreibung in jeden Entwurf.</div></li><li><div><b>Rohentwurf erzeugen</b>Thema wählen: Blattwerk füllt Reihe, Verlaufsplan, Sachanalyse und Arbeitsblatt vor.</div></li><li><div><b>Überarbeiten</b>Leitfragen und Formulierungshilfen begleiten jeden Abschnitt. Dann als Word oder PDF abgeben.</div></li></ol></div>
+    <h2 class="sec">Meine Unterrichtsbesuche</h2>
+    <div id="ub-list"></div>
+    <h2 class="sec">Meine Lerngruppen</h2>
+    <p class="mut" style="margin:-6px 0 12px">Bitte keine Namen von Kindern eintragen. Alles bleibt nur auf deinem Computer.</p>
+    <div id="ref-groups"><div id="grp-list"></div></div>
+  </section>
+
+  <!-- ENTWURF -->
+  <section id="v-entwurf" class="view" hidden>
+    <div id="e-empty" class="empty-doc" hidden><h2>Kein Unterrichtsentwurf geöffnet</h2><p>Erstelle einen Entwurf aus einem Thema oder öffne einen aus der Übersicht.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a class="btn pri" href="#ref">Zum Referendariat</a></div></div>
+    <div id="e-main" hidden>
+      <div class="docbar">
+        <a class="btn ghost" href="#ref"><svg class="ic"><use href="#i-back"/></svg>Referendariat</a>
+        <input type="text" id="e-title" class="doc-title" aria-label="Thema der Stunde">
+        <span class="savestate"></span>
+        <span class="grow"></span>
+        <div class="seg" id="e-tabs"><button data-et="entwurf" aria-pressed="true">Entwurf</button><button data-et="reflexion">Reflexion</button></div>
+        <button class="btn" id="e-undo" title="Rückgängig (Strg+Z)"><svg class="ic"><use href="#i-undo"/></svg>Rückgängig</button>
+        <button class="btn" id="e-redo" aria-label="Wiederherstellen"><svg class="ic"><use href="#i-redo"/></svg></button>
+        <button class="btn" id="e-word"><svg class="ic"><use href="#i-save"/></svg>Word</button>
+        <button class="btn pri" id="e-print"><svg class="ic"><use href="#i-print"/></svg>Drucken / PDF</button>
+      </div>
+      <div class="doc"><div class="desk" id="e-desk"></div><aside class="side" id="e-side" aria-label="Hilfe und Einstellungen"></aside></div>
+    </div>
+  </section>
+
   <!-- HILFE -->
   <section id="v-hilfe" class="view" hidden>
     <div class="page-head"><h1>Hilfe</h1><p>Antworten auf die häufigsten Fragen. Klicke auf eine Frage, um die Antwort zu sehen.</p></div>
@@ -714,6 +807,9 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       <details><summary>Wo sind meine Sachen gespeichert?</summary><div>Alles wird automatisch in diesem Browser auf diesem Computer gespeichert. Es geht nichts ins Internet. Wenn du im Browser die <b>Website-Daten löschst</b>, sind deine Sachen weg. Lade deshalb unter <b>Meine Sachen</b> regelmäßig eine <b>Sicherung</b> herunter. Blattwerk erinnert dich alle zwei Wochen daran.<br><br><b>Tipp:</b> Öffne Blattwerk immer mit demselben Browser, am besten Chrome oder Edge, und lass die Datei am selben Ort liegen. In manchen Browsern hängen die gespeicherten Sachen daran, wo die Datei liegt.</div></details>
       <details><summary>Wie nehme ich meine Blätter auf einen anderen Computer mit?</summary><div>Unter <b>Meine Sachen</b> auf <b>Sicherung herunterladen</b> klicken. Die Datei auf einen USB-Stick kopieren oder dir selbst per Mail schicken. Auf dem anderen Computer Blattwerk öffnen, zu <b>Meine Sachen</b> gehen und <b>Sicherung laden</b> wählen.</div></details>
       <details><summary>Wie mache ich Lücken in einen Lückentext?</summary><div>Setze das Wort, das fehlen soll, zwischen zwei Sternchen: <b>Der *Igel* schläft.</b> Auf dem Blatt wird daraus eine Lücke, und das Wort kommt in den Wortspeicher.</div></details>
+      <details><summary>Wie schreibe ich einen Unterrichtsentwurf?</summary><div>Oben auf <b>Referendariat</b> klicken. Lege zuerst deine <b>Lerngruppe</b> an. Dann <b>Entwurf aus einem Thema</b> wählen: Du bekommst einen Rohentwurf mit Reihe, Kernanliegen, Sachanalyse, Verlaufsplan und Arbeitsblatt im Anhang. Klicke in einen Abschnitt, dann siehst du rechts <b>Leitfragen</b> und <b>Formulierungshilfen</b>. Unter <b>Aufbau des Entwurfs</b> blendest du Abschnitte aus oder sortierst sie um, passend zu den Vorgaben deines Seminars. Mit <b>Word</b> lädst du eine Word-Datei herunter, mit <b>Drucken / PDF</b> druckst du den Entwurf samt Arbeitsblättern.</div></details>
+      <details><summary>Wie fülle ich die Kompetenzerwartungen richtig aus?</summary><div>Blattwerk schlägt eine Formulierung vor. Fachleitungen achten aber sehr genau auf den <b>Wortlaut des Lehrplans NRW</b>. Bitte gleiche die Kompetenzen deshalb immer mit dem Originaltext des Lehrplans ab und übernimm sie wörtlich.</div></details>
+      <details><summary>Wie fülle ich die Reflexion nach dem Besuch aus?</summary><div>Öffne den Entwurf und klicke oben auf <b>Reflexion</b>. Dort beantwortest du fünf Fragen, zum Beispiel ob das Kernanliegen erreicht wurde und was du beim nächsten Mal anders machst.</div></details>
       <details><summary>Wie füge ich ein Bild ein?</summary><div>Klicke auf <b>+ Aufgabe hinzufügen</b> und wähle <b>Bild</b>. Dann suchst du ein Foto auf deinem Computer aus. Noch schneller: Zieh ein Bild aus einem Ordner direkt auf das Blatt. Rechts kannst du Größe und Position einstellen. Bilder werden automatisch verkleinert, damit genug Speicher bleibt.</div></details>
       <details><summary>Wie mache ich ein Domino, Memory oder Bingo?</summary><div>Unter <b>Vorlagen</b> auf der Startseite gibt es <b>Lernspiele</b>. Oder du fügst auf einem Blatt eine Aufgabe ein und wählst den Reiter <b>Lernspiele</b>. Rechts stellst du den Inhalt ein, zum Beispiel Einmaleins, Uhrzeiten oder Gegenteile. Mit <b>Eigene Paare</b> tippst du eigene Inhalte ein, etwa „Hund = dog“.</div></details>
       <details><summary>Was ist die Silbenfärbung?</summary><div>Klicke auf ein Blatt, ohne eine Aufgabe auszuwählen. Rechts unter <b>Einstellungen für das Blatt</b> schaltest du <b>Lesetexte in Silben färben</b> ein. Dann werden die Silben in allen Texten abwechselnd blau und rot. Die Silben werden automatisch erkannt. Bei langen zusammengesetzten Wörtern lohnt sich ein kurzer Blick.</div></details>
@@ -2532,7 +2628,7 @@ function describe(b){if(b.type==='math')return`${GEN[b.gen].name} (${LVL[b.level
    ========================================================= */
 const KEY='blattwerk-v1';
 let DB={sheets:{},plans:{}};
-try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);DB.sheets=d.sheets||{};DB.plans=d.plans||{}}}catch(e){}
+try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);DB.sheets=d.sheets||{};DB.plans=d.plans||{};DB.entwuerfe=d.entwuerfe||{};DB.gruppen=d.gruppen||{}}}catch(e){}
 let UI={};try{UI=JSON.parse(localStorage.getItem(KEY+'-ui')||'{}')||{}}catch(e){UI={}}
 function saveUI(){try{localStorage.setItem(KEY+'-ui',JSON.stringify(UI))}catch(e){}}
 function setSave(s){$$('.savestate').forEach(el=>{el.innerHTML=s==='ok'?`${icon('check')}Automatisch gespeichert`:s==='busy'?'Speichert …':'Speichern nicht möglich';el.classList.toggle('err',s==='err')})}
@@ -2542,18 +2638,18 @@ let saveT;function touch(o){if(o)o.updated=Date.now();setSave('busy');clearTimeo
 const S={view:'start',sel:null,showSol:false,mode:'blatt',f:{fach:'alle',kl:'alle',ber:'alle',q:''},tab:'sheet',saq:'',pickTab:'a',insertAt:0};
 const curSheet=()=>DB.sheets[UI.sheetId];
 const curPlan=()=>DB.plans[UI.planId];
-const docCur=()=>S.view==='blatt'?curSheet():S.view==='stunde'?curPlan():null;
+const docCur=()=>S.view==='blatt'?curSheet():S.view==='stunde'?curPlan():S.view==='entwurf'?curEnt():null;
 
 /* ---------- Rückgängig ---------- */
 const HIST={u:[],r:[],key:null,t:0};
 function resetHist(){HIST.u=[];HIST.r=[];HIST.key=null;updUndo()}
 function snap(key){const d=docCur();if(!d)return;const now=Date.now();if(key&&HIST.key===key&&now-HIST.t<1500){HIST.t=now;return}
   HIST.u.push(JSON.stringify(d));if(HIST.u.length>80)HIST.u.shift();HIST.r=[];HIST.key=key||null;HIST.t=now;updUndo()}
-function restore(json){const d=JSON.parse(json);if(d.kind==='plan')DB.plans[d.id]=d;else DB.sheets[d.id]=d;touch(d);
-  if(S.view==='blatt'){if(S.sel&&!d.blocks.some(b=>b.id===S.sel))S.sel=null;renderBlatt()}else renderStunde()}
+function restore(json){const d=JSON.parse(json);if(d.kind==='plan')DB.plans[d.id]=d;else if(d.kind==='entwurf')DB.entwuerfe[d.id]=d;else DB.sheets[d.id]=d;touch(d);
+  if(S.view==='blatt'){if(S.sel&&!d.blocks.some(b=>b.id===S.sel))S.sel=null;renderBlatt()}else if(S.view==='entwurf')renderEnt();else renderStunde()}
 function undo(){const d=docCur();if(!d||!HIST.u.length)return;HIST.r.push(JSON.stringify(d));HIST.key=null;restore(HIST.u.pop());updUndo();toast('Rückgängig gemacht')}
 function redo(){const d=docCur();if(!d||!HIST.r.length)return;HIST.u.push(JSON.stringify(d));HIST.key=null;restore(HIST.r.pop());updUndo()}
-function updUndo(){['b','s'].forEach(p=>{const u=$('#'+p+'-undo'),r=$('#'+p+'-redo');if(u)u.disabled=!HIST.u.length;if(r)r.disabled=!HIST.r.length})}
+function updUndo(){['b','s','e'].forEach(p=>{const u=$('#'+p+'-undo'),r=$('#'+p+'-redo');if(u)u.disabled=!HIST.u.length;if(r)r.disabled=!HIST.r.length})}
 
 /* ---------- Toast ---------- */
 let toastT;function toast(msg,label,fn){const t=$('#toast');t.querySelector('span').textContent=msg;const b=t.querySelector('button');b.hidden=!label;b.textContent=label||'';b.onclick=()=>{t.classList.remove('show');fn&&fn()};t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),label?7000:2600)}
@@ -2565,8 +2661,9 @@ const PV=new Map();
 function topicSheet(t){if(!PV.has(t.id))PV.set(t.id,{title:t.titel,fach:t.fach,klasse:t.kl.length>1?'3/4':String(t.kl[0]),showStars:t.fach!=='su',showName:true,blocks:t.blocks().map(b=>newBlock(b.type,b))});return PV.get(t.id)}
 function sheetFromTopic(t){const p=topicSheet(t);const sh={...clone(p),id:uid(),kind:'sheet',topicId:t.id,created:Date.now(),updated:Date.now()};sh.blocks.forEach(b=>b.id=uid());DB.sheets[sh.id]=sh;touch();return sh}
 function blankSheet(){const sh={id:uid(),kind:'sheet',title:'Neues Arbeitsblatt',fach:'su',klasse:'3',showStars:false,showName:true,blocks:[newBlock('text',{text:'Hier steht dein Text. Klicke hinein und schreib los.'}),newBlock('lines',{instruction:'Schreibe deine Antwort auf.'})],created:Date.now(),updated:Date.now()};DB.sheets[sh.id]=sh;touch();return sh}
+function reiheMatch(thema,list){const ws=thema.toLowerCase().replace(/[^a-zäöüß ]/g,' ').split(/\s+/).filter(x=>x.length>3).sort((a,b)=>b.length-a.length);let best=-1,score=0;list.forEach((r,i)=>{const tx=(r.titel+' '+r.inhalt).toLowerCase();let sc=0;ws.forEach((w,k)=>{if(tx.includes(w))sc+=w.length*(r.titel.toLowerCase().includes(w)?2:1)});if(sc>score){score=sc;best=i}});return best}
 function planFromTopic(t){const st=t.stunde;const p={id:uid(),kind:'plan',title:st.thema,fach:FACH[t.fach],klasse:t.kl.join('/'),datum:today(),dauer:'45',reihe:t.titel,stunde:st.thema,ziel:st.ziel,kompetenz:t.kompetenz,rows:clone(st.rows),reihenplan:t.reihe.map(([a,b])=>({titel:a,inhalt:b,cur:a===st.thema})),notizen:'Material vorbereiten:\n– Arbeitsblatt „'+t.titel+'“ kopieren\n– ',topicId:t.id,created:Date.now(),updated:Date.now()};
-  if(!p.reihenplan.some(r=>r.cur)){const w=st.thema.toLowerCase().split(/\s+/).filter(x=>x.length>4);const i=p.reihenplan.findIndex(r=>w.some(x=>(r.titel+' '+r.inhalt).toLowerCase().includes(x)));p.reihenplan[i>=0?i:0].cur=true}
+  if(!p.reihenplan.some(r=>r.cur)){const i=t.curIdx??reiheMatch(st.thema,p.reihenplan);p.reihenplan[i>=0?i:0].cur=true}
   DB.plans[p.id]=p;touch();return p}
 function blankPlan(){const p={id:uid(),kind:'plan',title:'Neue Stunde',fach:'Sachunterricht',klasse:'3',datum:today(),dauer:'45',reihe:'',stunde:'',ziel:'',kompetenz:'',rows:ST('','','',''),reihenplan:[{titel:'',inhalt:'',cur:true}],notizen:'',created:Date.now(),updated:Date.now()};DB.plans[p.id]=p;touch();return p}
 
@@ -2809,20 +2906,20 @@ function openTopic(id){const t=TOPICS.find(x=>x.id===id);if(!t)return;const sh=t
 
 function renderSachen(){renderMeter();const q=S.saq.toLowerCase();
   const sh=Object.values(DB.sheets).sort((a,b)=>b.updated-a.updated),pl=Object.values(DB.plans).sort((a,b)=>b.updated-a.updated);
-  const tabs=$$('#sa-tabs button');tabs[0].querySelector('span').textContent=`(${sh.length})`;tabs[1].querySelector('span').textContent=`(${pl.length})`;
+  const tabs=$$('#sa-tabs button');tabs[0].querySelector('span').textContent=`(${sh.length})`;tabs[1].querySelector('span').textContent=`(${pl.length})`;if(tabs[2])tabs[2].querySelector('span').textContent=`(${Object.keys(DB.entwuerfe).length})`;
   tabs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.tab));
-  const list=(S.tab==='sheet'?sh:pl).filter(o=>!q||(o.title||'').toLowerCase().includes(q));
+  const list=(S.tab==='sheet'?sh:S.tab==='ent'?Object.values(DB.entwuerfe).sort((a,b)=>b.updated-a.updated):pl).filter(o=>!q||(o.title||'').toLowerCase().includes(q));
   $('#sa-list').innerHTML=list.length?list.map(o=>docCard(o,S.tab)).join(''):`<div class="empty-note">${q?'Nichts gefunden.':S.tab==='sheet'?'Noch keine Arbeitsblätter. Such dir unter „Themen“ eins aus.':'Noch keine Stundenplanungen. Unter „Themen“ gibt es zu jedem Thema eine Vorlage.'}</div>`}
 
 /* =========================================================
    Navigation
    ========================================================= */
-const VIEWS=['start','themen','blatt','stunde','sachen','hilfe','jahr'];
+const VIEWS=['start','themen','blatt','stunde','sachen','hilfe','jahr','ref','entwurf'];
 function route(){let v=location.hash.slice(1)||'start';if(!VIEWS.includes(v))v='start';S.view=v;
   VIEWS.forEach(x=>$('#v-'+x).hidden=x!==v);
-  $$('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===v||((v==='blatt'||v==='stunde')&&a.dataset.nav==='sachen')||(v==='jahr'&&a.dataset.nav==='themen')));
-  if(v!=='blatt'&&v!=='stunde')resetHist();
-  ({start:renderStart,themen:renderThemen,blatt:renderBlatt,stunde:renderStunde,sachen:renderSachen,hilfe:()=>{},jahr:renderJahr})[v]();
+  $$('[data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===v||((v==='blatt'||v==='stunde')&&a.dataset.nav==='sachen')||(v==='jahr'&&a.dataset.nav==='themen')||(v==='entwurf'&&a.dataset.nav==='ref')));
+  if(v!=='blatt'&&v!=='stunde'&&v!=='entwurf')resetHist();
+  ({start:renderStart,themen:renderThemen,blatt:renderBlatt,stunde:renderStunde,sachen:renderSachen,hilfe:()=>{},jahr:renderJahr,ref:renderRef,entwurf:renderEnt})[v]();
   window.scrollTo(0,0)}
 function go(v){if(location.hash.slice(1)===v)route();else location.hash=v}
 function openSheet(id){UI.sheetId=id;saveUI();S.sel=null;resetHist();closeDialogs();go('blatt')}
@@ -2868,9 +2965,9 @@ document.addEventListener('click',e=>{const t=e.target;
   }
   const tp=t.closest('[data-topic]');if(tp){openTopic(tp.dataset.topic);return}
   const fo=t.closest('[data-f]');if(fo){S.f[fo.dataset.f]=fo.dataset.v;if(fo.dataset.f==='fach')S.f.ber='alle';renderThemen();return}
-  const op=t.closest('[data-open]');if(op){const[k,id]=op.dataset.open.split(':');k==='sheet'?openSheet(id):openPlan(id);return}
-  const cp=t.closest('[data-copy]');if(cp){const[k,id]=cp.dataset.copy.split(':');const store=k==='sheet'?DB.sheets:DB.plans;const c=clone(store[id]);c.id=uid();c.title=store[id].title+' (Kopie)';c.updated=Date.now();if(k==='sheet')c.blocks.forEach(b=>b.id=uid());store[c.id]=c;touch();S.view==='start'?renderStart():renderSachen();toast('Kopie erstellt');return}
-  const dl=t.closest('[data-del]');if(dl){const[k,id]=dl.dataset.del.split(':');const store=k==='sheet'?DB.sheets:DB.plans;const o=store[id];delete store[id];touch();S.view==='start'?renderStart():renderSachen();
+  const op=t.closest('[data-open]');if(op){const[k,id]=op.dataset.open.split(':');k==='sheet'?openSheet(id):k==='ent'?openEnt(id):openPlan(id);return}
+  const cp=t.closest('[data-copy]');if(cp){const[k,id]=cp.dataset.copy.split(':');const store=k==='sheet'?DB.sheets:k==='ent'?DB.entwuerfe:DB.plans;const c=clone(store[id]);c.id=uid();c.title=store[id].title+' (Kopie)';c.updated=Date.now();if(k==='sheet')c.blocks.forEach(b=>b.id=uid());store[c.id]=c;touch();S.view==='start'?renderStart():renderSachen();toast('Kopie erstellt');return}
+  const dl=t.closest('[data-del]');if(dl){const[k,id]=dl.dataset.del.split(':');const store=k==='sheet'?DB.sheets:k==='ent'?DB.entwuerfe:DB.plans;const o=store[id];delete store[id];touch();S.view==='start'?renderStart():renderSachen();
     toast(`„${o.title}“ gelöscht`,'Rückgängig',()=>{store[id]=o;touch();S.view==='start'?renderStart():renderSachen()});return}
   const pk=t.closest('[data-pick]');if(pk){$('#dlg-insert').close();addBlockAt(pk.dataset.pick,S.insertAt);return}
   const pt=t.closest('[data-pt]');if(pt){S.pickTab=pt.dataset.pt;renderPick();return}
@@ -2911,9 +3008,9 @@ $('#sa-q').addEventListener('input',e=>{S.saq=e.target.value.trim();renderSachen
 
 document.addEventListener('input',e=>{const el=e.target.closest&&e.target.closest('[data-bind]');if(!el||!el.isContentEditable)return;
   let obj;const sc=el.dataset.scope;
-  if(sc==='sheet')obj=curSheet();else if(sc==='plan')obj=curPlan();else{const blk=el.closest('.blk');obj=curSheet()&&blk&&curSheet().blocks.find(b=>b.id===blk.dataset.id)}
+  if(sc==='sheet')obj=curSheet();else if(sc==='plan')obj=curPlan();else if(sc==='ent')obj=curEnt();else{const blk=el.closest('.blk');obj=curSheet()&&blk&&curSheet().blocks.find(b=>b.id===blk.dataset.id)}
   if(!obj)return;snap('ce:'+(el.closest('.blk')?.dataset.id||'')+el.dataset.bind);
-  setPath(obj,el.dataset.bind,el.innerText.replace(/\n$/,''));touch(sc==='plan'?curPlan():curSheet());
+  setPath(obj,el.dataset.bind,el.innerText.replace(/\n$/,''));touch(sc==='plan'?curPlan():sc==='ent'?curEnt():curSheet());
   if(sc==='sheet'&&el.dataset.bind==='title')$('#b-title').value=obj.title;
   if(sc==='plan'&&el.dataset.bind==='title')$('#s-title').value=obj.title;
   if(sc==='plan'&&/\.(zeit|phase)$/.test(el.dataset.bind))updatePlanLive()});
@@ -2921,12 +3018,12 @@ document.addEventListener('focusout',e=>{if(e.target.closest&&e.target.closest('
 document.addEventListener('keydown',e=>{
   const single=e.target.closest&&e.target.closest('[data-single]');if(single&&e.key==='Enter'){e.preventDefault();single.blur();return}
   const inEdit=e.target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
-  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'&&!inEdit&&(S.view==='blatt'||S.view==='stunde')){e.preventDefault();e.shiftKey?redo():undo();return}
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='z'&&!inEdit&&(S.view==='blatt'||S.view==='stunde'||S.view==='entwurf')){e.preventDefault();e.shiftKey?redo():undo();return}
   if(e.key==='Escape'&&S.view==='blatt'&&S.sel&&!document.querySelector('dialog[open]')&&!inEdit){S.sel=null;markSel();renderSide()}});
 document.addEventListener('paste',e=>{const el=e.target.closest&&e.target.closest('[contenteditable]');if(!el)return;e.preventDefault();const tx=(e.clipboardData||window.clipboardData).getData('text/plain');document.execCommand('insertText',false,tx)});
 
-$('#b-export').onclick=()=>{const blob=new Blob([JSON.stringify({app:'blattwerk',version:2,exported:new Date().toISOString(),sheets:DB.sheets,plans:DB.plans},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);const d=new Date();a.download=`blattwerk-sicherung-${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('Sicherung wurde heruntergeladen')};
-$('#f-import').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);let n=0;for(const[k,v]of Object.entries(d.sheets||{})){DB.sheets[k]=v;n++}for(const[k,v]of Object.entries(d.plans||{})){DB.plans[k]=v;n++}touch();renderSachen();toast(`${n} Einträge aus der Sicherung geladen`)}catch(err){toast('Diese Datei ist keine Blattwerk-Sicherung')}};r.readAsText(f);e.target.value=''};
+$('#b-export').onclick=()=>{const blob=new Blob([JSON.stringify({app:'blattwerk',version:2,exported:new Date().toISOString(),sheets:DB.sheets,plans:DB.plans,entwuerfe:DB.entwuerfe,gruppen:DB.gruppen},null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);const d=new Date();a.download=`blattwerk-sicherung-${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast('Sicherung wurde heruntergeladen')};
+$('#f-import').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);let n=0;for(const[k,v]of Object.entries(d.sheets||{})){DB.sheets[k]=v;n++}for(const[k,v]of Object.entries(d.plans||{})){DB.plans[k]=v;n++}for(const[k,v]of Object.entries(d.entwuerfe||{})){DB.entwuerfe[k]=v;n++}for(const[k,v]of Object.entries(d.gruppen||{})){DB.gruppen[k]=v}touch();renderSachen();toast(`${n} Einträge aus der Sicherung geladen`)}catch(err){toast('Diese Datei ist keine Blattwerk-Sicherung')}};r.readAsText(f);e.target.value=''};
 
 
 
@@ -3031,8 +3128,7 @@ document.addEventListener('click',e=>{const t=e.target;
 });
 document.addEventListener('focusout',e=>{const el=e.target.closest&&e.target.closest('#b-desk .tx[contenteditable]');const sh=curSheet();if(el&&sh&&sh.silben&&!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('#b-desk [contenteditable]')))setTimeout(renderPaper,0)});
 
-window.addEventListener('hashchange',route);
-route();
+
 
 
 /* =========================================================
@@ -3044,7 +3140,7 @@ function idbOpen(){return new Promise(res=>{try{if(!window.indexedDB)return res(
 function idbGet(k){return new Promise(res=>{try{const r=IDB.db.transaction('kv','readonly').objectStore('kv').get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>res(undefined)}catch(e){res(undefined)}})}
 function idbPut(k,v){return new Promise(res=>{try{const tx=IDB.db.transaction('kv','readwrite');tx.objectStore('kv').put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);tx.onabort=()=>res(false)}catch(e){res(false)}})}
 let lastSaveErr=0;
-persist=async function(){const data={sheets:DB.sheets,plans:DB.plans,savedAt:Date.now()};let idbOk=false,lsOk=false;
+persist=async function(){const data={sheets:DB.sheets,plans:DB.plans,entwuerfe:DB.entwuerfe,gruppen:DB.gruppen,savedAt:Date.now()};let idbOk=false,lsOk=false;
   if(IDB.db)idbOk=await idbPut('db',data);
   try{localStorage.setItem(KEY,JSON.stringify(data));lsOk=true}catch(e){}
   if(idbOk||lsOk){setSave('ok');return true}
@@ -3054,7 +3150,7 @@ persist=async function(){const data={sheets:DB.sheets,plans:DB.plans,savedAt:Dat
   const v=await idbGet('db');let lsAt=0;try{lsAt=(JSON.parse(localStorage.getItem(KEY)||'{}').savedAt)||0}catch(e){}
   const hasLocal=Object.keys(DB.sheets).length+Object.keys(DB.plans).length>0;
   IDB.ready=true;
-  if(v&&(v.savedAt||0)>lsAt){DB.sheets=v.sheets||{};DB.plans=v.plans||{};route()}
+  if(v&&(v.savedAt||0)>lsAt){DB.sheets=v.sheets||{};DB.plans=v.plans||{};DB.entwuerfe=v.entwuerfe||{};DB.gruppen=v.gruppen||{};route()}
   else if(hasLocal){await persist()}
   else renderBackupBanners()})();
 
@@ -3068,7 +3164,7 @@ renderMeter=async function(){const el=$('#sa-meter');if(!el)return;
 
 /* ---------- Erinnerung an die Sicherung ---------- */
 const DAY=864e5;
-function backupState(){const all=[...Object.values(DB.sheets),...Object.values(DB.plans)];if(!all.length)return null;const now=Date.now();
+function backupState(){const all=[...Object.values(DB.sheets),...Object.values(DB.plans),...Object.values(DB.entwuerfe||{})];if(!all.length)return null;const now=Date.now();
   if(now<(UI.backupSnooze||0))return null;const last=UI.lastBackup||0;
   if(last){const days=Math.floor((now-last)/DAY);return days>=14?{days}:null}
   const oldest=Math.min(...all.map(o=>o.created||o.updated||now));return now-oldest>=3*DAY?{days:null}:null}
@@ -3080,7 +3176,212 @@ $('#b-export').addEventListener('click',()=>{UI.lastBackup=Date.now();UI.backupS
 document.addEventListener('click',e=>{const a=e.target.closest('[data-act="bk-now"],[data-act="bk-later"]');if(!a)return;
   if(a.dataset.act==='bk-now'){$('#b-export').click()}else{UI.backupSnooze=Date.now()+3*DAY;saveUI();renderBackupBanners();toast('Ich erinnere dich in drei Tagen wieder.')}});
 renderBackupBanners();
-window.addEventListener('pagehide',()=>{clearTimeout(saveT);const data={sheets:DB.sheets,plans:DB.plans,savedAt:Date.now()};try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}if(IDB.db)idbPut('db',data)});
+window.addEventListener('pagehide',()=>{clearTimeout(saveT);const data={sheets:DB.sheets,plans:DB.plans,entwuerfe:DB.entwuerfe,gruppen:DB.gruppen,savedAt:Date.now()};try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}if(IDB.db)idbPut('db',data)});
+
+
+/* =========================================================
+   Referendariat: Unterrichtsentwürfe, Lerngruppen, Unterrichtsbesuche
+   ========================================================= */
+DB.entwuerfe=DB.entwuerfe||{};DB.gruppen=DB.gruppen||{};
+[['brot',2],['d-verben',2],['d-satzglieder',0],['d-ie',0]].forEach(([id,i])=>{const t=TOPICS.find(x=>x.id===id);if(t)t.curIdx=i});
+const curEnt=()=>DB.entwuerfe[UI.entId];
+const SUS=s=>String(s||'').replace(/\bDie Kinder\b/g,'Die Schülerinnen und Schüler').replace(/\bdie Kinder\b/g,'die Schülerinnen und Schüler');
+
+const ENT_SEC=[
+ {key:'reihe',title:'Thema der Unterrichtsreihe und Einordnung der Stunde',lead:['Wie heißt die Reihe, und welches übergeordnete Ziel verfolgt sie?','An welcher Stelle steht diese Stunde? Sie ist in der Übersicht gelb markiert.','Worauf baut die Stunde auf, was folgt danach?'],phr:['Die Unterrichtsreihe verfolgt das Ziel, dass die Schülerinnen und Schüler …','Die heutige Stunde baut auf … auf und bereitet … vor.']},
+ {key:'kern',title:'Kernanliegen der Stunde',lead:['Was sollen die Kinder am Ende der Stunde können oder verstanden haben? Formuliere nur EIN zentrales Anliegen.','Ist das Anliegen beobachtbar? Woran erkennst du, dass es erreicht wurde?','Wodurch erreichen die Kinder das? Ergänze: „… indem sie …“'],phr:['Die Schülerinnen und Schüler erweitern ihre Kompetenz, …','… indem sie …','Die Schülerinnen und Schüler können … erklären, indem sie …']},
+ {key:'kompetenz',title:'Kompetenzerwartungen (Lehrplan NRW)',lead:['Welche Kompetenzerwartung aus dem Lehrplan wird angebahnt oder vertieft?','Trenne inhaltsbezogene und prozessbezogene Kompetenzen.','Übernimm die Formulierungen möglichst wörtlich aus dem Lehrplan und nenne den Bereich.'],phr:['Inhaltsbezogen: Die Schülerinnen und Schüler …','Prozessbezogen: Die Schülerinnen und Schüler …','(Lehrplan NRW, Bereich: …, Schwerpunkt: …)']},
+ {key:'lerngruppe',title:'Lernausgangslage der Lerngruppe',lead:['Wie groß ist die Lerngruppe, und wie ist sie zusammengesetzt? Bitte ohne Namen.','Welche Vorerfahrungen und Kenntnisse haben die Kinder zum Thema?','Welche Arbeitsweisen und Rituale kennen die Kinder?','Welche Kinder brauchen besondere Unterstützung oder Herausforderung, und wie berücksichtigst du das?'],phr:['Die Lerngruppe ist mit der Arbeitsform … vertraut.','In der vorangegangenen Stunde haben die Kinder …','Einige Kinder benötigen beim … noch Unterstützung. Daher …','Leistungsstarke Kinder erhalten …']},
+ {key:'sache',title:'Sachanalyse',lead:['Was ist fachlich wichtig, um das Thema zu verstehen? Formuliere für Erwachsene, nicht für Kinder.','Welche Fachbegriffe werden verwendet?','Welche fachlichen Aspekte lässt du bewusst weg (didaktische Reduktion)?'],phr:['Unter … versteht man …','Fachlich ist zwischen … und … zu unterscheiden.','Für die Grundschule wird der Sachverhalt auf … reduziert.']},
+ {key:'didaktik',title:'Didaktische Überlegungen',lead:['Warum ist das Thema für die Kinder jetzt bedeutsam? Denke an Lebensweltbezug, Gegenwart und Zukunft.','Welche didaktische Reduktion nimmst du vor, und warum?','Welche Schwierigkeiten erwartest du, und wie gehst du damit um?'],phr:['Das Thema knüpft an die Lebenswelt der Kinder an, da …','Bewusst verzichtet wird auf …, weil …','Als mögliche Schwierigkeit wird erwartet, dass …. Daher …','Exemplarisch lernen die Kinder an diesem Thema, …']},
+ {key:'methodik',title:'Methodische Überlegungen und Differenzierung',lead:['Warum wählst du diesen Einstieg, diese Sozialform, diese Medien?','Wie differenzierst du? Nach Menge, nach Schwierigkeit, mit Hilfen, mit Herausforderungen?','Wie werden die Ergebnisse gesichert und für alle sichtbar?','Wie denken die Kinder über ihr Lernen nach (Reflexion)?'],phr:['Der Einstieg erfolgt über …, um …','Die Erarbeitung findet in Partnerarbeit statt, da …','Die Ergebnisse werden im Plenum gesichert, indem …','Die Aufgaben liegen in drei Niveaustufen (★ bis ★★★) vor.','Gestufte Hilfekarten unterstützen Kinder, die nicht weiterkommen.','Für schnelle Kinder stehen Expertenaufgaben bereit.','Ein Wortspeicher unterstützt besonders Kinder mit Deutsch als Zweitsprache.','Kinder mit Förderbedarf arbeiten mit Anschauungsmaterial.','Die Kinder wählen ihr Niveau selbst (Selbstdifferenzierung).']},
+ {key:'verlauf',title:'Geplanter Unterrichtsverlauf',lead:['Begründe jede Phase kurz in der Kommentarspalte.','Stimmen die Zeiten mit der Dauer der Stunde überein?','Plane eine didaktische Reserve für schnelle Kinder oder Gruppen ein.'],phr:[]},
+ {key:'tafel',title:'Geplantes Tafelbild',lead:['Was steht am Ende der Stunde an der Tafel?','Ist das Tafelbild übersichtlich, und spiegelt es das Kernanliegen wider?','Du kannst auch ein Foto oder eine Skizze einfügen.'],phr:['Überschrift: …','Linke Tafelseite: …','Mitte: …','Rechte Tafelseite: …']},
+ {key:'erwartung',title:'Erwartungshorizont',lead:['Welche Antworten und Lösungen erwartest du?','Welche Lösungswege sind möglich?','Woran erkennst du, ob das Kernanliegen erreicht wurde?'],phr:['Erwartet wird, dass die Kinder …','Mögliche Schülerantworten: …','Das Kernanliegen ist erreicht, wenn …']},
+ {key:'literatur',title:'Literatur und Quellen',lead:['Welche Fachliteratur, Lehrwerke und Materialien hast du genutzt?','Gib Quellen einheitlich an: Autor (Jahr): Titel. Ort: Verlag.'],phr:['Ministerium für Schule und Bildung NRW (2021): Lehrpläne für die Primarstufe in Nordrhein-Westfalen.','Autor, A. (Jahr): Titel. Ort: Verlag.']},
+ {key:'anhang',title:'Anhang',lead:['Füge Arbeitsblätter, Tafelbild und Material bei. Wähle die Arbeitsblätter rechts unter „Anhang“ aus.','Nummeriere das Material (M1, M2 …) und verweise im Verlaufsplan darauf.'],phr:['M1: Arbeitsblatt …','M2: Hilfekarten …','M3: Tafelbild']}];
+const SEC_BY=Object.fromEntries(ENT_SEC.map(s=>[s.key,s]));
+const KOMMENTAR={Einstieg:'Aktivierung des Vorwissens und Motivation; Transparenz über das Ziel der Stunde.',Erarbeitung:'Eigenständige Auseinandersetzung mit dem Lerngegenstand; Differenzierung über …',Sicherung:'Ergebnisse werden gebündelt und für alle sichtbar gemacht; Bezug zum Kernanliegen.',Reflexion:'Die Kinder denken über ihren Lernprozess nach; Ausblick auf die nächste Stunde.'};
+
+function lastProfile(){const l=Object.values(DB.entwuerfe).sort((a,b)=>b.updated-a.updated)[0];return l?{anwaerter:l.meta.anwaerter,schule:l.meta.schule,ausbildung:l.meta.ausbildung}:{anwaerter:'',schule:'',ausbildung:''}}
+function newEntwurf(){const p=lastProfile();const n=Object.keys(DB.entwuerfe).length+1;
+  return{id:uid(),kind:'entwurf',title:'Thema der Stunde',created:Date.now(),updated:Date.now(),
+    meta:{ub:`${n}. Unterrichtsbesuch`,anwaerter:p.anwaerter,schule:p.schule,klasse:'',fach:'',datum:'',zeit:'',raum:'',fachleitung:'',ausbildung:p.ausbildung,reihe:''},
+    sections:ENT_SEC.map(s=>({key:s.key,title:s.title,on:true,text:''})),
+    verlauf:ST('','','','').map(r=>({phase:r.phase,zeit:r.zeit,inhalt:'',sozial:'',kommentar:KOMMENTAR[r.phase]||''})).concat([{phase:'Didaktische Reserve',zeit:'',inhalt:'',sozial:'',kommentar:'Für Kinder, die früher fertig sind.'}]),
+    reihe:[{titel:'',inhalt:'',cur:true}],anhang:[],anhangLsg:true,dauer:'45',maxSeiten:'',abgabe:'',status:'geplant',gruppeId:'',reflexion:{erreicht:'',gelungen:'',aendern:'',hinweise:'',ziel:''}}}
+function setSec(e,k,t){const s=e.sections.find(x=>x.key===k);if(s)s.text=t}
+function entwurfFromTopic(t){const e=newEntwurf();const st=t.stunde;const sh=sheetFromTopic(t);
+  e.title=st.thema;e.topicId=t.id;e.meta.fach=FACH[t.fach];e.meta.klasse=t.kl.length>1?'3/4':String(t.kl[0]);e.meta.reihe=t.titel;
+  e.reihe=t.reihe.map(([a,b])=>({titel:a,inhalt:b,cur:a===st.thema}));if(!e.reihe.some(r=>r.cur)){const i=t.curIdx??reiheMatch(st.thema,e.reihe);e.reihe[i>=0?i:0].cur=true}
+  const ci=e.reihe.findIndex(r=>r.cur),prev=e.reihe[ci-1],next=e.reihe[ci+1];
+  setSec(e,'reihe',`Die Unterrichtsreihe „${t.titel}“ umfasst ${e.reihe.length} Stunden. ${t.desc}\n\nDie heutige Stunde ist die ${ci+1}. Stunde der Reihe.${prev?` Sie baut auf der Stunde „${prev.titel}“ auf.`:''}${next?` In der folgenden Stunde geht es um „${next.titel}“.`:''}`);
+  setSec(e,'kern',`${SUS(st.ziel)}\n\n(Tipp: Ergänze, wodurch sie das erreichen: „… indem sie …“)`);
+  const kp=t.kompetenz.split(':');
+  setSec(e,'kompetenz',`Inhaltsbezogen (${kp[0].trim()}):\n${SUS(kp.slice(1).join(':').trim())}\n\nProzessbezogen:\nDie Schülerinnen und Schüler …\n\n(Vorschlag von Blattwerk – bitte mit dem Originaltext des Lehrplans NRW abgleichen und wörtlich übernehmen.)`);
+  const g=Object.values(DB.gruppen)[0];if(g){e.gruppeId=g.id;setSec(e,'lerngruppe',gruppeText(g))}
+  const info=t.blocks().filter(b=>b.type==='text').map(b=>b.text).join('\n\n');
+  setSec(e,'sache',`Fachlicher Hintergrund (Ausgangspunkt – bitte für Erwachsene ausformulieren und mit Fachliteratur belegen):\n\n${info||'…'}\n\nFachbegriffe der Stunde: …\n\nDidaktische Reduktion: Für die Grundschule wird der Sachverhalt auf … reduziert.`);
+  setSec(e,'didaktik',`Bedeutung für die Kinder: Das Thema knüpft an die Lebenswelt der Kinder an, da …\n\nBezug zum Lehrplan: Die Stunde trägt zur oben genannten Kompetenzerwartung bei.\n\nEinordnung: ${prev?`Die Kinder kennen aus der vorherigen Stunde bereits „${prev.titel}“.`:'Die Stunde eröffnet die Reihe.'} …\n\nDidaktische Reduktion: Bewusst verzichtet wird auf …, weil …\n\nErwartete Schwierigkeiten: Als mögliche Schwierigkeit wird erwartet, dass …. Daher …`);
+  const levels=sh.blocks.some(b=>b.type==='math'),bank=sh.blocks.some(b=>b.type==='gap'&&b.bank);
+  setSec(e,'methodik',`Einstieg: ${st.rows[0]?.inhalt||'…'} Dieser Einstieg soll …\n\nErarbeitung: ${st.rows[1]?.inhalt||'…'} Die Sozialform ${st.rows[1]?.sozial||'…'} wurde gewählt, weil …\n\nSicherung: ${st.rows[2]?.inhalt||'…'}\n\nDifferenzierung: ${levels?'Die Aufgaben liegen in drei Niveaustufen (★ bis ★★★) vor. ':''}${bank?'Ein Wortspeicher unterstützt besonders Kinder mit Deutsch als Zweitsprache. ':''}…\n\nReflexion: ${st.rows[3]?.inhalt||'…'}`);
+  e.verlauf=st.rows.map(r=>({phase:r.phase,zeit:r.zeit,inhalt:r.inhalt,sozial:[r.sozial,r.medien].filter(Boolean).join('\n'),kommentar:KOMMENTAR[r.phase]||''})).concat([{phase:'Didaktische Reserve',zeit:'',inhalt:'Expertenaufgabe auf dem Arbeitsblatt',sozial:'EA',kommentar:'Für Kinder, die früher fertig sind.'}]);
+  setSec(e,'tafel',`Überschrift: ${st.thema}\n\nLinke Tafelseite: …\nMitte: …\nRechte Tafelseite: …`);
+  setSec(e,'erwartung','Die erwarteten Lösungen stehen auf dem Lösungsblatt im Anhang (M1).\n\nDas Kernanliegen ist erreicht, wenn …');
+  setSec(e,'literatur','Ministerium für Schule und Bildung NRW (2021): Lehrpläne für die Primarstufe in Nordrhein-Westfalen.\n…');
+  setSec(e,'anhang',`M1: Arbeitsblatt „${sh.title}“ mit Lösungsblatt\nM2: …`);
+  e.anhang=[sh.id];
+  DB.entwuerfe[e.id]=e;touch();return e}
+function blankEntwurfDoc(){const e=newEntwurf();DB.entwuerfe[e.id]=e;touch();return e}
+
+/* ---------- Lerngruppen ---------- */
+function newGruppe(){const g={id:uid(),name:'3a',klasse:'3',anzahl:'',maedchen:'',jungen:'',daz:'',foerder:'',lernstand:'',arbeitsweisen:'',besonderheiten:'',updated:Date.now()};DB.gruppen[g.id]=g;touch();return g}
+function gruppeText(g){const p=[];const n=+g.anzahl;
+  if(n)p.push(`Die Klasse ${g.name} besteht aus ${n} Kindern${(+g.maedchen||+g.jungen)?` (${+g.maedchen||0} Mädchen, ${+g.jungen||0} Jungen)`:''}.`);else p.push(`Die Klasse ${g.name}: …`);
+  if(+g.daz)p.push(`${+g.daz} ${+g.daz===1?'Kind spricht':'Kinder sprechen'} Deutsch als Zweitsprache.`);
+  if(g.foerder)p.push(`Sonderpädagogischer Unterstützungsbedarf: ${g.foerder}.`);
+  return[p.join(' '),g.lernstand,g.arbeitsweisen,g.besonderheiten].filter(x=>x&&x.trim()).join('\n\n')}
+
+/* ---------- Entwurf rendern ---------- */
+function entSum(e){return e.verlauf.reduce((s,r)=>s+(parseInt(r.zeit,10)||0),0)}
+function renderEntwurf(e,ed){
+  const E=(path,text,tag='div',cls='',single,extra='')=>ed?`<${tag} class="${cls}" contenteditable="true" spellcheck="true" data-scope="ent" data-bind="${path}"${single?' data-single="1"':''} ${extra}>${esc(text)}</${tag}>`:`<${tag} class="${cls}">${esc(text)}</${tag}>`;
+  const M=e.meta;const row=(l,k,single=true)=>`<tr><th>${l}</th>${E('meta.'+k,M[k]||'','td','',single)}</tr>`;
+  let n=0;
+  const secs=e.sections.map((s,i)=>{if(!s.on)return'';n++;const head=`<h2 class="es-h"><span class="es-n">${n}</span>${E('sections.'+i+'.title',s.title,'span','',true)}</h2>`;let body='';
+    if(s.key==='reihe'){body=`<ol class="reihe es-reihe">${e.reihe.map((r,j)=>`<li class="${r.cur?'cur':''}">${E('reihe.'+j+'.titel',r.titel,'span','rt',true)}${r.inhalt||ed?' – ':''}${E('reihe.'+j+'.inhalt',r.inhalt,'span','ri',true)}${ed?`<span class="rc"><button data-ea="reihecur" data-i="${j}" title="Diese Stunde markieren">★</button><button data-ea="reiheup" data-i="${j}" aria-label="Nach oben">↑</button><button data-ea="reihedel" data-i="${j}" aria-label="Löschen">✕</button></span>`:''}</li>`).join('')}</ol>${ed?'<div class="pl-add"><button data-ea="reiheadd">+ Stunde zur Reihe</button></div>':''}`}
+    if(s.key==='verlauf'){const sum=entSum(e),soll=parseInt(e.dauer,10)||45;
+      body=`<div class="es-sum${sum>soll?' bad':''}">Gesamt: ${sum} von ${soll} Minuten</div><table class="pt es-vt"><thead><tr><th class="ph">Phase</th><th class="zt">Zeit</th><th>Unterrichtsgeschehen</th><th class="so">Sozialform / Medien</th><th>Didaktisch-methodischer Kommentar</th>${ed?'<th class="rc"></th>':''}</tr></thead><tbody>${e.verlauf.map((r,j)=>`<tr>${E('verlauf.'+j+'.phase',r.phase,'td','ph')}${E('verlauf.'+j+'.zeit',r.zeit,'td','zt',true)}${E('verlauf.'+j+'.inhalt',r.inhalt,'td','')}${E('verlauf.'+j+'.sozial',r.sozial,'td','so')}${E('verlauf.'+j+'.kommentar',r.kommentar,'td','')}${ed?`<td class="rc"><button data-ea="rowup" data-i="${j}" aria-label="Nach oben">↑</button><button data-ea="rowdel" data-i="${j}" aria-label="Löschen">✕</button></td>`:''}</tr>`).join('')}</tbody></table>${ed?'<div class="pl-add"><button data-ea="rowadd">+ Phase hinzufügen</button></div>':''}`}
+    const txt=s.key==='reihe'||s.key==='verlauf'?(s.text?E('sections.'+i+'.text',s.text,'div','es-t'):(ed?E('sections.'+i+'.text','','div','es-t es-empty'):'')):E('sections.'+i+'.text',s.text,'div','es-t'+(s.text?'':' es-empty'));
+    const img=s.key==='tafel'?(e.tafelImg?`<img class="es-img" src="${e.tafelImg}" alt="Tafelbild">`:''):'';
+    const att=s.key==='anhang'&&e.anhang.length?`<ul class="es-att">${e.anhang.map((id,j)=>DB.sheets[id]?`<li>M${j+1}: ${esc(DB.sheets[id].title)}${e.anhangLsg?' (mit Lösung)':''}</li>`:'').join('')}</ul>`:'';
+    return`<section class="es" data-sec="${s.key}">${head}${s.key==='reihe'?txt+body:s.key==='verlauf'?body+txt:txt}${img}${att}</section>`}).join('');
+  return`<div class="paper ent${ed?' editing':''}"><div class="es-deck"><div class="pl-kicker">Schriftliche Unterrichtsplanung</div>${E('meta.ub',M.ub,'div','es-ub',true)}<h1 class="es-title">${E('title',e.title,'span','',true)}</h1>
+    <table class="pm es-meta"><tbody>${row('Lehramtsanwärter/in','anwaerter')}${row('Schule','schule')}${row('Klasse','klasse')}${row('Fach','fach')}${row('Datum','datum')}${row('Uhrzeit','zeit')}${row('Raum','raum')}${row('Fachleitung','fachleitung')}${row('Ausbildungslehrkraft','ausbildung')}${row('Thema der Reihe','reihe')}</tbody></table></div>
+    <div class="es-body" id="es-body">${secs}</div></div>`}
+function renderReflexion(e,ed){const R=e.reflexion||{};const E=(k,ph)=>ed?`<div class="es-t es-box" contenteditable="true" data-scope="ent" data-bind="reflexion.${k}" data-ph="${esc(ph)}">${esc(R[k]||'')}</div>`:`<div class="es-t es-box">${esc(R[k]||'')}</div>`;
+  return`<div class="paper ent${ed?' editing':''}"><div class="pl-kicker">Reflexion nach dem Unterrichtsbesuch</div><h1 class="es-title">${esc(e.title)}</h1><p class="es-sub">${esc(e.meta.ub)} · ${esc(e.meta.fach)} · ${esc(e.meta.datum)}</p>
+   <h2 class="es-h">Wurde das Kernanliegen erreicht? Woran habe ich das erkannt?</h2>${E('erreicht','Ja / teilweise / nein, weil …')}
+   <h2 class="es-h">Was ist mir gut gelungen?</h2>${E('gelungen','Zum Beispiel: Einstieg, Arbeitsaufträge, Zeitplanung …')}
+   <h2 class="es-h">Was würde ich beim nächsten Mal anders machen? Welche Alternativen gibt es?</h2>${E('aendern','Zum Beispiel: Sozialform, Hilfen, Sicherung …')}
+   <h2 class="es-h">Hinweise aus der Nachbesprechung</h2>${E('hinweise','Was haben Fachleitung und Ausbildungslehrkraft angemerkt?')}
+   <h2 class="es-h">Mein nächstes Entwicklungsziel</h2>${E('ziel','Darauf achte ich beim nächsten Unterrichtsbesuch: …')}</div>`}
+
+/* ---------- Editor ---------- */
+S.entTab='entwurf';S.entSec='kern';
+function openEnt(id){UI.entId=id;saveUI();resetHist();closeDialogs();S.entTab='entwurf';go('entwurf')}
+function renderEnt(){const e=curEnt();$('#e-empty').hidden=!!e;$('#e-main').hidden=!e;if(!e)return;
+  $('#e-title').value=e.title;$$('#e-tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.et===S.entTab));
+  $('#e-desk').innerHTML=S.entTab==='reflexion'?renderReflexion(e,true):renderEntwurf(e,true);
+  renderEntSide();updPages();fitPaper();updUndo();setSave('ok')}
+function updPages(){const e=curEnt(),el=$('#e-pages');if(!el||!e)return;const body=$('#es-body');if(!body||S.entTab!=='entwurf'){el.innerHTML='';return}
+  const p=$('#e-desk .paper');const z=p.style.zoom;p.style.zoom='';let h=0;$$('#es-body .es').forEach(s=>{if(s.dataset.sec!=='anhang')h+=s.getBoundingClientRect().height});p.style.zoom=z;
+  const pages=Math.max(1,Math.round(h/(273*3.7795)*10)/10),mx=parseFloat(e.maxSeiten);
+  el.innerHTML=`<b>Umfang: ca. ${String(pages).replace('.',',')} Seiten</b><span>ohne Deckblatt und Anhang</span>${mx?`<span class="${pages>mx?'warn':'ok'}">${pages>mx?`Das sind etwa ${String(Math.round((pages-mx)*10)/10).replace('.',',')} Seiten zu viel.`:'Im Rahmen der Vorgabe.'}</span>`:''}`}
+function renderEntHelp(){const s=SEC_BY[S.entSec]||SEC_BY.kern;const e=curEnt();const sec=e&&e.sections.find(x=>x.key===s.key);
+  $('#e-help').innerHTML=`<h3>Hilfe: ${esc(sec?sec.title:s.title)}</h3><ul class="tips lead">${s.lead.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>${s.phr.length?`<div class="phr-h">Formulierungshilfen <small>(Klick fügt den Text an der Cursorstelle ein)</small></div><div class="phr">${s.phr.map(p=>`<button class="phrb" data-phr="${esc(p)}">${esc(p)}</button>`).join('')}</div>`:''}`}
+function renderEntSide(){const e=curEnt();const el=$('#e-side');if(!e)return;
+  if(S.entTab==='reflexion'){el.innerHTML=`<div class="panel tip"><h3>Reflexion</h3><ul class="tips"><li>Schreibe die Reflexion möglichst direkt nach der Nachbesprechung.</li><li>Das Entwicklungsziel hilft dir, im nächsten Entwurf gezielt daran zu arbeiten.</li><li>Über „Drucken / PDF“ druckst du nur die Reflexion.</li></ul></div>`;return}
+  const gr=Object.values(DB.gruppen);const sheets=Object.values(DB.sheets).sort((a,b)=>b.updated-a.updated);
+  el.innerHTML=`<div class="panel" id="e-help"></div>
+   <div class="panel"><div id="e-pages" class="pages"></div><label class="fld">Vorgabe deines Seminars: höchstens … Seiten<input type="text" data-e="maxSeiten" value="${esc(e.maxSeiten||'')}" placeholder="z. B. 5"></label></div>
+   <details class="panel" open><summary><h3>Lerngruppe</h3></summary>${gr.length?`<label class="fld">Lerngruppe wählen<select data-e="gruppeId"><option value="">–</option>${gr.map(g=>`<option value="${g.id}"${g.id===e.gruppeId?' selected':''}>${esc(g.name)}</option>`).join('')}</select></label><button class="btn wide" data-ea="grp-apply"${e.gruppeId?'':' disabled'}>Beschreibung in den Entwurf übernehmen</button>`:'<p class="mut">Noch keine Lerngruppe angelegt. Beschreibe deine Klasse einmal, dann kannst du sie in jeden Entwurf übernehmen.</p>'}<a class="btn wide" href="#ref">Lerngruppen verwalten</a></details>
+   <details class="panel"><summary><h3>Aufbau des Entwurfs</h3></summary><p class="mut">Richte den Aufbau nach den Vorgaben deines Seminars. Überschriften änderst du direkt auf dem Blatt.</p><ul class="seclist">${e.sections.map((s,i)=>`<li><label class="chk2"><input type="checkbox" data-sec-on="${i}"${s.on?' checked':''}><span>${esc(s.title)}</span></label><span class="rc"><button data-ea="secup" data-i="${i}" aria-label="Nach oben">↑</button><button data-ea="secdown" data-i="${i}" aria-label="Nach unten">↓</button></span></li>`).join('')}</ul><label class="fld">Dauer der Stunde<select data-e="dauer">${['45','90','60'].map(d=>`<option value="${d}"${String(e.dauer)===d?' selected':''}>${d} Minuten</option>`).join('')}</select></label></details>
+   <details class="panel"><summary><h3>Anhang (Arbeitsblätter)</h3></summary>${sheets.length?`<ul class="attlist">${sheets.slice(0,30).map(s=>`<li><label class="chk2"><input type="checkbox" data-att="${s.id}"${e.anhang.includes(s.id)?' checked':''}><span>${esc(s.title)}</span></label></li>`).join('')}</ul><label class="chk2"><input type="checkbox" data-e="anhangLsg"${e.anhangLsg?' checked':''}><span>Lösungsblätter mitdrucken</span></label>`:'<p class="mut">Noch keine Arbeitsblätter vorhanden.</p>'}<button class="btn wide" data-ea="tafel-img">${icon('image')}${e.tafelImg?'Tafelbild-Foto ersetzen':'Foto vom Tafelbild einfügen'}</button>${e.tafelImg?'<button class="btn wide danger" data-ea="tafel-img-del">Foto entfernen</button>':''}</details>
+   <details class="panel"><summary><h3>Unterrichtsbesuch</h3></summary><label class="fld">Abgabe des Entwurfs bis<input type="date" data-e="abgabe" value="${esc(e.abgabe||'')}"></label><label class="fld">Stand<select data-e="status">${[['geplant','in Planung'],['abgegeben','abgegeben'],['gehalten','gehalten']].map(([v,l])=>`<option value="${v}"${e.status===v?' selected':''}>${l}</option>`).join('')}</select></label></details>`;
+  renderEntHelp()}
+
+/* ---------- Word und Drucken ---------- */
+function entWordHTML(e){const br=s=>esc(s||'').replace(/\n/g,'<br>');const M=e.meta;let n=0;
+  const secs=e.sections.filter(s=>s.on).map(s=>{n++;let b='';
+    if(s.key==='reihe')b=`<ol>${e.reihe.map(r=>`<li>${r.cur?'<b>':''}${esc(r.titel)}${r.inhalt?' – '+esc(r.inhalt):''}${r.cur?'</b>':''}</li>`).join('')}</ol>`;
+    if(s.key==='verlauf')b=`<table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;font-size:10pt"><tr style="background:#eef1f6"><th>Phase</th><th>Zeit</th><th>Unterrichtsgeschehen</th><th>Sozialform / Medien</th><th>Didaktisch-methodischer Kommentar</th></tr>${e.verlauf.map(r=>`<tr><td><b>${br(r.phase)}</b></td><td>${br(r.zeit)}</td><td>${br(r.inhalt)}</td><td>${br(r.sozial)}</td><td>${br(r.kommentar)}</td></tr>`).join('')}</table>`;
+    const t=s.text?`<p>${br(s.text).replace(/(<br>){2,}/g,'</p><p>')}</p>`:'';
+    return`<h2>${n} ${esc(s.title)}</h2>${s.key==='verlauf'?b+t:t+b}`}).join('');
+  return`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(e.title)}</title><style>@page WordSection1{size:21cm 29.7cm;margin:2cm 2cm 2cm 2.5cm}div.WordSection1{page:WordSection1}body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.4}h1{font-size:16pt}h2{font-size:12.5pt;margin-top:14pt}th{text-align:left}</style></head><body><div class="WordSection1">
+   <p style="font-size:9pt;letter-spacing:1px">SCHRIFTLICHE UNTERRICHTSPLANUNG</p><p>${esc(M.ub)}</p><h1>${esc(e.title)}</h1>
+   <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%">${[['Lehramtsanwärter/in',M.anwaerter],['Schule',M.schule],['Klasse',M.klasse],['Fach',M.fach],['Datum',M.datum],['Uhrzeit',M.zeit],['Raum',M.raum],['Fachleitung',M.fachleitung],['Ausbildungslehrkraft',M.ausbildung],['Thema der Reihe',M.reihe]].map(([l,v])=>`<tr><th style="width:5cm;background:#eef1f6">${l}</th><td>${esc(v||'')}</td></tr>`).join('')}</table>
+   <br clear="all" style="page-break-before:always">${secs}</div></body></html>`}
+function downloadBlob(content,type,name){const blob=new Blob(['﻿',content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},800)}
+function safeName(s){return String(s||'Entwurf').replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,' ').trim().slice(0,60)}
+function entPrint(){const e=curEnt();if(!e)return;
+  if(S.entTab==='reflexion')return printHTML(renderReflexion(e,false));
+  let h=renderEntwurf(e,false);e.anhang.forEach(id=>{const sh=DB.sheets[id];if(sh){h+=renderSheet(sh,{});if(e.anhangLsg)h+=renderSheet(sh,{solution:true})}});
+  if(e.tafelImg&&!e.sections.find(s=>s.key==='tafel'&&s.on))h+=`<div class="paper ent"><h2 class="es-h">Tafelbild</h2><img class="es-img" src="${e.tafelImg}" alt=""></div>`;
+  printHTML(h)}
+
+/* ---------- Referendariat-Übersicht ---------- */
+function daysTo(d){if(!d)return null;const t=new Date(d+'T00:00:00');if(isNaN(t))return null;const n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5)}
+function renderRef(){const es=Object.values(DB.entwuerfe).sort((a,b)=>(a.abgabe||a.meta.datum||'9').localeCompare(b.abgabe||b.meta.datum||'9'));
+  const stl={geplant:'in Planung',abgegeben:'abgegeben',gehalten:'gehalten'};
+  $('#ub-list').innerHTML=es.length?`<div class="tblwrap"><table class="ubt"><thead><tr><th>Unterrichtsbesuch</th><th>Thema der Stunde</th><th>Fach · Klasse</th><th>Datum</th><th>Abgabe bis</th><th>Stand</th><th></th></tr></thead><tbody>${es.map(e=>{const d=daysTo(e.abgabe);const due=d==null?'':d<0?(e.status==='geplant'?'<span class="due late">überfällig</span>':''):d===0?'<span class="due soon">heute</span>':d<=5?`<span class="due soon">in ${d} ${d===1?'Tag':'Tagen'}</span>`:`<span class="due">in ${d} Tagen</span>`;
+     return`<tr><td><b>${esc(e.meta.ub)}</b></td><td>${esc(e.title)}</td><td>${esc(e.meta.fach)}${e.meta.klasse?' · '+esc(e.meta.klasse):''}</td><td>${esc(e.meta.datum||'–')}</td><td>${e.abgabe?esc(new Date(e.abgabe+'T00:00').toLocaleDateString('de-DE')):'–'} ${due}</td><td><span class="st st-${e.status}">${stl[e.status]||e.status}</span></td><td><button class="btn sm pri" data-open="ent:${e.id}">Öffnen</button></td></tr>`}).join('')}</tbody></table></div>`
+    :`<div class="empty-note">Noch keine Unterrichtsentwürfe. Starte mit <b>„Entwurf aus einem Thema“</b>. Dann bekommst du einen vorausgefüllten Rohentwurf, den du überarbeitest.</div>`;
+  const gs=Object.values(DB.gruppen);
+  $('#grp-list').innerHTML=gs.map(g=>{const F=(k,l,t='text',ph='')=>`<label class="fld">${l}${t==='area'?`<textarea data-g="${g.id}:${k}" rows="3" placeholder="${esc(ph)}">${esc(g[k]||'')}</textarea>`:`<input type="${t}" data-g="${g.id}:${k}" value="${esc(g[k]||'')}" placeholder="${esc(ph)}">`}</label>`;
+    return`<div class="grp panel"><div class="ph"><h3>Lerngruppe ${esc(g.name)}</h3><button class="btn sm danger" data-ea="grp-del" data-id="${g.id}">${icon('trash')}Löschen</button></div>
+     <div class="grp-grid">${F('name','Name der Klasse','text','z. B. 3b')}${F('anzahl','Anzahl Kinder','number')}${F('maedchen','davon Mädchen','number')}${F('jungen','davon Jungen','number')}${F('daz','Kinder mit Deutsch als Zweitsprache','number')}${F('foerder','Sonderpädagogischer Unterstützungsbedarf','text','z. B. 1 Kind Lernen, 1 Kind emotionale und soziale Entwicklung')}</div>
+     ${F('lernstand','Lernstand und Vorerfahrungen','area','Was können die Kinder schon? Wo gibt es große Unterschiede?')}${F('arbeitsweisen','Bekannte Arbeitsweisen und Rituale','area','z. B. Partnerarbeit, Stationenarbeit, Sitzkreis, Ampelkarten …')}${F('besonderheiten','Besonderheiten','area','z. B. Unruhe nach der Pause, Doppelbesetzung …')}
+     <div class="grp-prev"><b>So erscheint die Beschreibung im Entwurf:</b><div>${esc(gruppeText(g)).replace(/\n/g,'<br>')}</div></div></div>`}).join('')+`<button class="btn" data-ea="grp-new">${icon('plus')}Lerngruppe anlegen</button>`}
+
+/* ---------- Ereignisse ---------- */
+let entImgPick=null;(()=>{const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.hidden=true;document.body.appendChild(inp);entImgPick=inp;
+  inp.addEventListener('change',async()=>{const f=inp.files[0];inp.value='';if(!f)return;try{const src=await loadImage(f);const e=curEnt();snap();e.tafelImg=src;touch(e);renderEnt();toast('Tafelbild eingefügt')}catch(err){toast(typeof err==='string'?err:'Das Bild konnte nicht geladen werden.')}})})();
+document.addEventListener('mousedown',e=>{if(e.target.closest('[data-phr]'))e.preventDefault()});
+document.addEventListener('click',ev=>{const t=ev.target;
+  const ph=t.closest('[data-phr]');if(ph){const a=document.activeElement;if(a&&a.isContentEditable&&a.closest('#e-desk')){document.execCommand('insertText',false,(a.innerText.trim()?' ':'')+ph.dataset.phr)}else{toast('Klicke zuerst in einen Abschnitt auf dem Blatt, dann auf den Baustein.')}return}
+  const et=t.closest('#e-tabs [data-et]');if(et){S.entTab=et.dataset.et;renderEnt();return}
+  const a=t.closest('[data-act]');const act=a&&a.dataset.act;
+  if(act==='t-ent'){openEnt(entwurfFromTopic(TOPICS.find(x=>x.id===a.dataset.id)).id);toast('Dein Rohentwurf ist fertig. Überarbeite ihn Abschnitt für Abschnitt.');return}
+  if(act==='ent-from-topic'){S.mode='entwurf';go('themen');return}
+  if(act==='ent-new-blank'){openEnt(blankEntwurfDoc().id);return}
+  const ea=t.closest('[data-ea]');if(!ea)return;const k=ea.dataset.ea,i=+ea.dataset.i;
+  if(k==='grp-new'){newGruppe();renderRef();return}
+  if(k==='grp-del'){const id=ea.dataset.id,g=DB.gruppen[id];delete DB.gruppen[id];touch();renderRef();toast(`Lerngruppe ${g.name} gelöscht`,'Rückgängig',()=>{DB.gruppen[id]=g;touch();renderRef()});return}
+  const e=curEnt();if(!e)return;
+  if(k==='tafel-img'){entImgPick.click();return}
+  if(k==='tafel-img-del'){snap();e.tafelImg='';touch(e);renderEnt();return}
+  if(k==='grp-apply'){const g=DB.gruppen[e.gruppeId];if(!g)return;snap();setSec(e,'lerngruppe',gruppeText(g));touch(e);renderEnt();toast('Beschreibung der Lerngruppe übernommen');return}
+  snap();
+  switch(k){
+    case'rowadd':e.verlauf.push({phase:'Neue Phase',zeit:'5',inhalt:'',sozial:'',kommentar:''});break;
+    case'rowdel':e.verlauf.splice(i,1);break;
+    case'rowup':if(i>0)[e.verlauf[i-1],e.verlauf[i]]=[e.verlauf[i],e.verlauf[i-1]];break;
+    case'reiheadd':e.reihe.push({titel:'Neue Stunde',inhalt:'',cur:false});break;
+    case'reihedel':e.reihe.splice(i,1);break;
+    case'reiheup':if(i>0)[e.reihe[i-1],e.reihe[i]]=[e.reihe[i],e.reihe[i-1]];break;
+    case'reihecur':e.reihe.forEach((r,j)=>r.cur=j===i);break;
+    case'secup':if(i>0)[e.sections[i-1],e.sections[i]]=[e.sections[i],e.sections[i-1]];break;
+    case'secdown':if(i<e.sections.length-1)[e.sections[i+1],e.sections[i]]=[e.sections[i],e.sections[i+1]];break;
+    default:return}
+  touch(e);renderEnt()});
+function entSecFrom(ev){const s=ev.target.closest&&ev.target.closest('#e-desk [data-sec]');if(s&&S.entSec!==s.dataset.sec){S.entSec=s.dataset.sec;if($('#e-help'))renderEntHelp()}}
+document.addEventListener('click',entSecFrom);document.addEventListener('keyup',entSecFrom);
+document.addEventListener('focusin',ev=>{const s=ev.target.closest&&ev.target.closest('#e-desk [data-sec]');if(s&&S.entSec!==s.dataset.sec){S.entSec=s.dataset.sec;if($('#e-help'))renderEntHelp()}});
+document.addEventListener('input',ev=>{const el=ev.target;if(el.closest&&el.closest('#e-desk')&&/verlauf\.\d+\.zeit/.test(el.dataset.bind||'')){const e=curEnt(),s=$('#e-desk .es-sum');if(s){const sum=entSum(e),soll=parseInt(e.dauer,10)||45;s.textContent=`Gesamt: ${sum} von ${soll} Minuten`;s.classList.toggle('bad',sum>soll)}}
+  if(el.closest&&el.closest('#e-desk'))clearTimeout(window._pgT),window._pgT=setTimeout(updPages,600)});
+$('#e-side').addEventListener('change',ev=>{const t=ev.target,e=curEnt();if(!e)return;
+  if(t.dataset.e){snap('e:'+t.dataset.e);e[t.dataset.e]=t.type==='checkbox'?t.checked:t.value;touch(e);if(t.dataset.e==='gruppeId'||t.dataset.e==='dauer')renderEnt();else if(t.dataset.e==='maxSeiten')updPages();else if(t.dataset.e==='anhangLsg')renderEnt();return}
+  if(t.dataset.secOn!=null){snap();e.sections[+t.dataset.secOn].on=t.checked;touch(e);renderEnt();return}
+  if(t.dataset.att){snap();if(t.checked){if(!e.anhang.includes(t.dataset.att))e.anhang.push(t.dataset.att)}else e.anhang=e.anhang.filter(x=>x!==t.dataset.att);touch(e);$('#e-desk').innerHTML=renderEntwurf(e,true);fitPaper();return}});
+$('#e-side').addEventListener('input',ev=>{const t=ev.target;if(t.dataset.e==='maxSeiten'){const e=curEnt();e.maxSeiten=t.value;touch(e);updPages()}});
+$('#ref-groups').addEventListener('input',ev=>{const t=ev.target;if(!t.dataset.g)return;const[id,k]=t.dataset.g.split(':');const g=DB.gruppen[id];if(!g)return;g[k]=t.value;g.updated=Date.now();touch();const pv=t.closest('.grp').querySelector('.grp-prev div');if(pv)pv.innerHTML=esc(gruppeText(g)).replace(/\n/g,'<br>');if(k==='name')t.closest('.grp').querySelector('h3').textContent='Lerngruppe '+g.name});
+$('#e-title').addEventListener('input',ev=>{const e=curEnt();if(!e)return;snap('etitle');e.title=ev.target.value;touch(e);const el=$('#e-desk .es-title span');if(el&&document.activeElement!==el)el.textContent=e.title});
+$('#e-undo').onclick=undo;$('#e-redo').onclick=redo;
+$('#e-print').onclick=entPrint;
+$('#e-word').onclick=()=>{const e=curEnt();if(!e)return;downloadBlob(entWordHTML(e),'application/msword',safeName(e.title)+'.doc');toast('Word-Datei wurde heruntergeladen. Du kannst sie in Word öffnen und weiterbearbeiten.')};
+
+/* ---------- Anbindung an Themen und Meine Sachen ---------- */
+const _openTopic=openTopic;openTopic=function(id){_openTopic(id);const acts=$('#dt-info .dt-acts');if(!acts)return;
+  const ent=S.mode==='entwurf';if(ent)acts.querySelectorAll('.btn.pri').forEach(b=>b.classList.remove('pri'));
+  acts.insertAdjacentHTML(ent?'afterbegin':'beforeend',`<button class="btn ${ent?'pri':''}" data-act="t-ent" data-id="${id}">${icon('grad')}Unterrichtsentwurf</button>`)};
+const _renderThemen=renderThemen;renderThemen=function(){_renderThemen();if(S.mode==='entwurf'){$('#th-h').textContent='Unterrichtsentwurf: Thema wählen';$('#th-sub').textContent='Klicke ein Thema an. Du bekommst einen vorausgefüllten Rohentwurf mit Verlaufsplan, Sachanalyse und Arbeitsblatt.';const b=$('#mode-banner');b.hidden=false;b.querySelector('span').innerHTML='<b>Unterrichtsentwurf:</b> Wähle ein Thema für deinen Unterrichtsbesuch. Alles im Rohentwurf kannst du anpassen.';const bb=b.querySelector('button');bb.dataset.act='ent-new-blank';bb.textContent='Ohne Thema beginnen'}else{const bb=$('#mode-banner button');if(bb){bb.dataset.act='blank-plan';bb.textContent='Ohne Thema beginnen'}}};
+const _docCard=docCard;docCard=function(o,kind){if(kind!=='ent')return _docCard(o,kind);
+  return`<article class="dcard"><button class="open" data-open="ent:${o.id}" aria-label="${esc(o.title)} öffnen"><div class="thumb"><div class="thumb-in">${renderEntwurf(o,false)}</div></div><div class="dt-t"><b>${esc(o.title||'Ohne Titel')}</b><small>${esc(o.meta.ub)} · ${esc(o.meta.fach||'')} · ${fmtDate(o.updated)}</small></div></button>
+    <div class="acts"><button class="btn sm" data-open="ent:${o.id}">Öffnen</button><button class="btn sm" data-copy="ent:${o.id}">${icon('copy')}Kopie</button><button class="btn sm danger" data-del="ent:${o.id}" aria-label="Löschen">${icon('trash')}</button></div></article>`};
+
+window.addEventListener('hashchange',route);
+route();
 
 </script>
 <script>
