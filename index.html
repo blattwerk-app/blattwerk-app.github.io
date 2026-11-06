@@ -526,6 +526,11 @@ details#sh-set>summary small{width:100%;color:var(--muted);font-size:13px;order:
 
 .ber-hint{margin:0;font-size:13.5px;color:var(--muted);line-height:1.4}
 
+.name-edit{border:0;background:transparent;color:var(--muted);vertical-align:middle;padding:6px;border-radius:9px;margin-left:2px}
+.name-edit:hover{background:var(--surface2);color:var(--ink)}
+.name-edit .ic{width:22px;height:22px}
+.name-in{width:220px!important;font-size:24px!important;font-weight:700;padding:4px 10px!important;vertical-align:middle}
+
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
 .editing [contenteditable]:hover{outline:1.5px dashed #8aa0c8;outline-offset:1px}
@@ -3675,6 +3680,22 @@ TOPICS.push(
  stunde:{thema:'How do you get to school?',ziel:'Die Kinder können sagen, wie sie zur Schule kommen.',
   rows:ST('Geräusche von Verkehrsmitteln erraten.','Wörter üben, Arbeitsblatt, Klassenumfrage.','Ergebnisse als Strichliste an der Tafel.','Lied.',['Audio','Arbeitsblatt','Tafel','–'])}}
 );
+
+
+/* =========================================================
+   Persönliche Begrüßung: Name nur lokal gespeichert
+   ========================================================= */
+(function(){const m=location.hash.match(/^#name=([^&]+)/);if(m){try{const n=decodeURIComponent(m[1]).replace(/[<>]/g,'').trim().slice(0,30);if(n){UI.name=n;saveUI()}}catch(e){}history.replaceState(null,'','#start')}})();
+S.nameEdit=false;
+const _rsName=renderStart;renderStart=function(){_rsName();const g=$('#greet');if(!g)return;
+  const base=g.textContent.replace(/!\s*$/,'');
+  if(S.nameEdit){g.innerHTML=`${esc(base)}, <input id="name-in" class="name-in" type="text" maxlength="30" placeholder="dein Vorname" value="${esc(UI.name||'')}" aria-label="Dein Vorname"> <button class="btn sm pri" data-act="name-save">Speichern</button>`;const i=$('#name-in');i.focus();i.select();return}
+  g.innerHTML=`${esc(base)}${UI.name?', '+esc(UI.name):''}! <button class="name-edit" data-act="name-edit" title="${UI.name?'Namen ändern':'Deinen Namen eintragen'}" aria-label="${UI.name?'Namen ändern':'Deinen Namen eintragen'}">${icon('draw')}</button>`};
+function saveName(){const i=$('#name-in');if(!i)return;UI.name=i.value.replace(/[<>]/g,'').trim().slice(0,30);saveUI();S.nameEdit=false;renderStart();if(UI.name)toast(`Schön, dass du da bist, ${UI.name}!`)}
+document.addEventListener('click',ev=>{const a=ev.target.closest('[data-act]');if(!a)return;
+  if(a.dataset.act==='name-edit'){S.nameEdit=true;renderStart()}
+  else if(a.dataset.act==='name-save')saveName()});
+document.addEventListener('keydown',ev=>{if(ev.target.id!=='name-in')return;if(ev.key==='Enter'){ev.preventDefault();saveName()}else if(ev.key==='Escape'){S.nameEdit=false;renderStart()}});
 
 window.addEventListener('hashchange',route);
 route();
