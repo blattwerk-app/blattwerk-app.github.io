@@ -3700,15 +3700,21 @@ const _rsName=renderStart;renderStart=function(){_rsName();const g=$('#greet');i
 /* =========================================================
    Druckvorschau im Editor: zeigt, wo beim Drucken eine neue Seite beginnt
    ========================================================= */
-const MM=96/25.4, PAGE_H=273*MM, PAD_TOP=12*MM;
-function markBreaks(){const p=$('#b-desk .paper');if(!p)return;p.querySelectorAll('.pgbrk').forEach(x=>x.remove());
+const MM=96/25.4, PAGE_H=273*MM;
+function markBreaks(){const p=$('#b-desk .paper'),sh=curSheet();if(!p||!sh)return;p.querySelectorAll('.pgbrk').forEach(x=>x.remove());
+  /* unsichtbare Druckkopie ohne Bearbeitungshilfen messen */
+  let m=$('#pg-measure');if(!m){m=document.createElement('div');m.id='pg-measure';m.setAttribute('aria-hidden','true');
+    m.style.cssText='position:absolute;left:-10000px;top:0;width:182mm;visibility:hidden;pointer-events:none';document.body.appendChild(m)}
+  m.innerHTML=renderSheet(sh,{solution:S.showSol});const mp=m.querySelector('.paper');if(!mp)return;
+  mp.style.cssText='width:auto;min-height:0;padding:0;margin:0;box-shadow:none;zoom:1';
+  const pr=[...mp.querySelectorAll(':scope > .blk')],ed=[...p.querySelectorAll(':scope > .blk')];
   const z=p.style.zoom;p.style.zoom='';
-  let end=PAD_TOP+PAGE_H,n=1;const marks=[];
-  p.querySelectorAll(':scope > .blk').forEach(b=>{const top=b.offsetTop,bot=top+b.offsetHeight;
-    if(b.classList.contains('pb')){n++;marks.push([bot,n]);end=bot+PAGE_H;return}
-    if(bot>end&&top>end-PAGE_H+1){n++;marks.push([top,n]);end=top+PAGE_H}
-    while(bot>end){n++;marks.push([end,n]);end+=PAGE_H}});
-  p.style.zoom=z;
+  let end=PAGE_H,n=1;const marks=[];
+  pr.forEach((b,i)=>{const e=ed[i];if(!e)return;const top=b.offsetTop,bot=top+b.offsetHeight,et=e.offsetTop;
+    if(b.classList.contains('pb')){n++;marks.push([et+e.offsetHeight,n]);end=bot+PAGE_H;return}
+    if(bot>end&&top>end-PAGE_H+1){n++;marks.push([et,n]);end=top+PAGE_H}
+    while(bot>end){n++;marks.push([et+(end-top),n]);end+=PAGE_H}});
+  p.style.zoom=z;m.innerHTML='';
   marks.forEach(([y,k])=>p.insertAdjacentHTML('beforeend',`<div class="pgbrk" style="top:${Math.round(y-3.5*MM)}px"><span>Hier beginnt beim Drucken Seite ${k}</span></div>`));
   const c=$('#b-pages');if(c){c.textContent=n===1?'1 Seite':`${n} Seiten`;c.title=n===1?'Das Blatt passt auf eine Seite.':`Das Blatt wird auf ${n} Seiten gedruckt. Die gestrichelten Linien zeigen, wo eine neue Seite beginnt.`;c.hidden=false}}
 const _rpPrint=renderPaper;renderPaper=function(){_rpPrint();markBreaks()};
