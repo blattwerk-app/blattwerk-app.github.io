@@ -3698,29 +3698,49 @@ const _rsName=renderStart;renderStart=function(){_rsName();const g=$('#greet');i
 
 
 /* =========================================================
-   Druckvorschau im Editor: zeigt, wo beim Drucken eine neue Seite beginnt
+   Druck: Seitenumbrüche berechnen, knappe Blätter leicht verkleinern,
+   im Editor anzeigen, wo eine neue Seite beginnt
    ========================================================= */
-const MM=96/25.4, PAGE_H=273*MM;
-function markBreaks(){const p=$('#b-desk .paper'),sh=curSheet();if(!p||!sh)return;p.querySelectorAll('.pgbrk').forEach(x=>x.remove());
-  /* unsichtbare Druckkopie ohne Bearbeitungshilfen messen */
-  let m=$('#pg-measure');if(!m){m=document.createElement('div');m.id='pg-measure';m.setAttribute('aria-hidden','true');
+const MM=96/25.4, PAGE_H=273*MM, MIN_FIT=0.9;
+/* misst eine Blatt-Fassung ohne Bearbeitungshilfen, so wie sie gedruckt wird */
+function measurePaper(html){let m=$('#pg-measure');if(!m){m=document.createElement('div');m.id='pg-measure';m.setAttribute('aria-hidden','true');
     m.style.cssText='position:absolute;left:-10000px;top:0;width:182mm;visibility:hidden;pointer-events:none';document.body.appendChild(m)}
-  m.innerHTML=renderSheet(sh,{solution:S.showSol});const mp=m.querySelector('.paper');if(!mp)return;
+  m.innerHTML=html;const mp=m.querySelector('.paper');if(!mp)return[];
   mp.style.cssText='width:auto;min-height:0;padding:0;margin:0;box-shadow:none;zoom:1';
-  const pr=[...mp.querySelectorAll(':scope > .blk')],ed=[...p.querySelectorAll(':scope > .blk')];
-  const z=p.style.zoom;p.style.zoom='';
-  let end=PAGE_H,n=1;const marks=[];
-  pr.forEach((b,i)=>{const e=ed[i];if(!e)return;const top=b.offsetTop,bot=top+b.offsetHeight,et=e.offsetTop;
-    if(b.classList.contains('pb')){n++;marks.push([et+e.offsetHeight,n]);end=bot+PAGE_H;return}
-    if(bot>end&&top>end-PAGE_H+1){n++;marks.push([et,n]);end=top+PAGE_H}
-    while(bot>end){n++;marks.push([et+(end-top),n]);end+=PAGE_H}});
-  p.style.zoom=z;m.innerHTML='';
-  marks.forEach(([y,k])=>p.insertAdjacentHTML('beforeend',`<div class="pgbrk" style="top:${Math.round(y-3.5*MM)}px"><span>Hier beginnt beim Drucken Seite ${k}</span></div>`));
-  const c=$('#b-pages');if(c){c.textContent=n===1?'1 Seite':`${n} Seiten`;c.title=n===1?'Das Blatt passt auf eine Seite.':`Das Blatt wird auf ${n} Seiten gedruckt. Die gestrichelten Linien zeigen, wo eine neue Seite beginnt.`;c.hidden=false}}
+  const pos=[...mp.querySelectorAll(':scope > .blk')].map(b=>({top:b.offsetTop,bot:b.offsetTop+b.offsetHeight,pb:b.classList.contains('pb')}));
+  m.innerHTML='';return pos}
+/* simuliert den Druck: Blöcke werden nicht geteilt, außer sie sind höher als eine Seite */
+function paginate(pos,s){let end=PAGE_H,n=1;const marks=[];
+  pos.forEach((b,i)=>{const top=b.top*s,bot=b.bot*s;
+    if(b.pb){n++;marks.push({i,at:'after',n});end=bot+PAGE_H;return}
+    if(bot>end&&top>end-PAGE_H+1){n++;marks.push({i,off:0,n});end=top+PAGE_H}
+    while(bot>end){n++;marks.push({i,off:(end-top)/s,n});end+=PAGE_H}});
+  return{n,marks}}
+/* wenn nur ein kleiner Rest auf die nächste Seite rutscht: bis 90 % verkleinern */
+function fitScale(pos){const base=paginate(pos,1);if(base.n<2)return{s:1,...base};
+  for(let s=0.99;s>=MIN_FIT-1e-9;s-=0.01){const r=paginate(pos,s);if(r.n<base.n)return{s:Math.round(s*100)/100,...r}}
+  return{s:1,...base}}
+
+function markBreaks(){const p=$('#b-desk .paper'),sh=curSheet();if(!p||!sh)return;p.querySelectorAll('.pgbrk').forEach(x=>x.remove());
+  const pos=measurePaper(renderSheet(sh,{solution:S.showSol}));const r=fitScale(pos);
+  const ed=[...p.querySelectorAll(':scope > .blk')];const z=p.style.zoom;p.style.zoom='';
+  const ys=r.marks.map(k=>{const e=ed[k.i];if(!e)return null;return[k.at==='after'?e.offsetTop+e.offsetHeight:e.offsetTop+k.off,k.n]}).filter(Boolean);
+  p.style.zoom=z;
+  ys.forEach(([y,k])=>p.insertAdjacentHTML('beforeend',`<div class="pgbrk" style="top:${Math.round(y-3.5*MM)}px"><span>Hier beginnt beim Drucken Seite ${k}</span></div>`));
+  const c=$('#b-pages');if(!c)return;const pct=Math.round(r.s*100);
+  c.textContent=(r.n===1?'1 Seite':`${r.n} Seiten`)+(r.s<1?` · ${pct} %`:'');
+  c.title=(r.n===1?'Das Blatt passt auf eine Seite.':`Das Blatt wird auf ${r.n} Seiten gedruckt. Die gestrichelten Linien zeigen, wo eine neue Seite beginnt.`)
+    +(r.s<1?` Damit nichts Kleines allein auf eine neue Seite rutscht, wird es beim Drucken auf ${pct} % verkleinert.`:'');
+  c.hidden=false}
 const _rpPrint=renderPaper;renderPaper=function(){_rpPrint();markBreaks()};
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(S.view==='blatt')markBreaks()});
 (()=>{const s=$('#v-blatt .docbar .savestate');if(s&&!$('#b-pages'))s.insertAdjacentHTML('afterend','<span class="chip" id="b-pages" hidden></span>')})();
 document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('#b-desk')){clearTimeout(window._mbT);window._mbT=setTimeout(markBreaks,500)}});
+
+/* beim Drucken: jedes Blatt prüfen und bei Bedarf leicht verkleinern */
+function fitPrintRoot(){$('#print-root').querySelectorAll(':scope > .paper').forEach(p=>{if(!p.querySelector(':scope > .blk'))return;
+    p.style.zoom='';const r=fitScale(measurePaper(p.outerHTML));if(r.s<1)p.style.zoom=r.s})}
+printHTML=function(html){$('#print-root').innerHTML=html;fitPrintRoot();setTimeout(()=>window.print(),80)};
 
 window.addEventListener('hashchange',route);
 route();
