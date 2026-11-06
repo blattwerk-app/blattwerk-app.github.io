@@ -252,7 +252,7 @@ dialog.big{max-width:1120px;max-height:calc(100vh - 40px)}
 #toast button{border:0;background:transparent;color:var(--mark);font-weight:700;padding:4px 6px}
 
 /* ---------- PAPER (A4) ---------- */
-.paper{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 15mm 15mm;background:#fff;color:var(--p-ink);font-family:var(--sheet);font-size:12.5pt;line-height:1.45;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 28px rgba(20,30,50,.14);position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-scheme:light}
+.paper{width:210mm;min-height:297mm;margin:0 auto;padding:12mm 14mm 15mm;background:#fff;color:var(--p-ink);font-family:var(--sheet);font-size:12.5pt;line-height:1.45;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 28px rgba(20,30,50,.14);position:relative;-webkit-print-color-adjust:exact;print-color-adjust:exact;color-scheme:light}
 .paper *{border-color:var(--p-ink)}
 .sh-top{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;flex-wrap:wrap;border-bottom:1.5px solid var(--p-ink);padding-bottom:2mm;margin-bottom:5mm;font-size:10.5pt}
 .sh-meta{font-weight:700;letter-spacing:.02em}
@@ -531,6 +531,11 @@ details#sh-set>summary small{width:100%;color:var(--muted);font-size:13px;order:
 .name-edit .ic{width:22px;height:22px}
 .name-in{width:220px!important;font-size:24px!important;font-weight:700;padding:4px 10px!important;vertical-align:middle}
 
+.sol-tag{font-weight:700;color:var(--p-sol);border:1.5px solid var(--p-sol);border-radius:2mm;padding:0 3mm;font-size:11pt}
+.pgbrk{position:absolute;left:0;right:0;height:0;border-top:2px dashed #e0671f;z-index:2;pointer-events:none}
+.pgbrk span{position:absolute;right:4mm;top:-3.2mm;background:#fff;color:#c4561a;font:700 11px var(--ui);padding:1px 8px;border:1.5px solid #e0671f;border-radius:99px}
+#b-pages{background:var(--mark-soft);color:#7a5c00;border-color:transparent}
+
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
 .editing [contenteditable]:hover{outline:1.5px dashed #8aa0c8;outline-offset:1px}
@@ -619,7 +624,8 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   #print-root{display:block}
   #print-root .paper{width:auto;min-height:0;padding:0;margin:0;box-shadow:none;break-after:page}
   #print-root .paper:last-child{break-after:auto}
-  #print-root .sol-banner{top:0;right:0}
+  #print-root .pl-notes{min-height:12mm;break-inside:avoid}
+  #print-root .pgbrk{display:none}
 }
 </style>
 </head>
@@ -2732,8 +2738,8 @@ function renderSheet(sh,o={}){
     const ctl=ed?`<div class="ctl">${cb('up','up','Hoch')}${cb('down','down','Runter')}${re}${cb('dupb','copy','Kopieren')}${cb('del','trash','Löschen','del')}</div>`:'';
     return `<div class="blk${b.type==='pagebreak'?' pb':''}${ed&&S.sel===b.id?' sel':''}" data-id="${b.id}">${ctl}${h}</div>${idx<len-1?ins(idx+1):''}`}).join('');
   const lvTag=o.level?`<span class="lvtag">${'★'.repeat(o.level)} ${LVL[o.level-1]}</span>`:'';
-  const fields=sh.showName!==false?`<div class="sh-fields"><div>Name:<span></span></div><div>Datum:<span class="s"></span></div></div>`:'';
-  return `<div class="paper${o.solution?' show-sol':''}${ed?' editing':''}">${o.solution?'<div class="sol-banner">Lösung</div>':''}
+  const fields=o.solution?'<div class="sol-tag">Lösung</div>':sh.showName!==false?`<div class="sh-fields"><div>Name:<span></span></div><div>Datum:<span class="s"></span></div></div>`:'';
+  return `<div class="paper${o.solution?' show-sol':''}${ed?' editing':''}">
     <div class="sh-top"><div class="sh-meta">${sh.fach==='x'?'':(FACH[sh.fach]||'')+' · '}Klasse ${esc(sh.klasse)}${lvTag}</div>${fields}</div>
     ${E('sheet','title',sh.title,'h1','sh-title',true)}${len?ins(0):''}${body}${N?ptsFooter(sh,N):''}${ed?`<button class="ins-end" data-ins="${len}">${icon('plus')}Text, Aufgabe oder Bild hinzufügen</button>`:''}</div>`}
 
@@ -3689,6 +3695,26 @@ TOPICS.push(
 (function(){const m=location.hash.match(/^#name=([^&]+)/);if(m){try{const n=decodeURIComponent(m[1]).replace(/[<>]/g,'').trim().slice(0,30);if(n){UI.name=n;saveUI()}}catch(e){}history.replaceState(null,'','#start')}})();
 const _rsName=renderStart;renderStart=function(){_rsName();const g=$('#greet');if(!g||!UI.name)return;
   g.textContent=g.textContent.replace(/!\s*$/,'')+', '+UI.name+'!'};
+
+
+/* =========================================================
+   Druckvorschau im Editor: zeigt, wo beim Drucken eine neue Seite beginnt
+   ========================================================= */
+const MM=96/25.4, PAGE_H=273*MM, PAD_TOP=12*MM;
+function markBreaks(){const p=$('#b-desk .paper');if(!p)return;p.querySelectorAll('.pgbrk').forEach(x=>x.remove());
+  const z=p.style.zoom;p.style.zoom='';
+  let end=PAD_TOP+PAGE_H,n=1;const marks=[];
+  p.querySelectorAll(':scope > .blk').forEach(b=>{const top=b.offsetTop,bot=top+b.offsetHeight;
+    if(b.classList.contains('pb')){n++;marks.push([bot,n]);end=bot+PAGE_H;return}
+    if(bot>end&&top>end-PAGE_H+1){n++;marks.push([top,n]);end=top+PAGE_H}
+    while(bot>end){n++;marks.push([end,n]);end+=PAGE_H}});
+  p.style.zoom=z;
+  marks.forEach(([y,k])=>p.insertAdjacentHTML('beforeend',`<div class="pgbrk" style="top:${Math.round(y-3.5*MM)}px"><span>Hier beginnt beim Drucken Seite ${k}</span></div>`));
+  const c=$('#b-pages');if(c){c.textContent=n===1?'1 Seite':`${n} Seiten`;c.title=n===1?'Das Blatt passt auf eine Seite.':`Das Blatt wird auf ${n} Seiten gedruckt. Die gestrichelten Linien zeigen, wo eine neue Seite beginnt.`;c.hidden=false}}
+const _rpPrint=renderPaper;renderPaper=function(){_rpPrint();markBreaks()};
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(S.view==='blatt')markBreaks()});
+(()=>{const s=$('#v-blatt .docbar .savestate');if(s&&!$('#b-pages'))s.insertAdjacentHTML('afterend','<span class="chip" id="b-pages" hidden></span>')})();
+document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('#b-desk')){clearTimeout(window._mbT);window._mbT=setTimeout(markBreaks,500)}});
 
 window.addEventListener('hashchange',route);
 route();
