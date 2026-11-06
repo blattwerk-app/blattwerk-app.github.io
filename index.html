@@ -3433,6 +3433,249 @@ document.addEventListener('click',ev=>{const t=ev.target;
   if(a.dataset.act==='season-all'){S.seasonAll=true;renderStart();return}
   if(a.dataset.act==='hide-tips'){UI.hideTips=true;saveUI();renderSide();toast('Tipps ausgeblendet. Du findest alles auch unter „Hilfe“.')}});
 
+
+/* =========================================================
+   Erweiterung: neue Aufgabenarten, Wortschatz und 21 Themen
+   ========================================================= */
+GEN.ergaenzen={name:'Ergänzen',short:'Wie viel fehlt bis 100 oder 1000?',defaults:{count:12,level:1,opts:{zr:'100'}},
+  options:[{k:'zr',l:'Zahlenraum',c:[['100','bis 100'],['1000','bis 1000']]}],
+  instr:()=> 'Ergänze. Wie viel fehlt?',
+  render(b,L,R){const zr=+b.opts.zr;const t=many(b.count,()=>{let a,z;
+      if(zr===100){if(L===1){a=R.int(11,89);if(a%10===0)return null;z=Math.ceil(a/10)*10}else if(L===2){a=R.int(1,9)*10;z=100;if(R.r()<.5){a=R.int(11,89);if(a%10===0)return null}}else{a=R.int(3,97);z=100}}
+      else{if(L===1){a=R.int(101,989);if(a%100===0)return null;z=Math.ceil(a/100)*100;if(R.r()<.5){a=R.int(1,9)*100;z=1000}}else if(L===2){a=R.int(1,99)*10;z=1000}else{a=R.int(101,989);z=1000}}
+      return{key:a+'-'+z,h:`${a} + ${box(z-a)} = ${z}`}});
+    return grid(t.map(x=>x.h),3)}};
+GEN.doppelhalb={name:'Verdoppeln und Halbieren',short:'Das Doppelte und die Hälfte',defaults:{count:12,level:1,opts:{art:'mix'}},
+  options:[{k:'art',l:'Aufgabe',c:[['dopp','Verdoppeln'],['halb','Halbieren'],['mix','gemischt']]}],
+  instr:()=> 'Verdopple oder halbiere.',
+  render(b,L,R){const max=L===1?50:L===2?500:5000;const t=many(b.count,()=>{const art=b.opts.art==='mix'?R.pick(['dopp','halb']):b.opts.art;
+      if(art==='dopp'){const n=R.int(L===1?6:L===2?51:501,max);return{key:'d'+n,h:`Das Doppelte von ${fmt(n)}: ${sol(fmt(2*n),20)}`}}
+      const n=2*R.int(L===1?6:L===2?51:501,max);return{key:'h'+n,h:`Die Hälfte von ${fmt(n)}: ${sol(fmt(n/2),20)}`}});
+    return grid(t.map(x=>x.h),2)}};
+GEN.zehnermal={name:'Malnehmen mit Zehnerzahlen',short:'6 · 30, 4 · 200, 240 : 6',defaults:{count:12,level:1,opts:{}},options:[],
+  instr:(b,L)=>L===1?'Rechne. Nutze das kleine Einmaleins.':'Rechne. Nutze das kleine Einmaleins.',
+  render(b,L,R){const t=many(b.count,()=>{const k=R.int(2,9),m=R.int(2,9);
+      if(L===1){const z=m*10;return R.r()<.5?{key:k+'*'+z,h:`${k} · ${z} = ${sol(k*z)}`}:{key:z+'*'+k,h:`${z} · ${k} = ${sol(k*z)}`}}
+      if(L===2){const typ=R.int(0,2);if(typ===0){const h=m*100;return{key:k+'*'+h,h:`${k} · ${h} = ${sol(fmt(k*h))}`}}const z=m*10;return{key:k*z+'/'+k,h:`${k*z} : ${k} = ${sol(z)}`}}
+      const typ=R.int(0,2);if(typ===0){const a=k*10,c=m*10;return{key:a+'*'+c,h:`${a} · ${c} = ${sol(fmt(a*c))}`}}if(typ===1){const h=m*100;return{key:k*h+'/'+k,h:`${fmt(k*h)} : ${k} = ${sol(h)}`}}const z=m*10;return{key:k*z+'/'+z,h:`${k*z} : ${z} = ${sol(k)}`}});
+    return grid(t.map(x=>x.h),3)}};
+GEN_ORDER.push('ergaenzen','doppelhalb','zehnermal');
+
+Object.assign(EN,{
+  house:[['house','Haus','🏠'],['bed','Bett','🛏️'],['sofa','Sofa','🛋️'],['bath','Badewanne','🛁'],['door','Tür','🚪'],['chair','Stuhl','🪑'],['clock','Uhr','🕐'],['garden','Garten','🌳'],['kitchen','Küche',null],['bedroom','Schlafzimmer',null],['bathroom','Badezimmer',null],['living room','Wohnzimmer',null]],
+  toys:[['ball','Ball','⚽'],['teddy bear','Teddybär','🧸'],['car','Auto','🚗'],['bike','Fahrrad','🚲'],['game console','Spielekonsole','🎮'],['guitar','Gitarre','🎸'],['drum','Trommel','🥁'],['skateboard','Skateboard','🛹'],['train','Zug','🚂'],['robot','Roboter','🤖'],['puzzle','Puzzle','🧩']],
+  feelings:[['happy','fröhlich','😀'],['sad','traurig','😢'],['angry','wütend','😠'],['tired','müde','😴'],['scared','ängstlich','😨'],['surprised','überrascht','😮'],['bored','gelangweilt','😑'],['ill','krank','🤒']],
+  transport:[['car','Auto','🚗'],['bus','Bus','🚌'],['train','Zug','🚆'],['plane','Flugzeug','✈️'],['bike','Fahrrad','🚲'],['ship','Schiff','🚢'],['taxi','Taxi','🚕'],['tractor','Traktor','🚜'],['boat','Boot','⛵'],['helicopter','Hubschrauber','🚁']]});
+EN_TOPICS.push(['house','House (Haus)'],['toys','Toys (Spielsachen)'],['feelings','Feelings (Gefühle)'],['transport','Transport (Verkehrsmittel)']);
+
+TOPICS.push(
+/* -------- Sachunterricht -------- */
+{id:'frosch',fach:'su',titel:'Vom Laich zum Frosch',bereich:'Natur und Leben',kl:[3,4],mon:[3,4,5],desc:'Laich, Kaulquappe, Frosch: die Entwicklung eines Amphibiums und die Krötenwanderung.',
+ kompetenz:'Natur und Leben – Tiere und ihre Lebensräume: Die Kinder beschreiben die Entwicklung eines Amphibiums und begründen Maßnahmen zu seinem Schutz.',
+ blocks:()=>[TX('Frösche, Kröten und Molche sind Amphibien. Man nennt sie auch Lurche. Sie leben an Land und im Wasser.\n\nIm Frühling legt das Froschweibchen viele Eier ins Wasser. Diese Eier heißen Laich. Froschlaich sieht aus wie ein Klumpen aus Gallerte, Krötenlaich wie eine lange Schnur.\n\nAus den Eiern schlüpfen Kaulquappen. Sie leben im Wasser und atmen mit Kiemen. Nach einigen Wochen wachsen zuerst die Hinterbeine, danach die Vorderbeine. Der Schwanz wird immer kleiner. Die jungen Frösche atmen jetzt mit Lungen und gehen an Land.\n\nIm Frühling wandern viele Kröten zu ihrem Laichgewässer. Dabei müssen sie oft Straßen überqueren. Helferinnen und Helfer bauen deshalb Krötenzäune. Amphibien sind geschützt: Laich und Kaulquappen darf man nicht aus dem Teich mitnehmen.','info'),
+  TB('Bringe die Entwicklung in die richtige Reihenfolge. Schreibe die Zahlen 1 bis 5.',['Was passiert?','Nr.'],[['Die Hinterbeine wachsen.','?3'],['Das Weibchen legt Laich ins Wasser.','?1'],['Der junge Frosch geht an Land.','?5'],['Aus den Eiern schlüpfen Kaulquappen.','?2'],['Die Vorderbeine wachsen, der Schwanz wird kleiner.','?4']]),
+  GP('Setze die fehlenden Wörter ein.','Frösche sind *Amphibien*. Ihre Eier heißen *Laich*. Daraus schlüpfen *Kaulquappen*. Sie atmen mit *Kiemen*. Erwachsene Frösche atmen mit *Lungen*.'),
+  TF('Richtig oder falsch? Kreuze an.',['+Kaulquappen leben im Wasser.','-Zuerst wachsen die Vorderbeine.','+Krötenlaich sieht aus wie eine Schnur.','-Man darf Froschlaich mit nach Hause nehmen.']),
+  DR('Zeichne die Entwicklung vom Laich zum Frosch als Kreislauf mit Pfeilen.',7),
+  SC('Ich kann die Entwicklung des Frosches beschreiben.','Ich weiß, wie man Amphibien schützt.')],
+ reihe:[['Was sind Amphibien?','Frosch, Kröte, Molch'],['Vom Laich zum Frosch','Entwicklung'],['Leben im Teich','Lebensraum'],['Die Krötenwanderung','Gefahren und Schutz'],['Wir schützen Amphibien','Plakat oder Aktion']],
+ stunde:{thema:'Vom Laich zum Frosch',ziel:'Die Kinder können die Entwicklung des Frosches in der richtigen Reihenfolge beschreiben.',
+  rows:ST('Bildkarten der Entwicklungsstufen werden ungeordnet gezeigt. „Was gehört zusammen?“','Lesetext, Bildkarten in Partnerarbeit ordnen, Tabelle ausfüllen.','Entwicklungskreislauf an der Tafel legen und erklären.','Ausblick: Krötenwanderung in unserer Umgebung.',['Bildkarten','Arbeitsblatt, Bildkarten','Tafel','–'])}},
+
+{id:'schmetterling',fach:'su',titel:'Vom Ei zum Schmetterling',bereich:'Natur und Leben',kl:[3],mon:[4,5,6],desc:'Ei, Raupe, Puppe, Falter: die vollständige Verwandlung.',
+ kompetenz:'Natur und Leben – Tiere und ihre Lebensräume: Die Kinder beschreiben die Entwicklung eines Insekts mit vollständiger Verwandlung.',
+ blocks:()=>[TX('Ein Schmetterling durchläuft vier Stufen: Ei, Raupe, Puppe und Falter. Diese Verwandlung heißt Metamorphose.\n\nDas Weibchen legt seine Eier auf Pflanzen. Das Tagpfauenauge legt sie zum Beispiel auf Brennnesseln. Aus dem Ei schlüpft eine Raupe. Sie frisst sehr viel und wächst schnell. Weil ihre Haut nicht mitwächst, häutet sie sich mehrmals.\n\nDann verpuppt sich die Raupe. In der Puppe verwandelt sie sich. Nach einiger Zeit schlüpft der fertige Schmetterling. Er saugt mit seinem langen Rüssel Nektar aus Blüten. Wie alle Insekten hat er sechs Beine.','info'),
+  TB('Ordne die vier Stufen der Verwandlung.',['Stufe','Nr.'],[['Puppe','?3'],['Ei','?1'],['Schmetterling (Falter)','?4'],['Raupe','?2']]),
+  MT('Was passt zusammen? Verbinde.',['Ei = wird auf eine Pflanze gelegt','Raupe = frisst Blätter und häutet sich','Puppe = in ihr verwandelt sich das Tier','Falter = saugt Nektar mit dem Rüssel']),
+  TF('Richtig oder falsch? Kreuze an.',['+Die Raupe häutet sich mehrmals.','-Ein Schmetterling hat acht Beine.','+Aus der Puppe schlüpft der Schmetterling.','-Schmetterlinge fressen Blätter mit Zähnen.']),
+  DR('Zeichne die vier Stufen als Kreislauf.',7),
+  SC('Ich kenne die vier Stufen der Verwandlung.')],
+ reihe:[['Schmetterlinge beobachten','Arten kennenlernen'],['Vom Ei zur Raupe','Raupen beobachten'],['Die Puppe','Verwandlung'],['Der Falter','Körperbau'],['Schmetterlinge schützen','Futterpflanzen im Schulgarten']],
+ stunde:{thema:'Die Verwandlung des Schmetterlings',ziel:'Die Kinder können die vier Stufen der Metamorphose benennen und ordnen.',
+  rows:ST('Eine Raupe und ein Schmetterling (Bilder): „Das ist dasselbe Tier!“ Kinder staunen und vermuten.','Lesetext, Stufen ordnen und zeichnen.','Kreislauf an der Tafel, Begriff „Metamorphose“ klären.','Selbsteinschätzung.',['Bilder','Arbeitsblatt','Tafel','Arbeitsblatt'])}},
+
+{id:'schatten',fach:'su',titel:'Licht und Schatten',bereich:'Natur und Leben',kl:[3,4],mon:[2,3,10],desc:'Wie Schatten entstehen und warum sie im Laufe des Tages wandern.',
+ kompetenz:'Natur und Leben – Stoffe und ihre Eigenschaften / Physikalische Phänomene: Die Kinder untersuchen die Entstehung von Schatten in Versuchen.',
+ blocks:()=>[TX('Licht breitet sich geradlinig aus. Trifft es auf einen Gegenstand, der kein Licht durchlässt, entsteht dahinter ein Schatten.\n\nManche Stoffe lassen Licht ganz durch, zum Beispiel klares Glas. Sie sind durchsichtig. Andere lassen nur etwas Licht durch, zum Beispiel Butterbrotpapier. Sie sind durchscheinend. Holz oder Pappe lassen kein Licht durch. Sie sind undurchsichtig.\n\nJe näher ein Gegenstand an der Lampe ist, desto größer wird sein Schatten. Draußen ist die Sonne die Lichtquelle. Mittags steht sie hoch, dann sind die Schatten kurz. Morgens und abends steht sie tief, dann sind die Schatten lang.','info'),
+  TB('Versuch: Halte die Gegenstände vor eine Taschenlampe. Kreuze an.',['Gegenstand','durchsichtig','durchscheinend','undurchsichtig'],[['Glas','?✗','',''],['Butterbrotpapier','','?✗',''],['Holzbrett','','','?✗'],['Klarsichtfolie','?✗','',''],['Pappe','','','?✗']]),
+  GP('Setze die fehlenden Wörter ein.','Ein Schatten entsteht hinter einem *undurchsichtigen* Gegenstand. Je *näher* der Gegenstand an der Lampe ist, desto größer ist der Schatten. Mittags sind die Schatten *kurz*, abends sind sie *lang*.'),
+  TF('Richtig oder falsch? Kreuze an.',['+Licht breitet sich geradlinig aus.','-Hinter Glas entsteht ein dunkler Schatten.','+Abends sind die Schatten lang.','-Ein Schatten ist immer gleich groß.']),
+  DR('Zeichne eine Lampe, einen Gegenstand und seinen Schatten.',6),
+  SC('Ich kann erklären, wie ein Schatten entsteht.')],
+ reihe:[['Lichtquellen','Sonne, Lampe, Kerze'],['Wie entsteht ein Schatten?','Versuche mit der Taschenlampe'],['Große und kleine Schatten','Abstand verändern'],['Schatten draußen','Schatten im Tagesverlauf messen'],['Schattentheater','Figuren bauen und spielen']],
+ stunde:{thema:'Wie entsteht ein Schatten?',ziel:'Die Kinder können mit Versuchen erklären, wie ein Schatten entsteht und wovon seine Größe abhängt.',
+  rows:ST('Raum abdunkeln, Lehrkraft spielt mit der Hand ein Schattentier.','Versuche in Gruppen mit Taschenlampe und Gegenständen, Tabelle ausfüllen.','Ergebnisse sammeln: undurchsichtig – Schatten; näher an der Lampe – größer.','Schattentiere ausprobieren.',['Taschenlampe','Taschenlampen, Gegenstände, Arbeitsblatt','Tafel','–'])}},
+
+{id:'haustiere',fach:'su',titel:'Haustiere richtig halten',bereich:'Natur und Leben',kl:[3],mon:[9,10,1],desc:'Was brauchen Kaninchen, Hund und Katze? Verantwortung für ein Tier.',
+ kompetenz:'Natur und Leben – Tiere: Die Kinder beschreiben die Bedürfnisse von Haustieren und die Verantwortung bei der Tierhaltung.',
+ blocks:()=>[TX('Ein Haustier ist kein Spielzeug. Es braucht jeden Tag Futter, frisches Wasser, Pflege und Beschäftigung, viele Jahre lang.\n\nKaninchen und Meerschweinchen sind Gruppentiere. Sie dürfen nicht allein gehalten werden. Sie brauchen viel Platz zum Laufen und jeden Tag Heu. Ein Hund muss mehrmals am Tag nach draußen. Er braucht Bewegung und Erziehung. Katzen brauchen einen Kratzbaum, ein sauberes Katzenklo und Menschen, die sich mit ihnen beschäftigen.\n\nBevor eine Familie ein Tier aufnimmt, sollte sie gut überlegen: Haben wir genug Zeit und Platz? Wer kümmert sich in den Ferien? Viele Tiere warten im Tierheim auf ein neues Zuhause.','info'),
+  MT('Was braucht das Tier besonders? Verbinde.',['Kaninchen = Heu und einen Artgenossen','Hund = mehrmals am Tag Gassi gehen','Katze = einen Kratzbaum','Fisch = sauberes Wasser im Aquarium']),
+  TF('Richtig oder falsch? Kreuze an.',['+Kaninchen sollte man nicht allein halten.','-Ein Hund muss nur einmal in der Woche nach draußen.','+Haustiere brauchen jeden Tag frisches Wasser.','-Ein Haustier kann man in den Ferien einfach allein lassen.']),
+  TB('Mein Wunschtier: Was braucht es?',['Frage','Antwort'],[['Welches Tier?'],['Was frisst es?'],['Wie viel Platz braucht es?'],['Was muss ich jeden Tag tun?'],['Wer kümmert sich in den Ferien?']]),
+  SC('Ich weiß, was ein Haustier braucht.','Ich kann erklären, warum ein Haustier Verantwortung bedeutet.')],
+ reihe:[['Unsere Haustiere','Erzählkreis'],['Was brauchen Tiere?','Bedürfnisse'],['Kaninchen und Meerschweinchen','Artgerechte Haltung'],['Hund und Katze','Pflege und Verhalten'],['Das Tierheim','Besuch oder Film'],['Mein Wunschtier','Steckbrief']],
+ stunde:{thema:'Was braucht ein Haustier?',ziel:'Die Kinder können die Bedürfnisse eines Haustieres benennen und begründen.',
+  rows:ST('Kuscheltier im Sitzkreis: „Was braucht dieses Tier, wenn es echt wäre?“','Lesetext, Zuordnung, dann Tabelle für ein Wunschtier.','Tierbedürfnisse an der Tafel sammeln.','Diskussion: Ist ein Haustier etwas für jede Familie?',['Kuscheltier','Arbeitsblatt, Sachbücher','Tafel','–'])}},
+
+{id:'wiese',fach:'su',titel:'Lebensraum Wiese',bereich:'Natur und Leben',kl:[3],mon:[5,6,7],desc:'Pflanzen und Tiere der Wiese und warum Blumenwiesen wichtig sind.',
+ kompetenz:'Natur und Leben – Pflanzen, Tiere, Lebensräume: Die Kinder erkunden einen Lebensraum und beschreiben Zusammenhänge zwischen Pflanzen und Tieren.',
+ blocks:()=>[TX('Auf einer Wiese wachsen viele verschiedene Pflanzen: Gräser, Löwenzahn, Gänseblümchen, Klee und Hahnenfuß. Zwischen ihnen leben viele Tiere: Bienen und Hummeln sammeln Nektar, Heuschrecken springen durchs Gras, Regenwürmer lockern den Boden, und der Maulwurf gräbt seine Gänge.\n\nEine Blumenwiese wird nur ein- oder zweimal im Jahr gemäht. Deshalb können die Pflanzen blühen und Samen bilden. Ein Rasen wird dagegen oft gemäht. Dort finden Insekten nur wenig Nahrung.\n\nDer Löwenzahn ist eine besondere Wiesenpflanze: Aus seiner gelben Blüte wird die Pusteblume. Ihre Samen fliegen mit kleinen Schirmchen durch die Luft.','info'),
+  TB('Wiesen-Forscher: Was findest du auf der Wiese? Mache eine Strichliste.',['Pflanze oder Tier','Strichliste','Anzahl'],[['Löwenzahn'],['Gänseblümchen'],['Klee'],['Biene oder Hummel'],['Käfer'],['Heuschrecke']]),
+  GP('Setze die fehlenden Wörter ein.','Eine Blumenwiese wird nur *selten* gemäht. Bienen und *Hummeln* sammeln dort Nektar. Der *Regenwurm* lockert den Boden. Die Samen des Löwenzahns fliegen mit dem *Wind*.'),
+  TF('Richtig oder falsch? Kreuze an.',['+Auf einer Blumenwiese finden Insekten viel Nahrung.','-Ein Rasen wird nur einmal im Jahr gemäht.','+Aus der Löwenzahnblüte wird eine Pusteblume.','-Auf einer Wiese leben keine Tiere.']),
+  DR('Male eine Blumenwiese mit drei Pflanzen und drei Tieren. Beschrifte sie.',7),
+  SC('Ich kenne fünf Pflanzen und Tiere der Wiese.')],
+ reihe:[['Die Wiese erkunden','Unterrichtsgang'],['Wiesenpflanzen','Bestimmen und pressen'],['Tiere der Wiese','Beobachten mit der Becherlupe'],['Der Löwenzahn','Von der Blüte zur Pusteblume'],['Blumenwiese oder Rasen?','Vergleich'],['Wir säen eine Blühwiese','Aktion im Schulgarten']],
+ stunde:{thema:'Wiesen-Forscher',ziel:'Die Kinder erkunden eine Wiese und dokumentieren ihre Funde.',
+  rows:ST('Kurze Einführung: Regeln für den Unterrichtsgang, Becherlupen verteilen.','Gruppen untersuchen eine abgesteckte Fläche, Strichliste führen.','Funde vergleichen: Welche Gruppe hat was entdeckt?','Fragen für die nächste Stunde sammeln.',['Becherlupen','Strichliste, Bestimmungskarten','Sitzkreis draußen','–'])}},
+
+{id:'gemeinde',fach:'su',titel:'Unsere Gemeinde',bereich:'Mensch und Gemeinschaft',kl:[4],mon:[9,10,11],desc:'Rathaus, Bürgermeisterin, Rat: wer entscheidet in unserer Stadt?',
+ kompetenz:'Mensch und Gemeinschaft – Demokratie und Gesellschaft: Die Kinder beschreiben Aufgaben der Gemeinde und Möglichkeiten der Mitbestimmung.',
+ blocks:()=>[TX('Jeder Ort in Deutschland gehört zu einer Gemeinde oder Stadt. Im Rathaus arbeiten viele Menschen für die Bürgerinnen und Bürger. An der Spitze steht die Bürgermeisterin oder der Bürgermeister.\n\nWichtige Entscheidungen trifft der Rat der Stadt oder Gemeinde. Seine Mitglieder werden in NRW alle fünf Jahre gewählt. Wählen dürfen bei dieser Wahl schon Jugendliche ab 16 Jahren.\n\nDie Gemeinde kümmert sich um vieles, was alle brauchen: Schulgebäude, Spielplätze, Straßen, Büchereien, Schwimmbäder und die Feuerwehr. In manchen Städten gibt es ein Kinder- und Jugendparlament. Dort können Kinder ihre Ideen einbringen.','info'),
+  MT('Wer macht was? Verbinde.',['Bürgermeisterin = leitet die Stadt','Rat = trifft wichtige Entscheidungen','Rathaus = hier arbeitet die Verwaltung','Kinderparlament = hier bringen Kinder Ideen ein']),
+  TF('Richtig oder falsch? Kreuze an.',['+Der Rat wird von den Bürgerinnen und Bürgern gewählt.','-Die Gemeinde kümmert sich nicht um Spielplätze.','+In NRW dürfen Jugendliche ab 16 den Rat mitwählen.','-Im Rathaus wohnt die Bürgermeisterin.']),
+  LN('Was würdest du in deiner Stadt verbessern, wenn du Bürgermeisterin oder Bürgermeister wärst? Begründe.',4),
+  SC('Ich weiß, wer in unserer Gemeinde entscheidet.','Ich kenne Aufgaben der Gemeinde.')],
+ reihe:[['Unser Wohnort','Erkundung'],['Das Rathaus','Besuch oder Interview'],['Aufgaben der Gemeinde','Wer bezahlt den Spielplatz?'],['Wahlen','Wie wird der Rat gewählt?'],['Mitbestimmen','Kinderparlament, Klassenrat'],['Unsere Ideen für die Stadt','Brief an die Bürgermeisterin']],
+ stunde:{thema:'Wer entscheidet in unserer Stadt?',ziel:'Die Kinder können die Aufgaben von Bürgermeisterin, Rat und Verwaltung unterscheiden.',
+  rows:ST('Foto vom örtlichen Rathaus: „Was passiert in diesem Gebäude?“','Lesetext, Zuordnungsaufgabe, eigene Verbesserungsideen notieren.','Ideen sammeln und gemeinsam abstimmen.','Ausblick: Brief an die Bürgermeisterin schreiben.',['Foto','Arbeitsblatt','Tafel, Abstimmung','–'])}},
+
+{id:'zeitleiste',fach:'su',titel:'Meine Lebensgeschichte und die Zeitleiste',bereich:'Zeit und Kultur',kl:[3],mon:[8,9,1],desc:'Wichtige Ereignisse ordnen: Lebenslinie, Jahrzehnt und Jahrhundert.',
+ kompetenz:'Zeit und Kultur – Früher, heute, morgen: Die Kinder ordnen Ereignisse ihres Lebens zeitlich und stellen sie auf einer Zeitleiste dar.',
+ blocks:()=>[TX('Auf einer Zeitleiste kann man Ereignisse der Reihe nach ordnen. Was früher war, steht links. Was später kam, steht rechts.\n\nAuch dein Leben kannst du auf einer Zeitleiste zeigen: deine Geburt, deine ersten Schritte, der Kindergarten, deine Einschulung.\n\nFür längere Zeiträume gibt es eigene Wörter: Zehn Jahre sind ein Jahrzehnt. Hundert Jahre sind ein Jahrhundert. Wer etwas über früher wissen möchte, kann Fotos ansehen und ältere Menschen befragen.','info'),
+  TB('Meine Lebenslinie: Frage deine Familie und trage ein.',['Ereignis','Wann war das? (Jahr)','Wie alt war ich?'],[['Ich wurde geboren.'],['Ich habe laufen gelernt.'],['Ich kam in den Kindergarten.'],['Ich wurde eingeschult.'],['Ein besonderes Erlebnis: …']]),
+  MT('Was gehört zusammen? Verbinde.',['Jahrzehnt = 10 Jahre','Jahrhundert = 100 Jahre','Jahr = 12 Monate','Woche = 7 Tage']),
+  DR('Zeichne deine Lebenslinie als Zeitleiste. Klebe Fotos auf oder male Bilder dazu.',7),
+  SC('Ich kann Ereignisse auf einer Zeitleiste ordnen.')],
+ reihe:[['Früher und heute','Fotos vergleichen'],['Meine Lebenslinie','Ereignisse sammeln und ordnen'],['Die Zeitleiste','Darstellung üben'],['Jahrzehnte und Jahrhunderte','Größere Zeiträume'],['Familiengeschichte','Interview mit Großeltern']],
+ stunde:{thema:'Meine Lebenslinie',ziel:'Die Kinder können wichtige Ereignisse ihres Lebens in die richtige zeitliche Reihenfolge bringen.',
+  rows:ST('Lehrkraft zeigt ihre eigene Lebenslinie mit Fotos.','Ereignisse sammeln, Tabelle ausfüllen und als Zeitleiste zeichnen.','Lebenslinien im Galeriegang ansehen.','Gemeinsamkeiten entdecken: Alle wurden eingeschult …',['Fotos','Arbeitsblatt, Fotos von zu Hause','Galerie','–'])}},
+
+{id:'gefuehle',fach:'su',titel:'Gefühle erkennen und zeigen',bereich:'Mensch und Gemeinschaft',kl:[3,4],mon:[8,9,1],desc:'Freude, Wut, Angst, Trauer: Gefühle bei sich und anderen wahrnehmen.',
+ kompetenz:'Mensch und Gemeinschaft – Zusammenleben: Die Kinder benennen Gefühle, nehmen sie bei sich und anderen wahr und kennen Wege, mit ihnen umzugehen.',
+ blocks:()=>[TX('Jeder Mensch hat Gefühle: Freude, Trauer, Wut, Angst oder Überraschung. Alle Gefühle sind in Ordnung. Wichtig ist, wie wir mit ihnen umgehen.\n\nGefühle merken wir oft im Körper: Bei Angst klopft das Herz schneller, bei Wut wird das Gesicht heiß, bei Freude möchten wir hüpfen. Auch bei anderen Menschen können wir Gefühle erkennen, zum Beispiel am Gesicht, an der Stimme und an der Haltung.\n\nWenn du wütend bist, hilft es, tief durchzuatmen, kurz wegzugehen oder mit jemandem darüber zu reden. Wenn jemand traurig ist, kannst du nachfragen und zuhören.','info'),
+  MT('Woran erkennst du das Gefühl? Verbinde.',['Freude = lachen und hüpfen','Wut = Fäuste ballen, laute Stimme','Angst = Herzklopfen, zittern','Trauer = weinen, leise sein']),
+  TF('Richtig oder falsch? Kreuze an.',['+Alle Gefühle sind in Ordnung.','-Wenn ich wütend bin, darf ich andere schlagen.','+Tief durchatmen kann bei Wut helfen.','-Gefühle kann man bei anderen nie erkennen.']),
+  LN('Wann hast du dich zuletzt richtig gefreut? Schreibe auf.',3),
+  LN('Was hilft dir, wenn du wütend bist?',3),
+  SC('Ich kann Gefühle benennen.','Ich kenne Wege, mit Wut umzugehen.')],
+ reihe:[['Gefühle-Pantomime','Gefühle darstellen und erraten'],['Gefühle im Körper','Körperreise'],['Gefühle bei anderen','Gesichter lesen'],['Umgang mit Wut','Strategien sammeln'],['Mutmach-Kiste','Was hilft bei Angst und Trauer?']],
+ stunde:{thema:'Gefühle bei anderen erkennen',ziel:'Die Kinder können Gefühle an Mimik, Stimme und Haltung erkennen und benennen.',
+  rows:ST('Gefühle-Pantomime im Sitzkreis: Kinder stellen Gefühle dar, die anderen raten.','Lesetext, Zuordnungsaufgabe, eigene Erfahrungen aufschreiben.','Gefühle-Plakat: Woran erkennen wir welches Gefühl?','Blitzlicht: „Heute fühle ich mich …“',['Gefühlskarten','Arbeitsblatt','Plakat','Sitzkreis'])}},
+
+/* -------- Mathematik -------- */
+{id:'ergaenzen',fach:'ma',titel:'Ergänzen bis 100 und 1000',bereich:'Zahlen und Operationen',kl:[3],mon:[8,9,10],desc:'Wie viel fehlt bis zum nächsten Zehner, Hunderter oder bis 1000?',
+ kompetenz:'Zahlen und Operationen – Zahlvorstellungen: Die Kinder ergänzen Zahlen zu glatten Zehnern, Hundertern und Tausendern.',
+ blocks:()=>[TX('Beim Ergänzen fragst du: Wie viel fehlt noch?\nBeispiel: 37 + 3 = 40, und 40 + 60 = 100. Also fehlen von 37 bis 100 genau 63.','merk'),MA('ergaenzen',1,{zr:'100'},12),MA('ergaenzen',3,{zr:'100'},9),MA('ergaenzen',2,{zr:'1000'},9),SC('Ich kann bis zum nächsten Zehner ergänzen.','Ich kann bis 100 und 1000 ergänzen.')],
+ reihe:[['Zahlenpartner bis 10','Wiederholung'],['Bis zum Zehner','Ergänzen in Schritten'],['Bis 100','Zehner und Einer'],['Bis 1000','Hunderter'],['Rückgeld','Ergänzen beim Einkaufen']],
+ stunde:{thema:'Ergänzen bis 100',ziel:'Die Kinder können Zahlen in Schritten bis 100 ergänzen.',
+  rows:ST('Hunderterfeld mit 37 Punkten: „Wie viele fehlen bis 100?“','Strategie „erst bis zum Zehner, dann in Zehnerschritten“, dann Arbeitsblatt.','Rechenwege vergleichen.','Partnerspiel: Zahlenpartner bis 100.',['Hunderterfeld','Arbeitsblatt','Tafel','–'])}},
+
+{id:'doppelhalb',fach:'ma',titel:'Verdoppeln und Halbieren',bereich:'Zahlen und Operationen',kl:[3,4],mon:[9,10],desc:'Das Doppelte und die Hälfte, auch bei großen Zahlen.',
+ kompetenz:'Zahlen und Operationen – Rechenstrategien: Die Kinder verdoppeln und halbieren Zahlen und nutzen dies als Rechenstrategie.',
+ blocks:()=>[TX('Verdoppeln heißt: die Zahl plus dieselbe Zahl. Das Doppelte von 34 ist 34 + 34 = 68.\nHalbieren heißt: in zwei gleich große Teile teilen. Die Hälfte von 68 ist 34.\nTipp: Verdopple oder halbiere Zehner und Einer getrennt.','merk'),MA('doppelhalb',1,{art:'mix'},10),MA('doppelhalb',2,{art:'mix'},10),MA('doppelhalb',3,{art:'mix'},6)],
+ reihe:[['Verdoppeln mit Material','Spiegel und Plättchen'],['Halbieren','Gerecht teilen'],['Große Zahlen','Zehner und Einer getrennt'],['Rechenvorteile','Verdoppeln beim Einmaleins'],['Zahlenrätsel','Ich denke mir eine Zahl …']],
+ stunde:{thema:'Verdoppeln und Halbieren',ziel:'Die Kinder können zweistellige Zahlen verdoppeln und halbieren, indem sie Zehner und Einer getrennt betrachten.',
+  rows:ST('Spiegel an Plättchen halten: „Was passiert mit der Anzahl?“','Strategie erarbeiten, dann Arbeitsblatt.','Rechenwege an der Tafel.','Zahlenrätsel in Partnerarbeit.',['Spiegel, Plättchen','Arbeitsblatt','Tafel','–'])}},
+
+{id:'zehnermal',fach:'ma',titel:'Malnehmen mit Zehnerzahlen',bereich:'Zahlen und Operationen',kl:[3,4],mon:[11,12],desc:'Vom kleinen Einmaleins zu 6 · 30 und 4 · 200.',
+ kompetenz:'Zahlen und Operationen – Operationsvorstellungen: Die Kinder übertragen das kleine Einmaleins auf Zehner- und Hunderterzahlen.',
+ blocks:()=>[TX('Wenn du 6 · 3 kannst, kannst du auch 6 · 30:\n6 · 3 = 18, also 6 · 30 = 180 (zehnmal so viel).\n6 · 300 = 1800 (hundertmal so viel).','merk'),MA('zehnermal',1,{},12),MA('zehnermal',2,{},12),MA('zehnermal',3,{},9)],
+ reihe:[['Einmaleins wiederholen','Kernaufgaben'],['Mal Zehnerzahlen','Analogien'],['Mal Hunderterzahlen','Stellenwert'],['Geteilt durch','Umkehraufgaben'],['Sachaufgaben','Anwenden']],
+ stunde:{thema:'Vom Einmaleins zu den Zehnerzahlen',ziel:'Die Kinder können Malaufgaben mit Zehnerzahlen mithilfe des kleinen Einmaleins lösen.',
+  rows:ST('Aufgabenpaar 4 · 3 und 4 · 30 mit Zehnerstangen legen.','Entdecken: Was ist gleich, was ist anders? Dann Arbeitsblatt.','Regel formulieren: zehnmal so viel.','Kopfrechenspiel.',['Zehnerstangen','Arbeitsblatt','Tafel','–'])}},
+
+{id:'flaechenformen',fach:'ma',titel:'Flächenformen',bereich:'Raum und Form',kl:[3],mon:[4,5],desc:'Dreieck, Quadrat, Rechteck, Kreis: Ecken und Seiten untersuchen.',
+ kompetenz:'Raum und Form – Ebene Figuren: Die Kinder benennen ebene Figuren, beschreiben ihre Eigenschaften und zeichnen sie mit dem Lineal.',
+ blocks:()=>[TX('Ein Dreieck hat 3 Ecken und 3 Seiten.\nEin Quadrat hat 4 gleich lange Seiten und 4 rechte Winkel.\nEin Rechteck hat 4 rechte Winkel. Gegenüberliegende Seiten sind gleich lang.\nEin Kreis hat keine Ecken.','merk'),
+  TB('Zähle und trage ein.',['Form','Ecken','Seiten'],[['Dreieck','?3','?3'],['Quadrat','?4','?4'],['Rechteck','?4','?4'],['Fünfeck','?5','?5'],['Sechseck','?6','?6'],['Kreis','?0','?–']]),
+  MT('Was passt? Verbinde.',['Quadrat = alle Seiten sind gleich lang','Rechteck = gegenüberliegende Seiten sind gleich lang','Dreieck = hat drei Ecken','Kreis = hat keine Ecken']),
+  DR('Zeichne mit dem Lineal ein Quadrat, ein Rechteck und ein Dreieck.',7,'kaestchen'),
+  SC('Ich kann Flächenformen benennen.','Ich kann mit dem Lineal genau zeichnen.')],
+ reihe:[['Formen in der Umwelt','Suchen und fotografieren'],['Ecken und Seiten','Formen untersuchen'],['Quadrat und Rechteck','Vergleichen'],['Zeichnen mit dem Lineal','Genau arbeiten'],['Legespiele','Tangram']],
+ stunde:{thema:'Quadrat und Rechteck',ziel:'Die Kinder können Quadrat und Rechteck an ihren Eigenschaften unterscheiden.',
+  rows:ST('Fühlsack mit Formen: Kinder ertasten und beschreiben.','Formen untersuchen (falten, messen), Tabelle ausfüllen.','Eigenschaften an der Tafel gegenüberstellen.','Rätsel: „Ich habe vier Ecken und …“',['Fühlsack','Formen, Lineal, Arbeitsblatt','Tafel','–'])}},
+
+/* -------- Deutsch -------- */
+{id:'d-wortfamilien',fach:'de',titel:'Wortfamilien',bereich:'Sprache und Sprachgebrauch untersuchen',kl:[3,4],mon:[10,11],desc:'Wörter mit demselben Wortstamm finden und für die Rechtschreibung nutzen.',
+ kompetenz:'Sprache und Sprachgebrauch untersuchen / Richtig schreiben: Die Kinder finden verwandte Wörter und nutzen den Wortstamm als Rechtschreibhilfe.',
+ blocks:()=>[TX('Wörter, die einen gemeinsamen Wortstamm haben, gehören zu einer Wortfamilie. Der Wortstamm wird meistens gleich geschrieben.\nBeispiel: fahren, der Fahrer, das Fahrrad, die Abfahrt, gefährlich (ä kommt von a).','merk'),
+  TB('Zu welcher Wortfamilie gehört das Wort? Trage den Wortstamm ein.',['Wort','Wortstamm'],[['der Fahrer','?fahr'],['spielen','?spiel'],['die Schule','?schul'],['das Schwimmbad','?schwimm'],['malerisch','?mal'],['der Läufer','?lauf']]),
+  LN('Schreibe zu „spielen“ fünf Wörter derselben Wortfamilie auf.',3),
+  LN('Schreibe zu „lesen“ fünf Wörter derselben Wortfamilie auf.',3),
+  SC('Ich kann Wörter einer Wortfamilie finden.','Ich nutze den Wortstamm beim Schreiben.')],
+ reihe:[['Was ist eine Wortfamilie?','Wörter sammeln'],['Der Wortstamm','Markieren'],['Vorsilben und Endungen','Wörter bauen'],['Rechtschreibhilfe','ä von a, äu von au'],['Wortfamilien-Bäume','Plakat']],
+ stunde:{thema:'Wortfamilien bauen',ziel:'Die Kinder können zu einem Wortstamm passende Wörter bilden.',
+  rows:ST('Wortkarten „fahr“ und Vorsilben/Endungen: „Wie viele Wörter könnt ihr bauen?“','Wortfamilien in Partnerarbeit sammeln, Wortstamm markieren.','Wortfamilien-Baum an der Tafel.','Rechtschreibtipp festhalten.',['Wortkarten','Arbeitsblatt, Wortkarten','Tafel','–'])}},
+
+{id:'d-wortfelder',fach:'de',titel:'Wortfelder: treffende Wörter',bereich:'Schreiben',kl:[3,4],mon:[11,12,1],desc:'Statt immer „sagen“ und „gehen“: abwechslungsreich schreiben.',
+ kompetenz:'Schreiben – Texte überarbeiten: Die Kinder nutzen Wortfelder, um Texte abwechslungsreich und treffend zu gestalten.',
+ blocks:()=>[TX('Ein Wortfeld sind Wörter mit ähnlicher Bedeutung.\nStatt „sagen“: rufen, flüstern, fragen, antworten, schreien, murmeln.\nStatt „gehen“: laufen, rennen, schleichen, schlendern, hüpfen, eilen.','merk'),
+  GP('Setze ein passendes Wort aus dem Wortfeld „sagen“ ein.','Leise *flüstert* Mia ihrer Freundin ein Geheimnis ins Ohr. „Hilfe!“, *schreit* Ben laut. „Wo ist mein Ball?“, *fragt* Tom. „Unter der Bank“, *antwortet* Lena.'),
+  GP('Setze ein passendes Wort aus dem Wortfeld „gehen“ ein.','Die Katze *schleicht* leise ins Zimmer. Beim Wettlauf *rennt* Noah so schnell er kann. Am Sonntag *schlendern* wir gemütlich durch den Park.'),
+  LN('Überarbeite den Satz mit treffenderen Wörtern: „Er ging nach Hause und sagte: Ich bin müde.“',3),
+  SC('Ich kenne Wörter aus den Wortfeldern „sagen“ und „gehen“.','Ich kann meine Texte damit verbessern.')],
+ reihe:[['Langweilige Texte','Wiederholungen finden'],['Wortfeld „sagen“','Sammeln und sortieren'],['Wortfeld „gehen“','Pantomime'],['Wortfeld „sehen“','Erweitern'],['Texte überarbeiten','Schreibkonferenz']],
+ stunde:{thema:'Wortfeld „gehen“',ziel:'Die Kinder können Verben des Wortfelds „gehen“ unterscheiden und treffend einsetzen.',
+  rows:ST('Pantomime: Lehrkraft geht auf verschiedene Arten. „Wie gehe ich?“','Wörter sammeln, Lückentext bearbeiten.','Wortspeicher-Plakat für die Klasse.','Satz überarbeiten.',['–','Arbeitsblatt','Plakat','–'])}},
+
+{id:'d-gross',fach:'de',titel:'Großschreibung',bereich:'Schreiben',kl:[3],mon:[9,10],desc:'Satzanfänge und Nomen groß schreiben.',
+ kompetenz:'Schreiben – Richtig schreiben: Die Kinder schreiben Satzanfänge und Nomen groß und nutzen dafür Proben.',
+ blocks:()=>[TX('Groß schreibst du:\ndas erste Wort im Satz,\nalle Nomen (Probe: Passt der, die oder das davor?),\nNamen von Menschen, Orten und Tieren.','merk'),
+  TB('Groß oder klein? Schreibe das Wort richtig.',['Wort','So ist es richtig'],[['HUND','?Hund'],['LAUFEN','?laufen'],['SCHULE','?Schule'],['SCHNELL','?schnell'],['KÖLN','?Köln'],['BLUME','?Blume'],['GRÜN','?grün'],['FREUDE','?Freude']]),
+  LN('Schreibe den Text richtig ab: „am morgen geht lisa mit ihrem hund in den park. dort spielen viele kinder.“',4),
+  SC('Ich schreibe Satzanfänge groß.','Ich erkenne Nomen mit der Artikelprobe.')],
+ reihe:[['Satzanfänge','Punkt und Großschreibung'],['Nomen erkennen','Artikelprobe'],['Namen','Eigennamen'],['Abstrakte Nomen','Gefühle und Gedanken'],['Texte kontrollieren','Fehlerdetektive']],
+ stunde:{thema:'Die Artikelprobe',ziel:'Die Kinder können mit der Artikelprobe entscheiden, ob ein Wort groß geschrieben wird.',
+  rows:ST('Wortkarten in Großbuchstaben: „Wie schreibt man das richtig?“','Artikelprobe einführen, dann Arbeitsblatt.','Zweifelsfälle besprechen (Freude, Angst).','Fehlerdetektiv-Text.',['Wortkarten','Arbeitsblatt','Tafel','–'])}},
+
+{id:'d-steckbrief',fach:'de',titel:'Einen Steckbrief schreiben',bereich:'Schreiben',kl:[3,4],mon:[10,11,4],desc:'Informationen sammeln und kurz und übersichtlich aufschreiben.',
+ kompetenz:'Schreiben – Texte verfassen: Die Kinder entnehmen Informationen aus Sachtexten und stellen sie in einem Steckbrief übersichtlich dar.',
+ blocks:()=>[TX('Ein Steckbrief gibt kurze Informationen auf einen Blick. Man schreibt Stichwörter, keine ganzen Sätze.\nTypische Punkte bei einem Tier: Name, Aussehen, Größe, Lebensraum, Nahrung, Besonderheiten.','merk'),
+  TB('Mein Tier-Steckbrief',['Merkmal','Stichwörter'],[['Name des Tieres'],['Aussehen'],['Größe und Gewicht'],['Lebensraum'],['Nahrung'],['Besonderheiten']]),
+  DR('Male oder klebe ein Bild von deinem Tier ein.',6),
+  SC('Ich habe Stichwörter statt ganzer Sätze geschrieben.','Mein Steckbrief ist übersichtlich.')],
+ reihe:[['Was ist ein Steckbrief?','Beispiele untersuchen'],['Informationen finden','Sachbücher und Internet'],['Stichwörter','Aus Sätzen Stichwörter machen'],['Steckbrief schreiben','Eigenes Tier'],['Vorstellen','Steckbriefe präsentieren']],
+ stunde:{thema:'Aus Sätzen werden Stichwörter',ziel:'Die Kinder können Informationen aus einem Sachtext in Stichwörtern notieren.',
+  rows:ST('Steckbrief eines Igels an der Tafel: „Was fällt euch auf?“','Sachtext lesen, Stichwörter herausschreiben, eigenen Steckbrief beginnen.','Stichwörter vergleichen: kurz und treffend?','Ausblick: Steckbriefe vorstellen.',['Tafel','Sachtexte, Arbeitsblatt','Tafel','–'])}},
+
+{id:'d-buch',fach:'de',titel:'Ein Buch vorstellen',bereich:'Lesen – mit Texten und Medien umgehen',kl:[3,4],mon:[11,2,3],desc:'Lieblingsbuch vorstellen: Inhalt, Figuren, Lieblingsstelle, Empfehlung.',
+ kompetenz:'Lesen – mit Texten und Medien umgehen / Sprechen und Zuhören: Die Kinder stellen ein Buch vor, geben den Inhalt wieder und begründen ihre Meinung.',
+ blocks:()=>[TX('So stellst du ein Buch vor:\n1. Titel, Autorin oder Autor, Verlag\n2. Worum geht es? (ohne das Ende zu verraten)\n3. Die wichtigsten Figuren\n4. Deine Lieblingsstelle: Lies sie vor.\n5. Deine Meinung: Wem empfiehlst du das Buch und warum?','merk'),
+  TB('Plane deine Buchvorstellung.',['Punkt','Meine Notizen'],[['Titel und Autorin oder Autor'],['Worum geht es?'],['Wichtige Figuren'],['Meine Lieblingsstelle (Seite)'],['Meine Meinung und Empfehlung']]),
+  DR('Gestalte ein neues Buchcover für dein Buch.',7),
+  SC('Ich habe nicht das Ende verraten.','Ich habe meine Meinung begründet.')],
+ reihe:[['Unsere Lieblingsbücher','Bücher mitbringen'],['Inhalt wiedergeben','Kurz zusammenfassen'],['Figuren beschreiben','Steckbrief einer Figur'],['Vorlesen üben','Betonung'],['Buchvorstellungen','Präsentation mit Rückmeldung']],
+ stunde:{thema:'Wir planen eine Buchvorstellung',ziel:'Die Kinder können die wichtigsten Punkte einer Buchvorstellung planen.',
+  rows:ST('Lehrkraft stellt kurz ihr Lieblingsbuch vor.','Kriterien sammeln, eigene Buchvorstellung planen.','Zwei Kinder probieren ihren Anfang aus.','Termine für die Vorstellungen verteilen.',['Buch','Arbeitsblatt, eigene Bücher','Sitzkreis','–'])}},
+
+/* -------- Englisch -------- */
+{id:'e-house',fach:'en',titel:'My house',bereich:'Verfügen über sprachliche Mittel',kl:[4],mon:[1,2],desc:'Räume und Möbel benennen.',
+ kompetenz:'Verfügen über sprachliche Mittel – Wortschatz: Die Kinder benennen Räume und Gegenstände im Haus.',
+ blocks:()=>[MA('vokabel',1,{thema:'house',mode:'bild'},8),MA('vokabel',2,{thema:'house',mode:'deutsch'},8),DR('Draw your room. Write: In my room there is a …',8),SC('I can name rooms and things in a house.')],
+ reihe:[['Rooms','kitchen, bedroom …'],['Furniture','bed, sofa, chair …'],['Where is the cat?','in, on, under'],['My dream house','Malen und beschreiben']],
+ stunde:{thema:'Where is the cat?',ziel:'Die Kinder können sagen, wo sich etwas im Haus befindet.',
+  rows:ST('Plüschkatze versteckt sich im Raum: „Where is the cat?“','Wörter üben, Arbeitsblatt.','Versteckspiel in Partnerarbeit.','Lied.',['Plüschkatze','Arbeitsblatt','Partnerarbeit','Lied'])}},
+{id:'e-toys',fach:'en',titel:'Toys and hobbies',bereich:'Kommunikation – sprachliches Handeln',kl:[3],mon:[11,12],desc:'Spielsachen benennen und sagen, was man gern macht.',
+ kompetenz:'Kommunikation – sprachliches Handeln: Die Kinder benennen Spielsachen und sprechen über ihre Vorlieben.',
+ blocks:()=>[MA('vokabel',1,{thema:'toys',mode:'bild'},9),MA('vokabel',2,{thema:'toys',mode:'verbinden'},6),TB('Ask your friends: What is your favourite toy?',['Name','Favourite toy'],5),SC('I can name my toys.')],
+ reihe:[['My toys','Spielsachen mitbringen'],['I like …','Vorlieben'],['Wish list','Wunschzettel auf Englisch'],['Toy shop','Rollenspiel']],
+ stunde:{thema:'My favourite toy',ziel:'Die Kinder können ihr Lieblingsspielzeug benennen und danach fragen.',
+  rows:ST('Spielzeugkiste: „What is it?“','Wörter üben, Arbeitsblatt, Klasseninterview.','Ergebnisse: „Tom\'s favourite toy is …“','Lied.',['Spielzeugkiste','Arbeitsblatt','Sitzkreis','–'])}},
+{id:'e-feelings',fach:'en',titel:'Feelings',bereich:'Kommunikation – sprachliches Handeln',kl:[3,4],mon:[9,10],desc:'How are you? Gefühle auf Englisch ausdrücken.',
+ kompetenz:'Kommunikation – sprachliches Handeln: Die Kinder drücken ihr Befinden aus und fragen nach dem Befinden anderer.',
+ blocks:()=>[MA('vokabel',1,{thema:'feelings',mode:'bild'},8),MA('vokabel',2,{thema:'feelings',mode:'verbinden'},6),LN('How are you today? Write: I am …',2),SC('I can say how I feel.')],
+ reihe:[['How are you?','Begrüßungsritual'],['Feelings faces','Gesichter malen'],['I am happy because …','Gründe nennen'],['Feelings song','Lied mit Bewegung']],
+ stunde:{thema:'How are you today?',ziel:'Die Kinder können ihr Befinden auf Englisch ausdrücken.',
+  rows:ST('Gefühlsgesichter an der Tafel: „How is he?“','Wörter üben, Arbeitsblatt.','Kugellager: „How are you?“ – „I am …“','Lied.',['Bildkarten','Arbeitsblatt','Kugellager','Lied'])}},
+{id:'e-transport',fach:'en',titel:'Transport',bereich:'Verfügen über sprachliche Mittel',kl:[3,4],mon:[5,6],desc:'Verkehrsmittel benennen: How do you get to school?',
+ kompetenz:'Verfügen über sprachliche Mittel – Wortschatz: Die Kinder benennen Verkehrsmittel und beschreiben ihren Schulweg.',
+ blocks:()=>[MA('vokabel',1,{thema:'transport',mode:'bild'},9),MA('vokabel',2,{thema:'transport',mode:'malen'},4),TB('How do you get to school? Ask your friends.',['Name','By …'],5),SC('I can name means of transport.')],
+ reihe:[['Transport words','Verkehrsmittel'],['How do you get to school?','Umfrage'],['Sounds of transport','Hörspiel'],['A trip','Reise planen']],
+ stunde:{thema:'How do you get to school?',ziel:'Die Kinder können sagen, wie sie zur Schule kommen.',
+  rows:ST('Geräusche von Verkehrsmitteln erraten.','Wörter üben, Arbeitsblatt, Klassenumfrage.','Ergebnisse als Strichliste an der Tafel.','Lied.',['Audio','Arbeitsblatt','Tafel','–'])}}
+);
+
 window.addEventListener('hashchange',route);
 route();
 
