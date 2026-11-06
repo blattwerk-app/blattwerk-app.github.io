@@ -627,6 +627,12 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   #print-root .pl-notes{min-height:12mm;break-inside:avoid}
   #print-root .pgbrk{display:none}
 }
+/* Ohne oberen/unteren Seitenrand hat der Browser keinen Platz für Datum, Uhrzeit, Titel und Link.
+   Der Rand kommt stattdessen vom Blatt selbst und wird auf jeder Folgeseite wiederholt. */
+@supports (box-decoration-break:clone){
+  @page{size:A4;margin:0 14mm}
+  @media print{#print-root .paper{padding:12mm 0;box-decoration-break:clone}}
+}
 </style>
 </head>
 <body>
