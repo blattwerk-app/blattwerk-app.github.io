@@ -131,7 +131,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.45}
 
 /* ---------- Themen ---------- */
 .th-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}
-.filters{position:sticky;top:84px;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:18px}
+.filters{position:sticky;top:84px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:18px}
 .fgroup h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
 .fopts{display:flex;flex-direction:column;gap:2px}
 .fopt{display:flex;justify-content:space-between;align-items:center;gap:8px;border:0;background:transparent;text-align:left;padding:7px 10px;border-radius:8px;font-size:15px;color:var(--ink)}
@@ -523,6 +523,8 @@ body.no-ref .bigacts{grid-template-columns:repeat(3,minmax(0,1fr))}
 .ftabs button[aria-pressed="true"] span{color:inherit;opacity:.75}
 details#sh-set>summary{flex-wrap:wrap}
 details#sh-set>summary small{width:100%;color:var(--muted);font-size:13px;order:3}
+
+.ber-hint{margin:0;font-size:13.5px;color:var(--muted);line-height:1.4}
 
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
@@ -3419,6 +3421,7 @@ const FTABS=[['alle','Alle Fächer'],['su','Sachunterricht'],['ma','Mathe'],['de
 if(UI.lastFach&&FTABS.some(x=>x[0]===UI.lastFach))S.f.fach=UI.lastFach;
 const _rtUX=renderThemen;renderThemen=function(){_rtUX();
   const cnt=v=>TOPICS.filter(t=>topicMatches(t,{...S.f,fach:v},'')).length;
+  if(S.f.fach==='alle'){S.f.ber='alle';$('#f-ber').innerHTML='<p class="ber-hint">Wähle oben ein Fach. Dann kannst du hier nach Lehrplan-Bereich filtern.</p>'}
   $('#th-ftabs').innerHTML=FTABS.map(([v,l])=>`<button data-ftab="${v}" aria-pressed="${S.f.fach===v}">${l} <span>${cnt(v)}</span></button>`).join('')};
 /* Seitenleiste im Editor: Tipps ausblendbar, Einstellungen merken auf/zu */
 const _rsideUX=renderSide;renderSide=function(){_rsideUX();
