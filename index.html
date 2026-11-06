@@ -506,6 +506,10 @@ details.panel>summary h3{margin:0}
 .grp-prev div{color:var(--muted);margin-top:4px}
 .ref-steps{margin-bottom:8px}
 
+body.no-ref [data-ref-ui]{display:none!important}
+body.no-ref .bigacts{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){body.no-ref .bigacts{grid-template-columns:1fr}}
+
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
 .editing [contenteditable]:hover{outline:1.5px dashed #8aa0c8;outline-offset:1px}
@@ -650,7 +654,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       <a href="#start" data-nav="start"><svg class="ic"><use href="#i-home"/></svg><span>Start</span></a>
       <a href="#themen" data-nav="themen"><svg class="ic"><use href="#i-book"/></svg><span>Themen</span></a>
       <a href="#sachen" data-nav="sachen"><svg class="ic"><use href="#i-folder"/></svg><span>Meine Sachen</span></a>
-      <a href="#ref" data-nav="ref"><svg class="ic"><use href="#i-grad"/></svg><span>Referendariat</span></a>
+      <a href="#ref" data-nav="ref" data-ref-ui><svg class="ic"><use href="#i-grad"/></svg><span>Referendariat</span></a>
       <a href="#hilfe" data-nav="hilfe"><svg class="ic"><use href="#i-help"/></svg><span>Hilfe</span></a>
     </nav>
   </div>
@@ -664,7 +668,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="bigacts">
       <a class="bigact" href="#themen" data-mode="blatt"><span class="tile"><svg class="ic lg"><use href="#i-sheet"/></svg></span><div><b>Arbeitsblatt erstellen</b><span id="cnt-topics">Aus fertigen Themen wählen und anpassen.</span></div></a>
       <a class="bigact g" href="#themen" data-mode="stunde"><span class="tile"><svg class="ic lg"><use href="#i-plan"/></svg></span><div><b>Stunde planen</b><span>Stundenverlauf und Unterrichtsreihe als fertige Vorlage.</span></div></a>
-      <a class="bigact" href="#ref" style="--x:1"><span class="tile" style="background:var(--de-soft);color:var(--de)"><svg class="ic lg"><use href="#i-grad"/></svg></span><div><b>Unterrichtsentwurf</b><span>Für Unterrichtsbesuche: Rohentwurf mit Leitfragen, Verlaufsplan und Word-Export.</span></div></a>
+      <a class="bigact" href="#ref" data-ref-ui><span class="tile" style="background:var(--de-soft);color:var(--de)"><svg class="ic lg"><use href="#i-grad"/></svg></span><div><b>Unterrichtsentwurf</b><span>Für Unterrichtsbesuche: Rohentwurf mit Leitfragen, Verlaufsplan und Word-Export.</span></div></a>
       <button class="bigact y" data-act="blank-sheet"><span class="tile"><svg class="ic lg"><use href="#i-plus"/></svg></span><div><b>Leeres Arbeitsblatt</b><span>Ganz von vorn beginnen und selbst zusammenstellen.</span></div></button>
     </div>
     <div class="welcome" id="welcome" hidden>
@@ -744,7 +748,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="page-head"><h1>Meine Sachen</h1><p>Alles, was du erstellt hast. Es wird automatisch gespeichert, hier in diesem Browser.</p></div>
     <div id="bk-sachen"></div>
     <div class="sa-bar">
-      <div class="seg" id="sa-tabs"><button data-v="sheet" aria-pressed="true">Arbeitsblätter <span></span></button><button data-v="plan">Stundenplanungen <span></span></button><button data-v="ent">Unterrichtsentwürfe <span></span></button></div>
+      <div class="seg" id="sa-tabs"><button data-v="sheet" aria-pressed="true">Arbeitsblätter <span></span></button><button data-v="plan">Stundenplanungen <span></span></button><button data-v="ent" data-ref-ui>Unterrichtsentwürfe <span></span></button></div>
       <div class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="sa-q" placeholder="Suchen" aria-label="In meinen Sachen suchen"></div>
     </div>
     <div class="cards" id="sa-list"></div>
@@ -807,9 +811,9 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       <details><summary>Wo sind meine Sachen gespeichert?</summary><div>Alles wird automatisch in diesem Browser auf diesem Computer gespeichert. Es geht nichts ins Internet. Wenn du im Browser die <b>Website-Daten löschst</b>, sind deine Sachen weg. Lade deshalb unter <b>Meine Sachen</b> regelmäßig eine <b>Sicherung</b> herunter. Blattwerk erinnert dich alle zwei Wochen daran.<br><br><b>Tipp:</b> Öffne Blattwerk immer mit demselben Browser, am besten Chrome oder Edge, und lass die Datei am selben Ort liegen. In manchen Browsern hängen die gespeicherten Sachen daran, wo die Datei liegt.</div></details>
       <details><summary>Wie nehme ich meine Blätter auf einen anderen Computer mit?</summary><div>Unter <b>Meine Sachen</b> auf <b>Sicherung herunterladen</b> klicken. Die Datei auf einen USB-Stick kopieren oder dir selbst per Mail schicken. Auf dem anderen Computer Blattwerk öffnen, zu <b>Meine Sachen</b> gehen und <b>Sicherung laden</b> wählen.</div></details>
       <details><summary>Wie mache ich Lücken in einen Lückentext?</summary><div>Setze das Wort, das fehlen soll, zwischen zwei Sternchen: <b>Der *Igel* schläft.</b> Auf dem Blatt wird daraus eine Lücke, und das Wort kommt in den Wortspeicher.</div></details>
-      <details><summary>Wie schreibe ich einen Unterrichtsentwurf?</summary><div>Oben auf <b>Referendariat</b> klicken. Lege zuerst deine <b>Lerngruppe</b> an. Dann <b>Entwurf aus einem Thema</b> wählen: Du bekommst einen Rohentwurf mit Reihe, Kernanliegen, Sachanalyse, Verlaufsplan und Arbeitsblatt im Anhang. Klicke in einen Abschnitt, dann siehst du rechts <b>Leitfragen</b> und <b>Formulierungshilfen</b>. Unter <b>Aufbau des Entwurfs</b> blendest du Abschnitte aus oder sortierst sie um, passend zu den Vorgaben deines Seminars. Mit <b>Word</b> lädst du eine Word-Datei herunter, mit <b>Drucken / PDF</b> druckst du den Entwurf samt Arbeitsblättern.</div></details>
-      <details><summary>Wie fülle ich die Kompetenzerwartungen richtig aus?</summary><div>Blattwerk schlägt eine Formulierung vor. Fachleitungen achten aber sehr genau auf den <b>Wortlaut des Lehrplans NRW</b>. Bitte gleiche die Kompetenzen deshalb immer mit dem Originaltext des Lehrplans ab und übernimm sie wörtlich.</div></details>
-      <details><summary>Wie fülle ich die Reflexion nach dem Besuch aus?</summary><div>Öffne den Entwurf und klicke oben auf <b>Reflexion</b>. Dort beantwortest du fünf Fragen, zum Beispiel ob das Kernanliegen erreicht wurde und was du beim nächsten Mal anders machst.</div></details>
+      <details data-ref-ui><summary>Wie schreibe ich einen Unterrichtsentwurf?</summary><div>Oben auf <b>Referendariat</b> klicken. Lege zuerst deine <b>Lerngruppe</b> an. Dann <b>Entwurf aus einem Thema</b> wählen: Du bekommst einen Rohentwurf mit Reihe, Kernanliegen, Sachanalyse, Verlaufsplan und Arbeitsblatt im Anhang. Klicke in einen Abschnitt, dann siehst du rechts <b>Leitfragen</b> und <b>Formulierungshilfen</b>. Unter <b>Aufbau des Entwurfs</b> blendest du Abschnitte aus oder sortierst sie um, passend zu den Vorgaben deines Seminars. Mit <b>Word</b> lädst du eine Word-Datei herunter, mit <b>Drucken / PDF</b> druckst du den Entwurf samt Arbeitsblättern.</div></details>
+      <details data-ref-ui><summary>Wie fülle ich die Kompetenzerwartungen richtig aus?</summary><div>Blattwerk schlägt eine Formulierung vor. Fachleitungen achten aber sehr genau auf den <b>Wortlaut des Lehrplans NRW</b>. Bitte gleiche die Kompetenzen deshalb immer mit dem Originaltext des Lehrplans ab und übernimm sie wörtlich.</div></details>
+      <details data-ref-ui><summary>Wie fülle ich die Reflexion nach dem Besuch aus?</summary><div>Öffne den Entwurf und klicke oben auf <b>Reflexion</b>. Dort beantwortest du fünf Fragen, zum Beispiel ob das Kernanliegen erreicht wurde und was du beim nächsten Mal anders machst.</div></details>
       <details><summary>Wie füge ich ein Bild ein?</summary><div>Klicke auf <b>+ Aufgabe hinzufügen</b> und wähle <b>Bild</b>. Dann suchst du ein Foto auf deinem Computer aus. Noch schneller: Zieh ein Bild aus einem Ordner direkt auf das Blatt. Rechts kannst du Größe und Position einstellen. Bilder werden automatisch verkleinert, damit genug Speicher bleibt.</div></details>
       <details><summary>Wie mache ich ein Domino, Memory oder Bingo?</summary><div>Unter <b>Vorlagen</b> auf der Startseite gibt es <b>Lernspiele</b>. Oder du fügst auf einem Blatt eine Aufgabe ein und wählst den Reiter <b>Lernspiele</b>. Rechts stellst du den Inhalt ein, zum Beispiel Einmaleins, Uhrzeiten oder Gegenteile. Mit <b>Eigene Paare</b> tippst du eigene Inhalte ein, etwa „Hund = dog“.</div></details>
       <details><summary>Was ist die Silbenfärbung?</summary><div>Klicke auf ein Blatt, ohne eine Aufgabe auszuwählen. Rechts unter <b>Einstellungen für das Blatt</b> schaltest du <b>Lesetexte in Silben färben</b> ein. Dann werden die Silben in allen Texten abwechselnd blau und rot. Die Silben werden automatisch erkannt. Bei langen zusammengesetzten Wörtern lohnt sich ein kurzer Blick.</div></details>
@@ -3182,6 +3186,9 @@ window.addEventListener('pagehide',()=>{clearTimeout(saveT);const data={sheets:D
 /* =========================================================
    Referendariat: Unterrichtsentwürfe, Lerngruppen, Unterrichtsbesuche
    ========================================================= */
+/* Schalter: Bereich „Referendariat“ sichtbar? Auf true setzen, um ihn wieder einzublenden. Gespeicherte Entwürfe bleiben in jedem Fall erhalten. */
+const SHOW_REF=false;
+document.body.classList.toggle('no-ref',!SHOW_REF);
 DB.entwuerfe=DB.entwuerfe||{};DB.gruppen=DB.gruppen||{};
 [['brot',2],['d-verben',2],['d-satzglieder',0],['d-ie',0]].forEach(([id,i])=>{const t=TOPICS.find(x=>x.id===id);if(t)t.curIdx=i});
 const curEnt=()=>DB.entwuerfe[UI.entId];
@@ -3372,13 +3379,16 @@ $('#e-print').onclick=entPrint;
 $('#e-word').onclick=()=>{const e=curEnt();if(!e)return;downloadBlob(entWordHTML(e),'application/msword',safeName(e.title)+'.doc');toast('Word-Datei wurde heruntergeladen. Du kannst sie in Word öffnen und weiterbearbeiten.')};
 
 /* ---------- Anbindung an Themen und Meine Sachen ---------- */
-const _openTopic=openTopic;openTopic=function(id){_openTopic(id);const acts=$('#dt-info .dt-acts');if(!acts)return;
+const _openTopic=openTopic;openTopic=function(id){_openTopic(id);const acts=$('#dt-info .dt-acts');if(!acts||!SHOW_REF)return;
   const ent=S.mode==='entwurf';if(ent)acts.querySelectorAll('.btn.pri').forEach(b=>b.classList.remove('pri'));
   acts.insertAdjacentHTML(ent?'afterbegin':'beforeend',`<button class="btn ${ent?'pri':''}" data-act="t-ent" data-id="${id}">${icon('grad')}Unterrichtsentwurf</button>`)};
 const _renderThemen=renderThemen;renderThemen=function(){_renderThemen();if(S.mode==='entwurf'){$('#th-h').textContent='Unterrichtsentwurf: Thema wählen';$('#th-sub').textContent='Klicke ein Thema an. Du bekommst einen vorausgefüllten Rohentwurf mit Verlaufsplan, Sachanalyse und Arbeitsblatt.';const b=$('#mode-banner');b.hidden=false;b.querySelector('span').innerHTML='<b>Unterrichtsentwurf:</b> Wähle ein Thema für deinen Unterrichtsbesuch. Alles im Rohentwurf kannst du anpassen.';const bb=b.querySelector('button');bb.dataset.act='ent-new-blank';bb.textContent='Ohne Thema beginnen'}else{const bb=$('#mode-banner button');if(bb){bb.dataset.act='blank-plan';bb.textContent='Ohne Thema beginnen'}}};
 const _docCard=docCard;docCard=function(o,kind){if(kind!=='ent')return _docCard(o,kind);
   return`<article class="dcard"><button class="open" data-open="ent:${o.id}" aria-label="${esc(o.title)} öffnen"><div class="thumb"><div class="thumb-in">${renderEntwurf(o,false)}</div></div><div class="dt-t"><b>${esc(o.title||'Ohne Titel')}</b><small>${esc(o.meta.ub)} · ${esc(o.meta.fach||'')} · ${fmtDate(o.updated)}</small></div></button>
     <div class="acts"><button class="btn sm" data-open="ent:${o.id}">Öffnen</button><button class="btn sm" data-copy="ent:${o.id}">${icon('copy')}Kopie</button><button class="btn sm danger" data-del="ent:${o.id}" aria-label="Löschen">${icon('trash')}</button></div></article>`};
+
+/* Ausgeblendet: Referendariat-Seiten nicht erreichbar, Tab „Unterrichtsentwürfe“ nicht aktiv */
+const _route=route;route=function(){const v=location.hash.slice(1);if(!SHOW_REF&&(v==='ref'||v==='entwurf')){history.replaceState(null,'','#start');}if(!SHOW_REF&&S.tab==='ent')S.tab='sheet';if(!SHOW_REF&&S.mode==='entwurf')S.mode='blatt';_route()};
 
 window.addEventListener('hashchange',route);
 route();
