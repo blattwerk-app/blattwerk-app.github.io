@@ -510,6 +510,20 @@ body.no-ref [data-ref-ui]{display:none!important}
 body.no-ref .bigacts{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:760px){body.no-ref .bigacts{grid-template-columns:1fr}}
 
+.sec-sub{font-size:14px;font-weight:400;color:var(--muted);margin-left:6px}
+.tpl{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.tplc{padding:9px 12px;align-items:center}
+.tplc .tile{width:32px;height:32px}
+.tplc small{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px}
+.season-more{grid-column:1/-1;justify-self:start;border:1.5px dashed var(--line2);background:transparent;border-radius:10px;padding:8px 14px;font-weight:700;color:var(--pri)}
+.ftabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.ftabs button{border:1.5px solid var(--line2);background:var(--surface);border-radius:99px;padding:8px 16px;font-weight:700;font-size:15px;color:var(--ink)}
+.ftabs button span{font-weight:400;color:var(--muted);font-size:13px;margin-left:2px}
+.ftabs button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface)}
+.ftabs button[aria-pressed="true"] span{color:inherit;opacity:.75}
+details#sh-set>summary{flex-wrap:wrap}
+details#sh-set>summary small{width:100%;color:var(--muted);font-size:13px;order:3}
+
 /* editing affordances (screen only) */
 .editing [contenteditable]{border-radius:1mm}
 .editing [contenteditable]:hover{outline:1.5px dashed #8aa0c8;outline-offset:1px}
@@ -682,10 +696,10 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       </div>
       <button class="btn" data-act="welcome-ok"><svg class="ic"><use href="#i-check"/></svg>Alles klar</button>
     </div>
-    <h2 class="sec">Vorlagen</h2>
+    <div id="recent-wrap"><h2 class="sec">Weiter bearbeiten</h2>
+    <div id="recent"></div></div>
+    <h2 class="sec">Vorlagen <small class="sec-sub">Ein Klick, dann anpassen</small></h2>
     <div class="tpl" id="tpl"></div>
-    <h2 class="sec">Weiter bearbeiten</h2>
-    <div id="recent"></div>
     <h2 class="sec" id="season-h">Passt gerade</h2>
     <div class="season" id="season"></div>
   </section>
@@ -696,12 +710,13 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="th-layout">
       <aside class="filters" aria-label="Filter">
         <div class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="th-q" placeholder="Suchen, z. B. Igel" aria-label="Thema suchen"></div>
-        <div class="fgroup"><h4>Fach</h4><div class="fopts" id="f-fach"></div></div>
+        <div class="fgroup" hidden><h4>Fach</h4><div class="fopts" id="f-fach"></div></div>
         <div class="fgroup"><h4>Klasse</h4><div class="fopts" id="f-kl"></div></div>
         <div class="fgroup"><h4>Lehrplan-Bereich</h4><div class="fopts" id="f-ber"></div></div>
       </aside>
       <div style="min-width:0">
         <div class="mode-banner" id="mode-banner" hidden><span><b>Stunde planen:</b> Wähle ein Thema. Du bekommst einen fertigen Stundenverlauf, den du anpassen kannst.</span><button class="btn sm" data-act="blank-plan">Ohne Thema beginnen</button></div>
+        <div class="ftabs" id="th-ftabs" role="tablist" aria-label="Fach"></div>
         <div class="th-count" id="th-count"></div>
         <div class="cards" id="th-cards"></div>
       </div>
@@ -801,8 +816,8 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
     <div class="page-head"><h1>Hilfe</h1><p>Antworten auf die häufigsten Fragen. Klicke auf eine Frage, um die Antwort zu sehen.</p></div>
     <div class="faq">
       <details open><summary>Wie erstelle ich ein Arbeitsblatt?</summary><div>Gehe zu <b>Themen</b> und klicke ein Thema an. Du siehst eine Vorschau. Mit <b>Arbeitsblatt öffnen</b> bekommst du deine eigene Kopie, die du frei verändern kannst.</div></details>
-      <details><summary>Wie ändere ich einen Text?</summary><div>Klicke einfach in den Text auf dem Blatt und tippe los. Beim Lückentext, bei Richtig/Falsch und beim Zuordnen änderst du die Inhalte rechts im Bereich <b>Aufgabe bearbeiten</b>. Der erscheint, sobald du eine Aufgabe anklickst.</div></details>
-      <details><summary>Wie füge ich eine neue Aufgabe hinzu?</summary><div>Fahre mit der Maus zwischen zwei Aufgaben. Dort erscheint <b>+ Hier einfügen</b>. Ganz unten auf dem Blatt gibt es außerdem den Knopf <b>+ Aufgabe hinzufügen</b>. Danach wählst du aus, was für eine Aufgabe es sein soll.</div></details>
+      <details><summary>Wie ändere ich einen Text?</summary><div>Klicke einfach in den Text auf dem Blatt und tippe los. Beim Lückentext, bei Richtig/Falsch und beim Zuordnen änderst du die Inhalte rechts. Die Einstellungen erscheinen, sobald du den Teil auf dem Blatt anklickst.</div></details>
+      <details><summary>Wie füge ich etwas Neues hinzu (Aufgabe, Text, Bild)?</summary><div>Fahre mit der Maus zwischen zwei Aufgaben. Dort erscheint <b>+ Hier einfügen</b>. Ganz unten auf dem Blatt gibt es außerdem den Knopf <b>+ Text, Aufgabe oder Bild hinzufügen</b>. Danach wählst du aus, was du einfügen möchtest.</div></details>
       <details><summary>Wie bekomme ich neue Zahlen oder neue Wörter?</summary><div>Klicke die Aufgabe an und dann auf <b>Neue Zahlen</b> (bei Deutsch: <b>Neue Wörter</b>). Rechts kannst du auch die Schwierigkeit und die Anzahl der Aufgaben ändern. Für alle automatischen Aufgaben auf einmal gibt es rechts den Knopf <b>Alle Aufgaben neu</b>.</div></details>
       <details><summary>Was bedeuten die Sterne?</summary><div>Die Sterne zeigen die Schwierigkeit: ★ leicht, ★★ mittel, ★★★ schwer. Beim Drucken kannst du <b>Alle 3 Schwierigkeitsstufen</b> wählen. Dann bekommst du dasselbe Blatt dreimal, passend für jedes Kind.</div></details>
       <details><summary>Wie drucke ich, und wie bekomme ich eine PDF?</summary><div>Klicke oben rechts auf <b>Drucken / PDF</b>, wähle aus, was du brauchst, und klicke auf <b>Jetzt drucken</b>. Für eine PDF-Datei wählst du im Druckfenster als Drucker <b>Als PDF speichern</b>.</div></details>
@@ -814,9 +829,9 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
       <details data-ref-ui><summary>Wie schreibe ich einen Unterrichtsentwurf?</summary><div>Oben auf <b>Referendariat</b> klicken. Lege zuerst deine <b>Lerngruppe</b> an. Dann <b>Entwurf aus einem Thema</b> wählen: Du bekommst einen Rohentwurf mit Reihe, Kernanliegen, Sachanalyse, Verlaufsplan und Arbeitsblatt im Anhang. Klicke in einen Abschnitt, dann siehst du rechts <b>Leitfragen</b> und <b>Formulierungshilfen</b>. Unter <b>Aufbau des Entwurfs</b> blendest du Abschnitte aus oder sortierst sie um, passend zu den Vorgaben deines Seminars. Mit <b>Word</b> lädst du eine Word-Datei herunter, mit <b>Drucken / PDF</b> druckst du den Entwurf samt Arbeitsblättern.</div></details>
       <details data-ref-ui><summary>Wie fülle ich die Kompetenzerwartungen richtig aus?</summary><div>Blattwerk schlägt eine Formulierung vor. Fachleitungen achten aber sehr genau auf den <b>Wortlaut des Lehrplans NRW</b>. Bitte gleiche die Kompetenzen deshalb immer mit dem Originaltext des Lehrplans ab und übernimm sie wörtlich.</div></details>
       <details data-ref-ui><summary>Wie fülle ich die Reflexion nach dem Besuch aus?</summary><div>Öffne den Entwurf und klicke oben auf <b>Reflexion</b>. Dort beantwortest du fünf Fragen, zum Beispiel ob das Kernanliegen erreicht wurde und was du beim nächsten Mal anders machst.</div></details>
-      <details><summary>Wie füge ich ein Bild ein?</summary><div>Klicke auf <b>+ Aufgabe hinzufügen</b> und wähle <b>Bild</b>. Dann suchst du ein Foto auf deinem Computer aus. Noch schneller: Zieh ein Bild aus einem Ordner direkt auf das Blatt. Rechts kannst du Größe und Position einstellen. Bilder werden automatisch verkleinert, damit genug Speicher bleibt.</div></details>
-      <details><summary>Wie mache ich ein Domino, Memory oder Bingo?</summary><div>Unter <b>Vorlagen</b> auf der Startseite gibt es <b>Lernspiele</b>. Oder du fügst auf einem Blatt eine Aufgabe ein und wählst den Reiter <b>Lernspiele</b>. Rechts stellst du den Inhalt ein, zum Beispiel Einmaleins, Uhrzeiten oder Gegenteile. Mit <b>Eigene Paare</b> tippst du eigene Inhalte ein, etwa „Hund = dog“.</div></details>
-      <details><summary>Was ist die Silbenfärbung?</summary><div>Klicke auf ein Blatt, ohne eine Aufgabe auszuwählen. Rechts unter <b>Einstellungen für das Blatt</b> schaltest du <b>Lesetexte in Silben färben</b> ein. Dann werden die Silben in allen Texten abwechselnd blau und rot. Die Silben werden automatisch erkannt. Bei langen zusammengesetzten Wörtern lohnt sich ein kurzer Blick.</div></details>
+      <details><summary>Wie füge ich ein Bild ein?</summary><div>Klicke auf <b>+ Text, Aufgabe oder Bild hinzufügen</b> und wähle <b>Bild</b>. Dann suchst du ein Foto auf deinem Computer aus. Noch schneller: Zieh ein Bild aus einem Ordner direkt auf das Blatt. Rechts kannst du Größe und Position einstellen. Bilder werden automatisch verkleinert, damit genug Speicher bleibt.</div></details>
+      <details><summary>Wie mache ich ein Domino, Memory oder Bingo?</summary><div>Unter <b>Vorlagen</b> auf der Startseite gibt es <b>Lernspiele</b>. Oder du klickst auf einem Blatt auf <b>+ Text, Aufgabe oder Bild hinzufügen</b> und wählst den Reiter <b>Lernspiele</b>. Rechts stellst du den Inhalt ein, zum Beispiel Einmaleins, Uhrzeiten oder Gegenteile. Mit <b>Eigene Paare</b> tippst du eigene Inhalte ein, etwa „Hund = dog“.</div></details>
+      <details><summary>Was ist die Silbenfärbung?</summary><div>Öffne ein Blatt und klicke nichts darauf an. Rechts unter <b>Einstellungen für das Blatt</b> schaltest du <b>Lesetexte in Silben färben</b> ein. Dann werden die Silben in allen Texten abwechselnd blau und rot. Die Silben werden automatisch erkannt. Bei langen zusammengesetzten Wörtern lohnt sich ein kurzer Blick.</div></details>
       <details><summary>Wie erstelle ich eine Lernzielkontrolle mit Noten?</summary><div>Nimm die Vorlage <b>Lernzielkontrolle</b> oder schalte bei jedem Blatt <b>Punkte und Notenschlüssel</b> ein. Jede Aufgabe bekommt dann ein Punktefeld. Die Punkte kannst du pro Aufgabe ändern. Der Notenschlüssel erscheint nur auf dem Lösungsblatt.</div></details>
       <details><summary>Der Speicher ist voll. Was nun?</summary><div>Unter <b>Meine Sachen</b> siehst du, wie viel Speicher belegt ist. Lade zuerst eine <b>Sicherung</b> herunter. Lösche dann alte Blätter, besonders solche mit vielen Bildern.</div></details>
       <details><summary>Funktioniert Blattwerk auch ohne Internet?</summary><div>Ja. Ohne Internet sieht nur die Schrift etwas anders aus. Alles andere funktioniert.</div></details>
@@ -2678,7 +2693,7 @@ function face(t){return`<svg viewBox="0 0 24 24" class="face" aria-hidden="true"
 function renderSheet(sh,o={}){
   const ed=!!o.editable;let n=0;const len=sh.blocks.length;const N=sh.showPoints?sh.blocks.reduce((s,x)=>s+blockPts(x),0):0;
   const E=(scope,path,text,tag,cls,single)=>ed?`<${tag} class="${cls}" contenteditable="true" spellcheck="true" data-scope="${scope}" data-bind="${path}"${single?' data-single="1"':''}>${esc(text)}</${tag}>`:`<${tag} class="${cls}">${esc(text)}</${tag}>`;
-  const ins=i=>ed?`<button class="ins" data-ins="${i}" aria-label="Hier eine Aufgabe einfügen"><span>+ Hier einfügen</span></button>`:'';
+  const ins=i=>ed?`<button class="ins" data-ins="${i}" aria-label="Hier etwas einfügen"><span>+ Hier einfügen</span></button>`:'';
   const cb=(act,ic,label,cls='')=>`<button data-act="${act}" class="${cls}">${icon(ic)}${label}</button>`;
   const body=sh.blocks.map((b,idx)=>{
     const isNum=NUMBERED.has(b.type);if(isNum)n++;
@@ -2713,7 +2728,7 @@ function renderSheet(sh,o={}){
   const fields=sh.showName!==false?`<div class="sh-fields"><div>Name:<span></span></div><div>Datum:<span class="s"></span></div></div>`:'';
   return `<div class="paper${o.solution?' show-sol':''}${ed?' editing':''}">${o.solution?'<div class="sol-banner">Lösung</div>':''}
     <div class="sh-top"><div class="sh-meta">${sh.fach==='x'?'':(FACH[sh.fach]||'')+' · '}Klasse ${esc(sh.klasse)}${lvTag}</div>${fields}</div>
-    ${E('sheet','title',sh.title,'h1','sh-title',true)}${len?ins(0):''}${body}${N?ptsFooter(sh,N):''}${ed?`<button class="ins-end" data-ins="${len}">${icon('plus')}Aufgabe hinzufügen</button>`:''}</div>`}
+    ${E('sheet','title',sh.title,'h1','sh-title',true)}${len?ins(0):''}${body}${N?ptsFooter(sh,N):''}${ed?`<button class="ins-end" data-ins="${len}">${icon('plus')}Text, Aufgabe oder Bild hinzufügen</button>`:''}</div>`}
 
 function fitPaper(){$$('.desk').forEach(d=>{const p=d.querySelector('.paper');if(!p||!d.clientWidth)return;p.style.zoom='';const z=Math.min(1,(d.clientWidth-6)/p.offsetWidth);p.style.zoom=z<1?z.toFixed(3):''})}
 window.addEventListener('resize',fitPaper);
@@ -2735,8 +2750,8 @@ function renderSide(){const sh=curSheet(),el=$('#b-side');if(!sh)return;const b=
   const sel=(attr,k,v,opts)=>`<select ${attr}="${k}">${opts.map(([a,l])=>`<option value="${a}"${String(v)===String(a)?' selected':''}>${l}</option>`).join('')}</select>`;
   const step=(k,v,min,max)=>`<div class="stepper"><button type="button" data-step="-1" data-sk="${k}" aria-label="weniger">−</button><input type="number" data-k="${k}" value="${v}" min="${min}" max="${max}" aria-label="Anzahl"><button type="button" data-step="1" data-sk="${k}" aria-label="mehr">+</button></div>`;
   if(!b){const hasMath=sh.blocks.some(x=>x.type==='math');
-    el.innerHTML=`<div class="panel"><button class="btn pri wide" data-ins="${sh.blocks.length}">${icon('plus')}Aufgabe hinzufügen</button>${hasMath?`<button class="btn wide" data-act="reroll-all">${icon('dice')}Alle Aufgaben neu</button>`:''}</div>
-      <div class="panel"><h3>Einstellungen für das Blatt</h3>
+    el.innerHTML=`<div class="panel"><button class="btn pri wide" data-ins="${sh.blocks.length}">${icon('plus')}Text, Aufgabe oder Bild hinzufügen</button>${hasMath?`<button class="btn wide" data-act="reroll-all">${icon('dice')}Alle Aufgaben neu</button>`:''}</div>
+      <details class="panel" id="sh-set"${UI.setOpen?' open':''}><summary><h3>Einstellungen für das Blatt</h3><small>${FACH[sh.fach]||''} · Klasse ${esc(sh.klasse)}${sh.showStars?' · Sterne':''}${sh.silben?' · Silben':''}${sh.showPoints?' · Punkte':''}</small></summary>
         ${F('Fach',sel('data-sh','fach',sh.fach,[['ma','Mathematik'],['su','Sachunterricht'],['de','Deutsch'],['en','Englisch'],['x','Sonstiges']]))}
         ${F('Klasse',sel('data-sh','klasse',sh.klasse,[['3','Klasse 3'],['4','Klasse 4'],['3/4','Klasse 3/4']]))}
         <label class="sw"><input type="checkbox" data-sh="showStars"${sh.showStars?' checked':''}><span>Schwierigkeit mit Sternen zeigen<small>★ leicht · ★★ mittel · ★★★ schwer</small></span></label>
@@ -2745,11 +2760,11 @@ function renderSide(){const sh=curSheet(),el=$('#b-side');if(!sh)return;const b=
         ${sh.silben?F('Trennung korrigieren (freiwillig)',`<textarea data-sh="silbenFix" rows="3" placeholder="Stromkreis = Strom-kreis">${esc(sh.silbenFix||'')}</textarea>`,'Falls ein Wort falsch getrennt ist: ein Wort pro Zeile, Silben mit Bindestrich.'):''}
         <label class="sw"><input type="checkbox" data-sh="showPoints"${sh.showPoints?' checked':''}><span>Punkte und Notenschlüssel<small>Für Lernzielkontrollen. Der Notenschlüssel steht nur auf dem Lösungsblatt.</small></span></label>
         ${sh.showPoints?F('Notenschlüssel: ab wie viel Prozent gibt es Note 1, 2, 3, 4, 5?',`<input type="text" data-sh="noten" value="${esc(sh.noten||'95, 80, 65, 50, 25')}">`,'Passe die Werte an den Schlüssel deiner Schule an. Darunter gibt es Note 6.'):''}
-      </div>
+      </details>
       <div class="panel tip"><h3>So bearbeitest du das Blatt</h3><ul class="tips">
         <li><b>Text ändern:</b> Klicke direkt in einen Text auf dem Blatt und tippe los.</li>
-        <li><b>Aufgabe anpassen:</b> Klicke eine Aufgabe an. Dann erscheinen hier alle Einstellungen dazu.</li>
-        <li><b>Neue Aufgabe:</b> Fahre mit der Maus zwischen zwei Aufgaben. Dort erscheint „+ Hier einfügen“.</li>
+        <li><b>Etwas einstellen:</b> Klicke einen Teil des Blattes an, z. B. eine Aufgabe oder ein Bild. Dann erscheinen hier alle Einstellungen dazu.</li>
+        <li><b>Etwas Neues einfügen:</b> Fahre mit der Maus zwischen zwei Aufgaben. Dort erscheint „+ Hier einfügen“.</li>
         <li><b>Etwas schiefgegangen?</b> Oben auf „Rückgängig“ klicken.</li></ul></div>`;return}
   const num=blockNum(sh,b.id);
   let h=`<div class="panel"><div class="ph"><div><small>${num?'Aufgabe '+num+' bearbeiten':'Ausgewählt'}</small><h3>${esc(kindName(b))}</h3></div><button class="btn sm" data-act="desel">${icon('check')}Fertig</button></div>`;
@@ -2800,7 +2815,7 @@ function applyField(t){const sh=curSheet();if(!sh)return;
 function moveBlock(id,d){const sh=curSheet();const i=sh.blocks.findIndex(b=>b.id===id),j=i+d;if(i<0||j<0||j>=sh.blocks.length)return;snap();[sh.blocks[i],sh.blocks[j]]=[sh.blocks[j],sh.blocks[i]];touch(sh);renderPaper();renderSide();
   requestAnimationFrame(()=>{const el=$(`#b-desk .blk[data-id="${id}"]`);el&&el.scrollIntoView({block:'nearest',behavior:'smooth'})})}
 function delBlock(id){const sh=curSheet();const b=sh.blocks.find(x=>x.id===id);if(!b)return;snap();sh.blocks=sh.blocks.filter(x=>x.id!==id);if(S.sel===id)S.sel=null;touch(sh);renderPaper();renderSide();toast(`„${kindName(b)}“ gelöscht`,'Rückgängig',undo)}
-function dupBlock(id){const sh=curSheet();const b=sh.blocks.find(x=>x.id===id);if(!b)return;snap();const c=clone(b);c.id=uid();c.seed=seed();sh.blocks.splice(sh.blocks.indexOf(b)+1,0,c);S.sel=c.id;touch(sh);renderPaper();renderSide();toast('Aufgabe kopiert')}
+function dupBlock(id){const sh=curSheet();const b=sh.blocks.find(x=>x.id===id);if(!b)return;snap();const c=clone(b);c.id=uid();c.seed=seed();sh.blocks.splice(sh.blocks.indexOf(b)+1,0,c);S.sel=c.id;touch(sh);renderPaper();renderSide();toast(`„${kindName(b)}“ kopiert`)}
 function reroll(id){const sh=curSheet();const b=sh.blocks.find(x=>x.id===id);if(!b)return;snap();b.seed=seed();touch(sh);renderPaper()}
 function addBlockAt(spec,idx){const sh=curSheet();const b=spec.startsWith('math:')?newBlock('math',{gen:spec.slice(5)}):newBlock(spec);
   snap();sh.blocks.splice(Math.min(idx,sh.blocks.length),0,b);S.sel=b.id;touch(sh);renderPaper();renderSide();
@@ -3389,6 +3404,31 @@ const _docCard=docCard;docCard=function(o,kind){if(kind!=='ent')return _docCard(
 
 /* Ausgeblendet: Referendariat-Seiten nicht erreichbar, Tab „Unterrichtsentwürfe“ nicht aktiv */
 const _route=route;route=function(){const v=location.hash.slice(1);if(!SHOW_REF&&(v==='ref'||v==='entwurf')){history.replaceState(null,'','#start');}if(!SHOW_REF&&S.tab==='ent')S.tab='sheet';if(!SHOW_REF&&S.mode==='entwurf')S.mode='blatt';_route()};
+
+
+/* =========================================================
+   Übersichtlichkeit: Startseite, Themen-Reiter, Seitenleiste
+   ========================================================= */
+/* Startseite: „Weiter bearbeiten“ nur zeigen, wenn es etwas gibt; Monatsvorschläge auf 6 begrenzen */
+S.seasonAll=false;
+const _rsUX=renderStart;renderStart=function(){_rsUX();
+  const n=Object.keys(DB.sheets).length+Object.keys(DB.plans).length;$('#recent-wrap').hidden=!n;
+  const items=$$('#season > button');if(items.length>6&&!S.seasonAll){items.slice(6).forEach(b=>b.hidden=true);$('#season').insertAdjacentHTML('beforeend',`<button class="season-more" data-act="season-all">Alle ${items.length} Vorschläge anzeigen</button>`)}};
+/* Themen: Fächer als Reiter oben, letzte Auswahl merken */
+const FTABS=[['alle','Alle Fächer'],['su','Sachunterricht'],['ma','Mathe'],['de','Deutsch'],['en','Englisch']];
+if(UI.lastFach&&FTABS.some(x=>x[0]===UI.lastFach))S.f.fach=UI.lastFach;
+const _rtUX=renderThemen;renderThemen=function(){_rtUX();
+  const cnt=v=>TOPICS.filter(t=>topicMatches(t,{...S.f,fach:v},'')).length;
+  $('#th-ftabs').innerHTML=FTABS.map(([v,l])=>`<button data-ftab="${v}" aria-pressed="${S.f.fach===v}">${l} <span>${cnt(v)}</span></button>`).join('')};
+/* Seitenleiste im Editor: Tipps ausblendbar, Einstellungen merken auf/zu */
+const _rsideUX=renderSide;renderSide=function(){_rsideUX();
+  const tip=$('#b-side .panel.tip');if(tip){if(UI.hideTips)tip.remove();else tip.insertAdjacentHTML('beforeend','<button class="btn sm ghost" data-act="hide-tips">Tipps ausblenden</button>')}
+  const st=$('#sh-set');if(st)st.addEventListener('toggle',()=>{UI.setOpen=st.open;saveUI()})};
+document.addEventListener('click',ev=>{const t=ev.target;
+  const ft=t.closest('[data-ftab]');if(ft){S.f.fach=ft.dataset.ftab;S.f.ber='alle';UI.lastFach=S.f.fach;saveUI();renderThemen();return}
+  const a=t.closest('[data-act]');if(!a)return;
+  if(a.dataset.act==='season-all'){S.seasonAll=true;renderStart();return}
+  if(a.dataset.act==='hide-tips'){UI.hideTips=true;saveUI();renderSide();toast('Tipps ausgeblendet. Du findest alles auch unter „Hilfe“.')}});
 
 window.addEventListener('hashchange',route);
 route();
