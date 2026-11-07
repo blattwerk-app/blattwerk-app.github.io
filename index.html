@@ -621,7 +621,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   .ins::before{opacity:.35}
   .ins span{opacity:.9}
 }
-@media (max-width: 760px){
+@media screen and (max-width: 760px){
   body{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
   .brand small{display:none}
   .top-in{padding-top:8px;padding-bottom:8px}
@@ -657,6 +657,7 @@ ol.reihe li.cur{background:#fff6d6;border-radius:1mm}
   #print-root .paper:last-child{break-after:auto}
   #print-root .pl-notes{min-height:12mm;break-inside:avoid}
   #print-root .pgbrk{display:none}
+  #print-root .paper>:last-child{margin-bottom:0!important}
 }
 /* Ohne oberen/unteren Seitenrand hat der Browser keinen Platz für Datum, Uhrzeit, Titel und Link.
    Der Rand kommt stattdessen vom Blatt selbst und wird auf jeder Folgeseite wiederholt. */
@@ -3738,7 +3739,7 @@ const _rsName=renderStart;renderStart=function(){_rsName();const g=$('#greet');i
    Druck: Seitenumbrüche berechnen, knappe Blätter leicht verkleinern,
    im Editor anzeigen, wo eine neue Seite beginnt
    ========================================================= */
-const MM=96/25.4, PAGE_H=273*MM, MIN_FIT=0.9;
+const MM=96/25.4, PAGE_H=273*MM-4, MIN_FIT=0.9;
 /* misst eine Blatt-Fassung ohne Bearbeitungshilfen, so wie sie gedruckt wird */
 function measurePaper(html){let m=$('#pg-measure');if(!m){m=document.createElement('div');m.id='pg-measure';m.setAttribute('aria-hidden','true');
     m.style.cssText='position:absolute;left:-10000px;top:0;width:182mm;visibility:hidden;pointer-events:none';document.body.appendChild(m)}
@@ -3815,6 +3816,320 @@ const _routeMob=route;route=function(){_routeMob();if(S.view!=='blatt')document.
     t.insertAdjacentHTML('beforebegin',`<div id="ios-ban" class="bkban" style="background:var(--pri-soft);border-color:var(--pri)"><span class="tile">${icon('save')}</span><div><b>Blattwerk wie eine App öffnen</b><span>Tippe unten in Safari auf <b>Teilen</b> (Viereck mit Pfeil) und dann auf <b>„Zum Home-Bildschirm“</b>. Dann hast du ein eigenes Symbol.</span></div><div class="bkacts"><button class="btn" id="ios-no">Verstanden</button></div></div>`);
     $('#ios-no').onclick=()=>{$('#ios-ban').remove();try{localStorage.setItem('ios-hint-no','1')}catch(e){}}};
   const _rsI=renderStart;renderStart=function(){_rsI();show()};if(S.view==='start')show()})();
+
+/* teil:p18_topics.js */
+
+/* =========================================================
+   Weitere Themen (Paket 3): 10 SU, 6 Mathe, 7 Deutsch, 4 Englisch
+   ========================================================= */
+/* neue Rechtschreib-Regeln für den Baustein „Richtig schreiben“ */
+Object.assign(RS,{
+  h:{t:'Mit oder ohne h?',w:['Z[ah]l','F[ah]rrad','w[oh]nen','Sch[uh]','St[uh]l','U[hr]','f[üh]len','l[eh]ren','S[ah]ne','J[ah]r','K[uh]','B[oh]ne','H[o]se','N[a]se','T[o]r','Sch[a]l','Bl[u]me','Gr[a]s','L[ö]we','R[o]se']},
+  ableiten:{t:'b oder p, d oder t, g oder k?',w:['Hun[d]','Kin[d]','Lan[d]','Ra[d]','Mun[d]','Wal[d]','Bil[d]','Hu[t]','Bro[t]','Zel[t]','Kor[b]','Die[b]','Kal[b]','Sie[b]','Ber[g]','Zwer[g]','Zu[g]','We[g]','Ban[k]','Schran[k]']},
+  ae:{t:'ä oder e, äu oder eu?',w:['B[ä]lle','W[ä]lder','H[ä]nde','K[ä]lte','l[ä]nger','Gl[ä]ser','F[e]nster','H[e]rbst','B[e]tt','M[e]nsch','H[äu]ser','B[äu]me','M[äu]se','tr[äu]men','l[äu]ft','h[eu]te','Fr[eu]nd','n[eu]','F[eu]er','L[eu]te']},
+  v:{t:'v oder f?',w:['[V]ogel','[V]ater','[v]iel','[v]ier','[V]olk','[v]on','[v]or','[v]erlieren','[v]ergessen','[V]erkehr','[F]ahne','[F]eder','[f]ünf','[f]ertig','[F]ußball','[F]isch','[F]enster','[f]ragen','[F]reund','[f]ür']}});
+GEN.rechtschreib.options[0].c.splice(5,0,['h','Dehnungs-h'],['ableiten','b/p, d/t, g/k'],['ae','ä/e und äu/eu'],['v','v oder f']);
+(()=>{const _i=GEN.rechtschreib.instr;GEN.rechtschreib.instr=b=>({
+  h:'Setze ein: Mit oder ohne h? Das h nach einem langen Selbstlaut hörst du nicht. Merke dir die Wörter.',
+  ableiten:'Setze ein: b oder p, d oder t, g oder k? Verlängere das Wort, dann hörst du es: Hund – die Hunde.',
+  ae:'Setze ein: ä oder e, äu oder eu? Suche ein verwandtes Wort mit a oder au: Bälle – Ball.',
+  v:'Setze ein: v oder f? Wörter mit v musst du dir merken. Auch ver- und vor- schreibst du mit v.'})[b.opts.regel]||_i(b)})();
+
+Object.assign(EN,{
+  fruit:[['apple','Apfel','🍎'],['banana','Banane','🍌'],['pear','Birne','🍐'],['orange','Orange','🍊'],['strawberry','Erdbeere','🍓'],['grapes','Weintrauben','🍇'],['cherry','Kirsche','🍒'],['lemon','Zitrone','🍋'],['carrot','Karotte','🥕'],['tomato','Tomate','🍅'],['potato','Kartoffel','🥔'],['cucumber','Gurke','🥒']],
+  sports:[['football','Fußball','⚽'],['swimming','Schwimmen','🏊'],['tennis','Tennis','🎾'],['basketball','Basketball','🏀'],['riding','Reiten','🏇'],['dancing','Tanzen','💃'],['cycling','Radfahren','🚴'],['skiing','Skifahren','⛷️'],['running','Laufen','🏃'],['ice skating','Eislaufen','⛸️']],
+  town:[['school','Schule','🏫'],['park','Park','🌳'],['supermarket','Supermarkt','🛒'],['hospital','Krankenhaus','🏥'],['library','Bücherei','📚'],['station','Bahnhof','🚉'],['zoo','Zoo','🦁'],['cinema','Kino','🎬'],['post office','Post','📮'],['bakery','Bäckerei','🥐'],['playground','Spielplatz','🛝'],['swimming pool','Schwimmbad','🏊']],
+  time:[['one o’clock','ein Uhr','🕐'],['two o’clock','zwei Uhr','🕑'],['three o’clock','drei Uhr','🕒'],['four o’clock','vier Uhr','🕓'],['five o’clock','fünf Uhr','🕔'],['six o’clock','sechs Uhr','🕕'],['seven o’clock','sieben Uhr','🕖'],['eight o’clock','acht Uhr','🕗'],['nine o’clock','neun Uhr','🕘'],['ten o’clock','zehn Uhr','🕙'],['eleven o’clock','elf Uhr','🕚'],['twelve o’clock','zwölf Uhr','🕛']]});
+EN_TOPICS.push(['fruit','Fruit and vegetables (Obst und Gemüse)'],['sports','Sports (Sport)'],['town','In town (In der Stadt)'],['time','Time (Uhrzeit)']);
+
+TOPICS.push(
+/* -------- Sachunterricht -------- */
+{id:'fledermaus',fach:'su',titel:'Die Fledermaus',bereich:'Natur und Leben',kl:[3,4],mon:[9,10],desc:'Wie Fledermäuse mit den Ohren „sehen“ und wo sie den Winter verbringen.',
+ kompetenz:'Natur und Leben – Tiere und ihre Lebensräume: Die Kinder beschreiben Körperbau, Lebensweise und Überwinterung der Fledermaus.',
+ blocks:()=>[TX('Fledermäuse sind Säugetiere. Sie sind die einzigen Säugetiere, die richtig fliegen können. Ihre Flügel sind eine dünne Haut, die zwischen den langen Fingern gespannt ist.\n\nFledermäuse sind nachtaktiv. Tagsüber schlafen sie kopfüber hängend in Höhlen, auf Dachböden oder in Baumhöhlen. In der Nacht jagen sie Insekten wie Mücken und Nachtfalter. Eine kleine Fledermaus kann in einer Nacht über tausend Mücken fressen.\n\nIm Dunkeln finden sie sich mit ihren Ohren zurecht. Sie stoßen sehr hohe Rufe aus, die wir nicht hören können. Das Echo zeigt ihnen, wo ein Hindernis oder eine Beute ist. Das nennt man Echoortung.\n\nIm Winter gibt es keine Insekten. Deshalb halten Fledermäuse von etwa November bis März Winterschlaf. In Deutschland stehen alle Fledermäuse unter Naturschutz.','info'),
+  GP('Setze die fehlenden Wörter ein.','Fledermäuse sind *Säugetiere*. Ihre Flügel sind aus *Haut*. Tagsüber schlafen sie *kopfüber*. Sie jagen *Insekten*. Im Dunkeln orientieren sie sich mit der *Echoortung*. Im Winter halten sie *Winterschlaf*.'),
+  TF('Richtig oder falsch? Kreuze an.',['+Fledermäuse sind Säugetiere.','-Fledermäuse sind Vögel.','+Fledermäuse jagen nachts.','-Fledermäuse fressen im Winter viele Mücken.','+Alle Fledermäuse in Deutschland stehen unter Schutz.']),
+  LN('Erkläre mit eigenen Worten: Wie findet eine Fledermaus im Dunkeln ihre Beute?',3),
+  SC('Ich kann erklären, wie Fledermäuse jagen.','Ich weiß, wie Fledermäuse den Winter verbringen.')],
+ reihe:[['Was weißt du über Fledermäuse?','Vorwissen und Vorurteile'],['Körperbau','Flügel, Ohren, Füße'],['Jagen mit den Ohren','Echoortung im Spiel erleben'],['Wo wohnen Fledermäuse?','Quartiere im Sommer und Winter'],['Fledermäuse schützen','Fledermauskasten']],
+ stunde:{thema:'Jagen mit den Ohren',ziel:'Die Kinder können die Echoortung der Fledermaus erklären.',
+  rows:ST('Spiel „Fledermaus und Motte“: Ein Kind mit verbundenen Augen ruft „Fledermaus“, die Motte antwortet.','Lesetext, Lückentext und Richtig-falsch-Aufgaben.','Echoortung mit einem Tafelbild erklären.','Selbsteinschätzung.',['Augenbinde','Arbeitsblatt','Tafel','Arbeitsblatt'])}},
+
+{id:'atmung',fach:'su',titel:'Atmung und Lunge',bereich:'Natur und Leben',kl:[4],mon:[1,2],desc:'Der Weg der Luft durch den Körper und warum wir schneller atmen, wenn wir rennen.',
+ kompetenz:'Natur und Leben – Körper und Gesundheit: Die Kinder beschreiben den Weg der Atemluft und die Aufgabe der Lunge.',
+ blocks:()=>[TX('Wir atmen jeden Tag viele tausend Mal, meistens ohne darüber nachzudenken. Die Luft strömt durch Nase oder Mund in die Luftröhre. Die Luftröhre teilt sich in zwei Äste. Sie führen in den rechten und den linken Lungenflügel.\n\nIn der Lunge gibt es Millionen winziger Lungenbläschen. Dort gelangt der Sauerstoff aus der Luft ins Blut. Das Herz pumpt das Blut mit dem Sauerstoff in den ganzen Körper. Gleichzeitig geben wir verbrauchte Luft wieder ab, wenn wir ausatmen.\n\nUnter der Lunge liegt das Zwerchfell. Es ist ein Muskel, der beim Atmen hilft. Wenn wir rennen, braucht der Körper mehr Sauerstoff. Dann atmen wir schneller und tiefer. Rauchen schadet der Lunge sehr.','info'),
+  TB('Bringe den Weg der Luft in die richtige Reihenfolge. Schreibe die Zahlen 1 bis 4.',['Station','Nr.'],[['Luftröhre','?2'],['Nase oder Mund','?1'],['Lungenbläschen','?4'],['Lungenflügel','?3']]),
+  TB('Versuch: Zähle deine Atemzüge in einer Minute.',['Wann?','Atemzüge in 1 Minute'],[['im Sitzen'],['nach 20 Hampelmännern']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Wir haben zwei Lungenflügel.','-In der Lunge wird das Essen verdaut.','+Beim Rennen atmen wir schneller.','-Das Zwerchfell liegt im Kopf.']),
+  LN('Warum atmest du nach dem Sport schneller? Erkläre.',2),
+  SC('Ich kann den Weg der Luft beschreiben.','Ich kann erklären, warum wir beim Rennen schneller atmen.')],
+ reihe:[['Wir atmen','Atem spüren und beobachten'],['Der Weg der Luft','Nase, Luftröhre, Lunge'],['Wie viel Luft passt in meine Lunge?','Versuch mit Wasserflasche'],['Atmen und Bewegung','Atemzüge zählen'],['Gesund atmen','Frische Luft, Rauchen schadet']],
+ stunde:{thema:'Atmen und Bewegung',ziel:'Die Kinder können erklären, warum wir bei Anstrengung schneller atmen.',
+  rows:ST('Alle legen die Hand auf den Bauch und spüren den Atem.','Versuch: Atemzüge in Ruhe und nach Bewegung zählen, Lesetext, Aufgaben.','Ergebnisse vergleichen: Der Körper braucht mehr Sauerstoff.','Atemübung zur Entspannung.',['–','Stoppuhr, Arbeitsblatt','Tafel','–'])}},
+
+{id:'klima',fach:'su',titel:'Klima und Klimaschutz',bereich:'Natur und Leben',kl:[4],mon:[4,6],desc:'Was ist der Treibhauseffekt und was können Kinder für das Klima tun?',
+ kompetenz:'Natur und Leben – Umwelt: Die Kinder beschreiben Ursachen des Klimawandels und entwickeln Handlungsmöglichkeiten zum Klimaschutz.',
+ blocks:()=>[TX('Das Wetter ändert sich jeden Tag. Das Klima beschreibt, wie das Wetter an einem Ort über viele Jahre ist.\n\nUm die Erde liegt eine Lufthülle. Sie hält Wärme fest wie die Scheiben eines Gewächshauses. Das ist gut, sonst wäre es auf der Erde eiskalt. Wenn wir aber Kohle, Öl und Gas verbrennen, entsteht das Gas Kohlendioxid. Es verstärkt diesen Effekt. Die Erde wird wärmer. Das nennt man Klimawandel.\n\nDie Folgen: Gletscher schmelzen, es gibt öfter Hitze, Dürre oder starken Regen. Jeder kann etwas tun: mit dem Rad oder zu Fuß gehen, Licht ausschalten, weniger wegwerfen und Obst aus der Region kaufen.','info'),
+  GP('Setze die fehlenden Wörter ein.','Das *Klima* beschreibt das Wetter über viele Jahre. Wenn wir Kohle, Öl und *Gas* verbrennen, entsteht *Kohlendioxid*. Die Erde wird *wärmer*. Das nennt man *Klimawandel*.'),
+  TB('Gut für das Klima oder nicht? Kreuze an.',['Was ich tue','gut fürs Klima','schlecht fürs Klima'],[['Ich fahre mit dem Rad zur Schule.','?✗',''],['Das Licht brennt den ganzen Tag.','','?✗'],['Ich kaufe Äpfel aus der Region.','?✗',''],['Ich lasse beim Lüften die Heizung an.','','?✗'],['Ich trage meine Jacke noch ein Jahr.','?✗','']]),
+  LN('Was kannst du selbst für das Klima tun? Schreibe zwei Ideen auf.',3),
+  SC('Ich kann erklären, was Klima bedeutet.','Ich kenne Ideen für den Klimaschutz.')],
+ reihe:[['Wetter und Klima','Unterschied klären'],['Der Treibhauseffekt','Versuch mit zwei Gläsern'],['Folgen des Klimawandels','Bilder und Berichte'],['Was kann ich tun?','Ideen sammeln'],['Unsere Klimaschule','Klassenaktion planen']],
+ stunde:{thema:'Was kann ich für das Klima tun?',ziel:'Die Kinder können eigene Handlungsmöglichkeiten zum Klimaschutz nennen und begründen.',
+  rows:ST('Bild eines schmelzenden Gletschers: „Was ist hier passiert?“','Lesetext, Tabelle ausfüllen, eigene Ideen schreiben.','Klimaschutz-Ideen als Plakat sammeln.','Abstimmung: Welche Idee setzen wir als Klasse um?',['Bild','Arbeitsblatt','Plakat','–'])}},
+
+{id:'schall',fach:'su',titel:'Schall und Hören',bereich:'Natur und Leben',kl:[3,4],mon:[11,1],desc:'Wie ein Ton entsteht, wie er zu unserem Ohr kommt und warum Lärm schadet.',
+ kompetenz:'Natur und Leben – Physikalische Phänomene: Die Kinder untersuchen in Versuchen, wie Schall entsteht und sich ausbreitet.',
+ blocks:()=>[TX('Jeder Ton entsteht durch Schwingungen. Wenn du eine Gitarrensaite zupfst, bewegt sie sich ganz schnell hin und her. Du kannst das sehen und manchmal auch fühlen. Die Schwingungen werden an die Luft weitergegeben. So kommt der Schall zu unserem Ohr.\n\nSchall breitet sich nicht nur in der Luft aus, sondern auch in Wasser und in festen Stoffen wie Holz. Leg dein Ohr auf einen Tisch und lass jemanden leise klopfen. Du hörst es sehr deutlich.\n\nIm Ohr bringt der Schall das Trommelfell zum Schwingen. Das Gehirn macht daraus ein Geräusch. Sehr laute Geräusche können das Ohr für immer schädigen. Deshalb sollte man sich vor Lärm schützen.','info'),
+  TB('Versuch: Wie verändert sich der Ton? Schreibe auf, was du beobachtest.',['Versuch','Beobachtung'],[['Gummiband locker zupfen','?tiefer Ton'],['Gummiband straff zupfen','?hoher Ton'],['Ohr auf den Tisch, jemand klopft leise','?ich höre es deutlich']]),
+  MT('Was passt zusammen? Verbinde.',['Schwingung = so entsteht ein Ton','Trommelfell = schwingt im Ohr','Lärm = kann das Ohr schädigen','Echo = Schall wird zurückgeworfen']),
+  TF('Richtig oder falsch? Kreuze an.',['+Ein Ton entsteht durch Schwingungen.','-Schall breitet sich nur in der Luft aus.','+Laute Musik kann dem Ohr schaden.','-Eine straffe Saite klingt tiefer als eine lockere.']),
+  SC('Ich kann erklären, wie ein Ton entsteht.','Ich weiß, wie ich meine Ohren schütze.')],
+ reihe:[['Geräusche um uns herum','Hörspaziergang'],['Wie entsteht ein Ton?','Versuche mit Gummiband und Lineal'],['Schall wandert','Dosentelefon bauen'],['Unser Ohr','Aufbau des Ohres'],['Lärm macht krank','Lärmampel in der Klasse']],
+ stunde:{thema:'Wie entsteht ein Ton?',ziel:'Die Kinder können mit Versuchen erklären, dass Töne durch Schwingungen entstehen.',
+  rows:ST('Stille: Alle lauschen eine Minute und zählen die Geräusche.','Versuche an Stationen mit Gummiband, Lineal und Trommel mit Reis.','Gemeinsames Ergebnis: Ohne Schwingung kein Ton.','Ausblick: Dosentelefon bauen.',['–','Gummibänder, Lineale, Trommel, Reis','Tafel','–'])}},
+
+{id:'waerme',fach:'su',titel:'Wärme und Thermometer',bereich:'Natur und Leben',kl:[3],mon:[11,12,1],desc:'Temperaturen messen, Thermometer ablesen und warm halten.',
+ kompetenz:'Natur und Leben – Physikalische Phänomene: Die Kinder messen Temperaturen mit dem Thermometer und untersuchen Wärmeleitung und Wärmedämmung.',
+ blocks:()=>[TX('Mit einem Thermometer messen wir die Temperatur. Die Einheit heißt Grad Celsius, abgekürzt °C. Im Thermometer steigt eine Flüssigkeit, wenn es wärmer wird, und sinkt, wenn es kälter wird.\n\nBei 0 °C gefriert Wasser zu Eis. Bei 100 °C kocht Wasser. Unser Körper ist etwa 37 °C warm. Temperaturen unter null schreibt man mit einem Minuszeichen, zum Beispiel −5 °C.\n\nManche Stoffe leiten Wärme gut, zum Beispiel Metall. Ein Metalllöffel in heißem Tee wird schnell warm. Andere Stoffe halten die Wärme fest, zum Beispiel Wolle, Federn oder Styropor. Deshalb wärmt uns im Winter eine Wollmütze.','info'),
+  MT('Welche Temperatur passt? Verbinde.',['0 °C = Wasser gefriert','37 °C = unser Körper','100 °C = Wasser kocht','20 °C = ein warmes Klassenzimmer','−5 °C = ein kalter Wintertag']),
+  TB('Miss die Temperatur an verschiedenen Orten.',['Ort','Vermutung','gemessen'],[['im Klassenraum'],['auf dem Schulhof'],['im Kühlschrank'],['in der Hand']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Metall leitet Wärme gut.','-Wolle leitet Wärme besonders gut.','+Bei 0 °C gefriert Wasser.','-Unser Körper ist etwa 50 °C warm.']),
+  SC('Ich kann ein Thermometer ablesen.','Ich kenne Stoffe, die Wärme festhalten.')],
+ reihe:[['Warm und kalt','Fühlen ist ungenau'],['Das Thermometer','Aufbau und Ablesen'],['Temperaturen messen','Messreihe am Schulhof'],['Wärme wandert','Metall, Holz, Kunststoff'],['Warm halten','Versuch: Welche Verpackung hält Tee warm?']],
+ stunde:{thema:'Das Thermometer ablesen',ziel:'Die Kinder können Temperaturen messen und richtig ablesen.',
+  rows:ST('Versuch: Hand in kaltes, dann in lauwarmes Wasser. „Fühlen ist ungenau!“','Thermometer kennenlernen, Messungen an verschiedenen Orten, Tabelle.','Ergebnisse vergleichen: Vermutung und Messung.','Merksatz zu 0 °C und 100 °C.',['Schüsseln mit Wasser','Thermometer, Arbeitsblatt','Tafel','Heft'])}},
+
+{id:'karte',fach:'su',titel:'Vom Bild zur Karte',bereich:'Raum, Umwelt und Mobilität',kl:[3,4],mon:[9,10],desc:'Von oben sehen, Grundrisse zeichnen, Kartenzeichen und Legende verstehen.',
+ kompetenz:'Raum, Umwelt und Mobilität – Orientierung: Die Kinder lesen und zeichnen einfache Pläne und nutzen Kartenzeichen und Legende.',
+ blocks:()=>[TX('Eine Karte zeigt einen Ort so, wie ein Vogel ihn von oben sieht. Diese Sicht heißt Draufsicht. Von oben sieht ein Tisch aus wie ein Rechteck, ein Ball wie ein Kreis.\n\nAuf einer Karte ist alles viel kleiner als in Wirklichkeit. Für Häuser, Bäume, Wege oder Gewässer benutzt man einfache Zeichen und Farben. Wasser ist zum Beispiel blau, Wald grün. Was die Zeichen bedeuten, steht in der Legende.\n\nEine Karte ist meistens so ausgerichtet, dass Norden oben ist.','info'),
+  MT('Was ist auf einer Karte meistens in welcher Farbe? Verbinde.',['blau = Fluss, See, Meer','grün = Wald, Wiese, Park','rot oder grau = Häuser','schwarz = Bahnlinie']),
+  TF('Richtig oder falsch? Kreuze an.',['+Eine Karte zeigt die Draufsicht.','-Auf einer Karte ist alles so groß wie in Wirklichkeit.','+In der Legende stehen die Kartenzeichen.','-Auf einer Karte ist Süden meistens oben.']),
+  DR('Zeichne einen Plan deines Kinderzimmers von oben. Denke an eine Legende.',8,'kaestchen'),
+  SC('Ich kann Dinge von oben zeichnen.','Ich kann eine Legende lesen.')],
+ reihe:[['Von der Seite und von oben','Gegenstände zeichnen'],['Unser Klassenraum als Plan','Grundriss zeichnen'],['Kartenzeichen und Legende','Eigene Zeichen erfinden'],['Der Schulweg auf dem Stadtplan','Karte lesen'],['Mit der Karte unterwegs','Orientierungslauf']],
+ stunde:{thema:'Von der Seite und von oben',ziel:'Die Kinder können die Draufsicht von Gegenständen erkennen und zeichnen.',
+  rows:ST('Gegenstände auf dem Tisch: Wer steht wo? Ein Kind steigt (gesichert) auf einen Stuhl und beschreibt.','Gegenstände von oben zeichnen, Zuordnungsaufgaben, eigener Zimmerplan.','Pläne vergleichen, Legende besprechen.','Ausblick: Klassenraumplan.',['Gegenstände','Arbeitsblatt, Lineal','Dokumentenkamera','–'])}},
+
+{id:'medien',fach:'su',titel:'Werbung und Medien',bereich:'Mensch und Gemeinschaft',kl:[4],mon:[2,3],desc:'Wie Werbung funktioniert und wie man Medien klug nutzt.',
+ kompetenz:'Mensch und Gemeinschaft – Medien und Konsum: Die Kinder untersuchen Werbung, erkennen ihre Absichten und reflektieren ihre Mediennutzung.',
+ blocks:()=>[TX('Werbung begegnet uns überall: im Fernsehen, im Internet, auf Plakaten und in Zeitschriften. Werbung will, dass wir etwas kaufen. Dafür benutzt sie Tricks: fröhliche Musik, bekannte Personen, kurze Sprüche, die man sich gut merkt, und Bilder, auf denen alles besonders schön aussieht.\n\nIm Internet ist Werbung manchmal schwer zu erkennen. Sie steht dann zwischen anderen Beiträgen oder ist in Spielen versteckt. Achte auf Wörter wie „Anzeige“ oder „Werbung“.\n\nMedien wie Fernseher, Tablet oder Handy können Spaß machen und beim Lernen helfen. Wichtig ist, Pausen zu machen und nicht zu lange auf einen Bildschirm zu schauen.','info'),
+  TB('Untersuche eine Werbung.',['Frage','Antwort'],[['Wofür wird geworben?'],['Wen soll die Werbung ansprechen?'],['Welche Tricks benutzt sie?'],['Würdest du das kaufen? Warum?']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Werbung will, dass wir etwas kaufen.','-In Werbung sieht alles genau so aus wie in Wirklichkeit.','+Das Wort „Anzeige“ zeigt Werbung an.','-Im Internet gibt es keine Werbung.']),
+  LN('Erfinde einen Werbespruch für dein Lieblingsobst.',2),
+  SC('Ich erkenne Werbung.','Ich kenne Tricks der Werbung.')],
+ reihe:[['Werbung überall','Werbung sammeln'],['Tricks der Werbung','Werbung untersuchen'],['Werbung im Internet','Versteckte Werbung erkennen'],['Wir machen Werbung','Plakat für ein Fantasieprodukt'],['Meine Medienzeit','Medientagebuch']],
+ stunde:{thema:'Tricks der Werbung',ziel:'Die Kinder können Werbung untersuchen und ihre Tricks benennen.',
+  rows:ST('Kurzer Werbespot oder Werbeplakat: „Was will uns die Werbung sagen?“','Lesetext, eine Werbung in Partnerarbeit untersuchen, Tabelle.','Tricks der Werbung an der Tafel sammeln.','Eigenen Werbespruch erfinden und vorstellen.',['Werbespot oder Plakat','Arbeitsblatt, Prospekte','Tafel','–'])}},
+
+{id:'taschengeld',fach:'su',titel:'Geld und Taschengeld',bereich:'Mensch und Gemeinschaft',kl:[3,4],mon:[10,11],desc:'Wünsche und Bedürfnisse, sparen und überlegt einkaufen.',
+ kompetenz:'Mensch und Gemeinschaft – Konsum: Die Kinder unterscheiden Bedürfnisse und Wünsche und planen den Umgang mit Taschengeld.',
+ blocks:()=>[TX('Viele Kinder bekommen Taschengeld. Damit dürfen sie selbst entscheiden, was sie kaufen. Bevor man Geld ausgibt, ist es gut, kurz nachzudenken: Brauche ich das wirklich? Oder möchte ich es nur gerade haben?\n\nDinge, die man zum Leben braucht, nennt man Bedürfnisse, zum Beispiel Essen, Trinken, Kleidung und eine Wohnung. Wünsche sind Dinge, die schön sind, aber nicht nötig, zum Beispiel ein neues Spiel.\n\nWer sich etwas Teures wünscht, kann sparen. Dann legt man jede Woche einen Teil des Taschengeldes zur Seite, zum Beispiel in eine Spardose.','info'),
+  TB('Bedürfnis oder Wunsch? Kreuze an.',['Was?','Bedürfnis','Wunsch'],[['Wasser','?✗',''],['Ein neues Videospiel','','?✗'],['Eine warme Jacke im Winter','?✗',''],['Ein drittes Paar Turnschuhe','','?✗'],['Brot','?✗','']]),
+  TB('Rechne: Lea bekommt jede Woche 3 €. Sie spart für ein Buch für 15 €.',['Woche','gespart'],[['1','?3 €'],['2','?6 €'],['3','?9 €'],['4','?12 €'],['5','?15 €']]),
+  LN('Wofür würdest du sparen? Wie lange müsstest du sparen?',2),
+  SC('Ich kann Bedürfnisse und Wünsche unterscheiden.','Ich kann einen Sparplan aufstellen.')],
+ reihe:[['Was ist Geld wert?','Tauschen früher und heute'],['Bedürfnisse und Wünsche','Sortieren und begründen'],['Mein Taschengeld','Einnahmen und Ausgaben'],['Sparen','Sparplan aufstellen'],['Klug einkaufen','Preise vergleichen']],
+ stunde:{thema:'Bedürfnisse und Wünsche',ziel:'Die Kinder können Bedürfnisse und Wünsche unterscheiden und ihre Entscheidung begründen.',
+  rows:ST('Bildkarten (Brot, Spielkonsole, Jacke …) liegen in der Mitte: „Was brauchst du wirklich?“','Lesetext, Tabelle ausfüllen, Sparplan rechnen.','Bildkarten an der Tafel in zwei Spalten ordnen und begründen.','Wofür spare ich? Kurze Runde.',['Bildkarten','Arbeitsblatt','Tafel','–'])}},
+
+{id:'schulefrueher',fach:'su',titel:'Schule früher und heute',bereich:'Zeit und Kultur',kl:[3,4],mon:[8,9],desc:'Schiefertafel, Griffel und strenge Regeln: Schule vor über 100 Jahren.',
+ kompetenz:'Zeit und Kultur – Früher und heute: Die Kinder vergleichen den Schulalltag früher mit heute und nutzen dafür Quellen.',
+ blocks:()=>[TX('Vor über 100 Jahren sah Schule ganz anders aus. In einer Klasse saßen oft 60 Kinder oder mehr. Mädchen und Jungen saßen getrennt. Die Kinder saßen in langen Holzbänken in Reihen und mussten still sitzen.\n\nGeschrieben wurde mit einem Griffel auf einer kleinen Schiefertafel. Mit einem Schwamm wurde sie wieder sauber gewischt. Papier und Hefte waren teuer. Später schrieb man mit Feder und Tinte. Die Schrift hieß Sütterlin.\n\nDie Lehrer waren sehr streng. Wer nicht gehorchte, wurde hart bestraft. Viele Kinder mussten nach der Schule auf dem Feld oder im Haushalt helfen.','info'),
+  TB('Vergleiche: Schule früher und heute.',['','früher','heute'],[['Schreiben mit …','?Griffel und Schiefertafel',''],['Kinder in der Klasse','?60 oder mehr',''],['Sitzordnung','?Holzbänke in Reihen',''],['Lehrer','?sehr streng','']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Früher schrieb man auf Schiefertafeln.','-Früher hatte jedes Kind ein Tablet.','+Früher waren die Klassen sehr groß.','-Früher durften die Kinder in der Klasse herumlaufen.']),
+  LN('Wärst du lieber früher oder heute zur Schule gegangen? Begründe.',3),
+  SC('Ich kann Schule früher und heute vergleichen.')],
+ reihe:[['Fotos von früher','Bilder vergleichen'],['Eine Schulstunde wie früher','Rollenspiel'],['Schreiben früher','Griffel, Feder, Sütterlin'],['Zeitzeugen befragen','Großeltern interviewen'],['Schule in der Zukunft','Ideen malen und schreiben']],
+ stunde:{thema:'Eine Schulstunde wie vor 100 Jahren',ziel:'Die Kinder können Unterschiede zwischen Schule früher und heute benennen.',
+  rows:ST('Lehrkraft spielt eine strenge Schulstunde von früher (Begrüßung im Stehen, Sitzen in Reihen).','Lesetext, Vergleichstabelle, Gespräch über das Erlebte.','Tafelbild: früher – heute.','Eigene Meinung aufschreiben und vorlesen.',['Rollenspiel','Arbeitsblatt, Fotos','Tafel','Arbeitsblatt'])}},
+
+{id:'kinderwelt',fach:'su',titel:'Kinder in anderen Ländern',bereich:'Mensch und Gemeinschaft',kl:[3,4],mon:[11,6],desc:'Wie Kinder anderswo wohnen, lernen und spielen und was uns verbindet.',
+ kompetenz:'Mensch und Gemeinschaft – Zusammenleben: Die Kinder vergleichen Lebensweisen von Kindern in verschiedenen Ländern und erkennen Gemeinsamkeiten.',
+ blocks:()=>[TX('Auf der Welt leben ungefähr zwei Milliarden Kinder. Sie wohnen in großen Städten, in Dörfern, in den Bergen oder am Meer. Manche haben einen Schulweg von wenigen Minuten, andere laufen jeden Tag eine Stunde.\n\nAmani lebt in Kenia in Afrika. Sie trägt in der Schule eine Schuluniform und lernt Englisch und Suaheli. Kenji lebt in Japan. Dort putzen die Kinder nach dem Unterricht gemeinsam ihr Klassenzimmer. Sofia lebt in Brasilien. Nach der Schule spielt sie mit ihren Freunden Fußball am Strand.\n\nKinder auf der ganzen Welt spielen gern, haben Freunde und lernen jeden Tag Neues. Alle Kinder haben die gleichen Rechte.','info'),
+  TB('Lies und trage ein.',['Kind','Land','Das ist besonders'],[['Amani','?Kenia','?Schuluniform, Englisch und Suaheli'],['Kenji','?Japan','?putzt mit der Klasse das Klassenzimmer'],['Sofia','?Brasilien','?spielt Fußball am Strand']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Kinder auf der ganzen Welt spielen gern.','-Alle Kinder haben den gleichen Schulweg.','+In Japan putzen Kinder ihr Klassenzimmer.','-Kinder in anderen Ländern haben weniger Rechte.']),
+  LN('Was ist bei dir gleich wie bei Amani, Kenji oder Sofia? Was ist anders?',3),
+  SC('Ich kann vom Leben eines Kindes in einem anderen Land erzählen.')],
+ reihe:[['Kinder dieser Welt','Bilder und Weltkarte'],['Wohnen','Häuser auf der Welt'],['Schule','Schulalltag vergleichen'],['Spielen','Spiele aus anderen Ländern ausprobieren'],['Was uns verbindet','Kinderrechte']],
+ stunde:{thema:'Schule in anderen Ländern',ziel:'Die Kinder können den Schulalltag in anderen Ländern beschreiben und mit dem eigenen vergleichen.',
+  rows:ST('Fotos von Schulklassen aus verschiedenen Ländern: „Was fällt dir auf?“','Lesetext, Tabelle, Länder auf der Weltkarte suchen.','Gemeinsamkeiten und Unterschiede sammeln.','Kurzer Austausch: Was würdest du gern ausprobieren?',['Fotos','Arbeitsblatt, Weltkarte/Globus','Tafel','–'])}},
+
+/* -------- Mathe -------- */
+{id:'runden',fach:'ma',titel:'Zahlen runden',bereich:'Zahlen und Operationen',kl:[3,4],mon:[10,11],desc:'Auf Zehner, Hunderter und Tausender runden mit der Rundungsregel.',
+ kompetenz:'Zahlen und Operationen – Zahlvorstellungen: Die Kinder runden Zahlen sachgerecht auf Zehner, Hunderter und Tausender.',
+ blocks:()=>[TX('Bei 0, 1, 2, 3, 4 rundest du ab.\nBei 5, 6, 7, 8, 9 rundest du auf.\nSchau immer auf die Ziffer rechts neben der Stelle, auf die du rundest.\nBeispiel: 347 auf Zehner gerundet: 350.','merk'),
+  MA('runden',1,{zr:'1000'},6),MA('runden',2,{zr:'1000'},6),MA('runden',3,{zr:'100000'},5),
+  LN('Wo rundet man im Alltag? Schreibe ein Beispiel auf.',2),
+  SC('Ich kenne die Rundungsregel.','Ich kann auf Zehner und Hunderter runden.')],
+ reihe:[['Ungefähr oder genau?','Gerundete Zahlen in der Zeitung'],['Runden auf Zehner','Zahlenstrahl'],['Runden auf Hunderter','Regel anwenden'],['Runden auf Tausender','Große Zahlen'],['Runden und Überschlagen','Rechnen mit gerundeten Zahlen']],
+ stunde:{thema:'Runden auf Zehner',ziel:'Die Kinder können Zahlen mithilfe des Zahlenstrahls und der Regel auf Zehner runden.',
+  rows:ST('Zeitungsschlagzeile: „Rund 500 Besucher“. Waren es genau 500?','Am Zahlenstrahl zum nächsten Zehner springen, Regel ableiten, Arbeitsblatt.','Regel als Merksatz an der Tafel.','Zahlenkarten-Spiel: auf- oder abrunden?',['Zeitungsausschnitt','Zahlenstrahl, Arbeitsblatt','Tafel','Zahlenkarten'])}},
+
+{id:'stellenwert',fach:'ma',titel:'Die Stellenwerttafel',bereich:'Zahlen und Operationen',kl:[3,4],mon:[9,10],desc:'Zahlen bis 1000 und bis 1 Million eintragen, ablesen und zerlegen.',
+ kompetenz:'Zahlen und Operationen – Zahlvorstellungen: Die Kinder stellen Zahlen in der Stellenwerttafel dar und verstehen das Stellenwertsystem.',
+ blocks:()=>[TX('Jede Ziffer hat einen Platz. Der Platz bestimmt ihren Wert.\nE = Einer, Z = Zehner, H = Hunderter, T = Tausender.\nBeispiel: 352 = 3 H + 5 Z + 2 E','merk'),
+  MA('stellenwert',1,{zr:'1000',mode:'ein'},4),MA('stellenwert',2,{zr:'1000',mode:'ab'},4),MA('stellenwert',3,{zr:'100000',mode:'mix'},4),
+  SC('Ich kann Zahlen in die Stellenwerttafel eintragen.','Ich kann Zahlen aus der Stellenwerttafel ablesen.')],
+ reihe:[['Bündeln','Einer, Zehner, Hunderter mit Material'],['Die Stellenwerttafel','Zahlen eintragen'],['Zahlen ablesen','Mit Plättchen legen'],['Die Null als Platzhalter','307 oder 37?'],['Große Zahlen','Tausender und mehr']],
+ stunde:{thema:'Zahlen in der Stellenwerttafel',ziel:'Die Kinder können dreistellige Zahlen in die Stellenwerttafel eintragen und ablesen.',
+  rows:ST('Dienes-Material liegt in der Mitte: „Wie viele Würfel sind es?“ Bündeln.','Zahlen mit Plättchen in die Stellenwerttafel legen, Arbeitsblatt.','Die Null als Platzhalter besprechen.','Zahlendiktat.',['Dienes-Material','Plättchen, Arbeitsblatt','Tafel','Heft'])}},
+
+{id:'platzhalter',fach:'ma',titel:'Welche Zahl fehlt?',bereich:'Zahlen und Operationen',kl:[3,4],mon:[1,2],desc:'Platzhalteraufgaben und Umkehraufgaben sicher lösen.',
+ kompetenz:'Zahlen und Operationen – Operationsvorstellungen: Die Kinder nutzen Umkehraufgaben, um fehlende Zahlen in Gleichungen zu bestimmen.',
+ blocks:()=>[TX('Mit der Umkehraufgabe findest du die fehlende Zahl.\n25 + ☐ = 60 → 60 − 25 = 35\n☐ · 4 = 28 → 28 : 4 = 7','merk'),
+  MA('platzhalter',1,{zr:'100'},9),MA('platzhalter',2,{zr:'1000'},9),MA('platzhalter',3,{zr:'1000'},9),
+  LN('Erfinde selbst zwei Aufgaben mit einem Kästchen für deinen Nachbarn.',2),
+  SC('Ich kann fehlende Zahlen mit der Umkehraufgabe finden.')],
+ reihe:[['Zahlenrätsel','Ich denke mir eine Zahl …'],['Plus und Minus','Umkehraufgaben'],['Mal und Geteilt','Umkehraufgaben'],['Waage im Gleichgewicht','Gleichungen'],['Eigene Rätsel','Aufgaben erfinden']],
+ stunde:{thema:'Umkehraufgaben helfen',ziel:'Die Kinder können fehlende Zahlen mithilfe der Umkehraufgabe bestimmen.',
+  rows:ST('Zahlenrätsel: „Ich denke mir eine Zahl, addiere 15 und erhalte 40.“','Strategien sammeln, Arbeitsblatt in drei Niveaustufen.','Umkehraufgabe als Strategie an der Tafel festhalten.','Eigene Rätsel für den Partner.',['–','Arbeitsblatt','Tafel','–'])}},
+
+{id:'wuerfelnetze',fach:'ma',titel:'Würfelnetze',bereich:'Raum und Form',kl:[4],mon:[5,6],desc:'Welche Netze lassen sich zu einem Würfel falten? Probieren und begründen.',
+ kompetenz:'Raum und Form – Körper: Die Kinder erkennen Würfelnetze, falten sie und begründen, warum ein Netz passt oder nicht.',
+ blocks:()=>[TX('Wenn man einen Würfel an den Kanten aufschneidet und flach hinlegt, entsteht ein Würfelnetz. Ein Würfelnetz besteht immer aus 6 gleich großen Quadraten. Es gibt genau 11 verschiedene Würfelnetze.\n\nNicht jede Form aus 6 Quadraten ist ein Würfelnetz. Liegen zum Beispiel vier Quadrate wie ein Quadrat zusammen, kann man daraus keinen Würfel falten. Auch wenn mehr als vier Quadrate in einer Reihe liegen, klappt es nicht.','info'),
+  TF('Richtig oder falsch? Kreuze an.',['+Ein Würfelnetz hat 6 Quadrate.','-Jede Form aus 6 Quadraten ist ein Würfelnetz.','+Es gibt 11 verschiedene Würfelnetze.','-Ein Würfelnetz kann 5 Quadrate in einer Reihe haben.']),
+  DR('Zeichne ein Würfelnetz in die Kästchen. Schneide es aus und falte es.',7,'kaestchen'),
+  DR('Finde ein anderes Würfelnetz und zeichne es.',7,'kaestchen'),
+  SC('Ich weiß, aus wie vielen Quadraten ein Würfelnetz besteht.','Ich kann ein Würfelnetz zeichnen.')],
+ reihe:[['Würfel auspacken','Verpackungen aufschneiden'],['Netze aus Quadraten','Mit Quadraten legen'],['Passt oder passt nicht?','Netze prüfen'],['Alle 11 Würfelnetze','Systematisch suchen'],['Spielwürfel bauen','Augenzahlen richtig eintragen']],
+ stunde:{thema:'Passt oder passt nicht?',ziel:'Die Kinder können prüfen, ob ein Netz ein Würfelnetz ist, und ihre Entscheidung begründen.',
+  rows:ST('Ein Spielwürfel aus Pappe wird vor den Kindern aufgeschnitten.','Netze aus 6 Quadraten legen, zeichnen, ausschneiden und falten.','Funktionierende Netze an der Tafel sammeln.','Wie viele verschiedene Netze haben wir gefunden?',['Würfel aus Pappe, Schere','Quadrate, Kästchenpapier, Schere','Tafel','–'])}},
+
+{id:'massstab',fach:'ma',titel:'Maßstab',bereich:'Größen und Messen',kl:[4],mon:[3,4],desc:'Vergrößern, verkleinern und Entfernungen auf Plänen berechnen.',
+ kompetenz:'Größen und Messen – Sachrechnen: Die Kinder lesen einfache Maßstäbe und berechnen Längen auf Plänen und in Wirklichkeit.',
+ blocks:()=>[TX('Ein Maßstab zeigt, wie stark etwas verkleinert ist.\nMaßstab 1 : 100 bedeutet: 1 cm auf dem Plan sind 100 cm (1 m) in Wirklichkeit.\nMaßstab 1 : 1000 bedeutet: 1 cm auf dem Plan sind 10 m in Wirklichkeit.','merk'),
+  TB('Rechne um. Maßstab 1 : 100.',['auf dem Plan','in Wirklichkeit'],[['1 cm','?1 m'],['3 cm','?3 m'],['7 cm','?7 m'],['?5 cm','5 m'],['?12 cm','12 m']]),
+  TB('Rechne um. Maßstab 1 : 1000.',['auf der Karte','in Wirklichkeit'],[['1 cm','?10 m'],['4 cm','?40 m'],['9 cm','?90 m'],['?6 cm','60 m']]),
+  DR('Zeichne ein Rechteck im Maßstab 1 : 100. In Wirklichkeit ist es 6 m lang und 4 m breit.',6,'kaestchen'),
+  SC('Ich weiß, was ein Maßstab bedeutet.','Ich kann mit dem Maßstab 1 : 100 rechnen.')],
+ reihe:[['Groß und klein','Modelle und Spielzeug'],['Was bedeutet 1 : 100?','Maßstab erklären'],['Pläne zeichnen','Klassenraum im Maßstab'],['Entfernungen auf der Karte','Messen und umrechnen'],['Vergrößern','Maßstab 2 : 1']],
+ stunde:{thema:'Was bedeutet 1 : 100?',ziel:'Die Kinder können Längen im Maßstab 1 : 100 umrechnen.',
+  rows:ST('Spielzeugauto und echtes Auto (Bild): „Wie viel kleiner ist das Modell?“','Maßstab an Beispielen erklären, Tabellen ausfüllen, Rechteck zeichnen.','Lösungen vergleichen, Merksatz.','Ausblick: Klassenraumplan zeichnen.',['Spielzeugauto, Bild','Arbeitsblatt, Lineal','Tafel','–'])}},
+
+{id:'parkette',fach:'ma',titel:'Muster und Parkette',bereich:'Raum und Form',kl:[3,4],mon:[1,2],desc:'Flächen lückenlos auslegen, Muster fortsetzen und eigene Parkette erfinden.',
+ kompetenz:'Raum und Form – Muster: Die Kinder setzen geometrische Muster fort, beschreiben ihre Regel und legen Flächen lückenlos aus.',
+ blocks:()=>[TX('Ein Parkett ist ein Muster aus Formen, die eine Fläche ohne Lücken und ohne Überlappung bedecken, wie die Fliesen im Badezimmer.\n\nMit Quadraten, Rechtecken, gleichseitigen Dreiecken und Sechsecken klappt das sehr gut. Mit Kreisen klappt es nicht, denn zwischen den Kreisen bleiben immer Lücken. Ein Muster wiederholt sich nach einer bestimmten Regel.','info'),
+  TF('Richtig oder falsch? Kreuze an.',['+Mit Quadraten kann man eine Fläche ohne Lücken auslegen.','-Mit Kreisen kann man eine Fläche ohne Lücken auslegen.','+Bienenwaben sind ein Parkett aus Sechsecken.','-Bei einem Parkett überlappen sich die Formen.']),
+  DR('Setze das Muster fort: ein Quadrat, zwei Dreiecke, ein Quadrat, zwei Dreiecke …',4,'kaestchen'),
+  DR('Erfinde ein eigenes Parkett und male es bunt an.',8,'kaestchen'),
+  LN('Beschreibe die Regel deines Parketts.',2),
+  SC('Ich kann ein Muster fortsetzen.','Ich kann ein eigenes Parkett zeichnen.')],
+ reihe:[['Muster in der Umwelt','Fliesen, Zäune, Stoffe'],['Muster fortsetzen','Regeln finden'],['Flächen auslegen','Mit Formenplättchen'],['Welche Formen passen?','Quadrat, Dreieck, Kreis'],['Unser Parkett','Gemeinschaftsbild']],
+ stunde:{thema:'Welche Formen passen ohne Lücken?',ziel:'Die Kinder können prüfen, mit welchen Formen sich eine Fläche lückenlos auslegen lässt.',
+  rows:ST('Fotos von Fliesen und Bienenwaben: „Was ist das Besondere?“','Mit Formenplättchen Flächen auslegen, Ergebnisse eintragen, eigenes Parkett zeichnen.','Ergebnisse vergleichen: Warum klappt es mit Kreisen nicht?','Galerie der Parkette.',['Fotos','Formenplättchen, Arbeitsblatt, Buntstifte','Tafel','Galerie'])}},
+
+/* -------- Deutsch -------- */
+{id:'d-dehnungsh',fach:'de',titel:'Wörter mit Dehnungs-h',bereich:SCHR,kl:[3,4],mon:[3,4],desc:'Das stumme h nach langem Selbstlaut: Zahl, Schuh, wohnen.',
+ kompetenz:'Schreiben – Richtig schreiben: Die Kinder kennen häufige Wörter mit Dehnungs-h und nutzen die Merkstrategie.',
+ blocks:()=>[TX('Das Dehnungs-h hörst du nicht. Es steht nach einem langen Selbstlaut, oft vor l, m, n oder r: Zahl, nehmen, wohnen, Uhr.\nWörter mit Dehnungs-h sind Merkwörter. Schreibe sie oft und präge sie dir ein.','merk'),
+  MA('rechtschreib',1,{regel:'h'},12),MA('rechtschreib',2,{regel:'h'},12),
+  LN('Schreibe drei Wörter mit Dehnungs-h in einen Satz.',3),
+  SC('Ich kenne Wörter mit Dehnungs-h.','Ich übe Merkwörter regelmäßig.')],
+ reihe:[['Lange und kurze Selbstlaute','Hören und markieren'],['Das stumme h','Wörter sammeln'],['h vor l, m, n, r','Regel entdecken'],['Merkwörter üben','Wörterkartei'],['Wortfamilien','fahren, Fahrer, Fahrrad']],
+ stunde:{thema:'Das stumme h',ziel:'Die Kinder können häufige Wörter mit Dehnungs-h richtig schreiben.',
+  rows:ST('Wörter an der Tafel: Zahl, Schal. „Was ist anders?“','Wörter sortieren, Lückenwörter einsetzen, Sätze schreiben.','Regel: Das h hört man nicht, oft vor l, m, n, r.','Partnerdiktat mit drei Wörtern.',['Tafel','Arbeitsblatt, Wörterkartei','Tafel','Heft'])}},
+
+{id:'d-ableiten',fach:'de',titel:'Verlängern: b/p, d/t, g/k',bereich:SCHR,kl:[3,4],mon:[10,11],desc:'Am Wortende klingt es gleich. Mit der Verlängerungsprobe hörst du es.',
+ kompetenz:'Schreiben – Richtig schreiben: Die Kinder wenden die Verlängerungsprobe an, um die Schreibung von b/p, d/t und g/k am Wortende zu begründen.',
+ blocks:()=>[TX('Am Wortende klingen b und p, d und t, g und k oft gleich. Verlängere das Wort, dann hörst du es:\nHund → die Hunde, Zug → die Züge, gelb → gelbe Blumen.','merk'),
+  MA('rechtschreib',1,{regel:'ableiten'},12),MA('rechtschreib',2,{regel:'ableiten'},12),
+  TB('Verlängere das Wort und setze ein.',['Wort','verlängert'],[['Ber_','?Berge – Berg'],['Han_','?Hände – Hand'],['Die_','?Diebe – Dieb'],['run_','?runde – rund']]),
+  SC('Ich kann Wörter verlängern.','Ich weiß, wann ich b, d oder g schreibe.')],
+ reihe:[['Hören wir das?','Wortende genau abhören'],['Die Verlängerungsprobe','Nomen in die Mehrzahl setzen'],['Adjektive verlängern','gelb – gelbe'],['Verben verlängern','er gibt – geben'],['Rechtschreibdetektive','Fehler finden und begründen']],
+ stunde:{thema:'Die Verlängerungsprobe',ziel:'Die Kinder können mit der Verlängerungsprobe die Schreibung am Wortende begründen.',
+  rows:ST('Zwei Wortkarten: Hund und bunt. „Warum einmal d und einmal t?“','Wörter verlängern, Lückenwörter einsetzen, Tabelle.','Strategie als Merkplakat festhalten.','Wörterrätsel mit dem Partner.',['Wortkarten','Arbeitsblatt','Plakat','–'])}},
+
+{id:'d-ae',fach:'de',titel:'Ableiten: ä und äu',bereich:SCHR,kl:[3,4],mon:[1,2],desc:'Bälle kommt von Ball, Häuser von Haus: verwandte Wörter helfen.',
+ kompetenz:'Schreiben – Richtig schreiben: Die Kinder leiten Wörter mit ä und äu von verwandten Wörtern mit a und au ab.',
+ blocks:()=>[TX('Du hörst e, aber schreibst ä? Suche ein verwandtes Wort mit a: Bälle → Ball.\nDu hörst eu, aber schreibst äu? Suche ein verwandtes Wort mit au: Häuser → Haus.\nFindest du kein verwandtes Wort, schreibst du meistens e oder eu.','merk'),
+  MA('rechtschreib',1,{regel:'ae'},12),MA('rechtschreib',2,{regel:'ae'},12),
+  MT('Welches Wort ist verwandt? Verbinde.',['Bäume = Baum','Länder = Land','Mäuse = Maus','Zähne = Zahn','Äpfel = Apfel']),
+  SC('Ich kann Wörter mit ä und äu ableiten.')],
+ reihe:[['e oder ä?','Wörter abhören'],['Verwandte Wörter','Wortfamilien'],['äu oder eu?','Ableiten'],['Merkwörter','Käse, Bär, Mädchen'],['Üben im Text','Fehler finden']],
+ stunde:{thema:'Verwandte Wörter helfen',ziel:'Die Kinder können die Schreibung mit ä und äu durch Ableiten begründen.',
+  rows:ST('Bildkarten Ball – Bälle, Haus – Häuser: „Was fällt dir auf?“','Wortpaare finden, Lückenwörter einsetzen, Zuordnung.','Strategie Ableiten an der Tafel.','Wortfamilien-Wettbewerb.',['Bildkarten','Arbeitsblatt','Tafel','–'])}},
+
+{id:'d-v',fach:'de',titel:'Wörter mit V und v',bereich:SCHR,kl:[3,4],mon:[5,6],desc:'Vogel, viel, vorbei: Merkwörter und die Bausteine ver- und vor-.',
+ kompetenz:'Schreiben – Richtig schreiben: Die Kinder schreiben häufige Merkwörter mit V/v und die Wortbausteine ver- und vor- richtig.',
+ blocks:()=>[TX('Das v klingt meistens wie f. Wörter mit v musst du dir merken: Vater, Vogel, viel, vier, von.\nDie Bausteine ver- und vor- schreibst du immer mit v: verlieren, vorlesen.','merk'),
+  MA('rechtschreib',1,{regel:'v'},12),MA('rechtschreib',2,{regel:'v'},12),
+  GP('Setze ver- oder vor- ein.','Ich habe meinen Schlüssel *ver*loren. Mama *vor*liest eine Geschichte. Wir *ver*stecken uns. Das Auto fährt *vor*bei.',false),
+  SC('Ich kenne Merkwörter mit V und v.','Ich schreibe ver- und vor- richtig.')],
+ reihe:[['V wie Vogel','Merkwörter sammeln'],['ver- und vor-','Wortbausteine'],['Merkwörter üben','Wörterkartei'],['Wortfamilien','fahren – verfahren – vorfahren'],['Diktat vorbereiten','Übungstext']],
+ stunde:{thema:'Die Bausteine ver- und vor-',ziel:'Die Kinder können Wörter mit ver- und vor- bilden und richtig schreiben.',
+  rows:ST('Wortkarten mit Verben: „Was passiert, wenn wir ver- oder vor- davor setzen?“','Wörter bilden, Lückensätze, Merkwörter üben.','Wörter an der Tafel nach Bausteinen ordnen.','Partnerdiktat.',['Wortkarten','Arbeitsblatt','Tafel','Heft'])}},
+
+{id:'d-pronomen',fach:'de',titel:'Pronomen (Fürwörter)',bereich:SPR,kl:[3,4],mon:[11,12],desc:'ich, du, er, sie, es, wir, ihr, sie: Wiederholungen vermeiden.',
+ kompetenz:'Sprache und Sprachgebrauch untersuchen – Wortarten: Die Kinder kennen Personalpronomen und nutzen sie, um Wiederholungen in Texten zu vermeiden.',
+ blocks:()=>[TX('Pronomen stehen für ein Nomen. Man nennt sie auch Fürwörter.\nich, du, er, sie, es, wir, ihr, sie\nBeispiel: Tim spielt Fußball. Er schießt ein Tor.','merk'),
+  GP('Setze das passende Pronomen ein.','Lena hat einen Hund. *Sie* geht jeden Tag mit ihm spazieren. Der Hund heißt Bello. *Er* bellt laut. Paul und ich gehen mit. *Wir* werfen den Ball. Das Wetter ist schön. *Es* ist warm.'),
+  MT('Welches Pronomen passt? Verbinde.',['der Vogel = er','die Katze = sie','das Pferd = es','du und Tim = ihr','du und ich = wir']),
+  LN('Schreibe den Text neu. Ersetze das zweite „Oma“ und das zweite „Der Kuchen“ durch ein Pronomen: Oma backt einen Kuchen. Oma nimmt Mehl und Eier. Der Kuchen riecht gut. Der Kuchen ist bald fertig.',3),
+  SC('Ich kenne die Pronomen.','Ich kann Wiederholungen mit Pronomen vermeiden.')],
+ reihe:[['Immer dasselbe Wort?','Wiederholungen im Text'],['Die Pronomen','Fürwörter kennenlernen'],['Pronomen und Verben','ich spiele, du spielst'],['Texte verbessern','Pronomen einsetzen'],['Eigene Texte überarbeiten','Schreibkonferenz']],
+ stunde:{thema:'Pronomen vermeiden Wiederholungen',ziel:'Die Kinder können Nomen in einem Text durch passende Pronomen ersetzen.',
+  rows:ST('Lehrkraft liest einen Text vor, in dem immer wieder „Tim“ steht. „Was stört?“','Pronomen kennenlernen, Lückentext, Text überarbeiten.','Überarbeitete Texte vorlesen und vergleichen.','Selbsteinschätzung.',['Text','Arbeitsblatt','Dokumentenkamera','Arbeitsblatt'])}},
+
+{id:'d-wortbausteine',fach:'de',titel:'Wortbausteine: -ung, -heit, -keit',bereich:SPR,kl:[4],mon:[2,3],desc:'Aus Verben und Adjektiven werden Nomen: hoffen – die Hoffnung.',
+ kompetenz:'Sprache und Sprachgebrauch untersuchen – Wortbildung: Die Kinder bilden Nomen mit den Endungen -ung, -heit und -keit und schreiben sie groß.',
+ blocks:()=>[TX('Mit den Endungen -ung, -heit und -keit werden aus Verben und Adjektiven Nomen. Nomen schreibst du groß.\nhoffen → die Hoffnung, frei → die Freiheit, freundlich → die Freundlichkeit','merk'),
+  TB('Bilde Nomen mit -ung, -heit oder -keit.',['Wort','Nomen'],[['wandern','?die Wanderung'],['gesund','?die Gesundheit'],['ehrlich','?die Ehrlichkeit'],['zeichnen','?die Zeichnung'],['krank','?die Krankheit'],['heiter','?die Heiterkeit'],['meinen','?die Meinung'],['sicher','?die Sicherheit']]),
+  GP('Setze die Nomen ein.','Ich sage meine *Meinung*. Die *Rechnung* stimmt. Oma achtet auf ihre *Gesundheit*. Mit *Freundlichkeit* erreicht man viel.'),
+  SC('Ich kann Nomen mit -ung, -heit und -keit bilden.','Ich schreibe diese Nomen groß.')],
+ reihe:[['Wörter bauen','Wortbausteine kennenlernen'],['Die Endung -ung','Aus Verben werden Nomen'],['-heit und -keit','Aus Adjektiven werden Nomen'],['Großschreibung','Nomen erkennen'],['Wortbaustein-Spiel','Wörter legen']],
+ stunde:{thema:'Aus Verben und Adjektiven werden Nomen',ziel:'Die Kinder können Nomen mit -ung, -heit und -keit bilden und begründen, warum sie großgeschrieben werden.',
+  rows:ST('Wortkarten „wandern“ und „-ung“ werden zusammengesteckt: die Wanderung.','Nomen bilden, Tabelle ausfüllen, Lückentext.','Regel: Mit diesen Endungen entsteht ein Nomen, also groß.','Wortbaustein-Domino.',['Wortkarten','Arbeitsblatt','Tafel','Domino'])}},
+
+{id:'d-anleitung',fach:'de',titel:'Eine Anleitung schreiben',bereich:SCHR,kl:[3,4],mon:[11,12],desc:'Schritt für Schritt: Material, Reihenfolge und genaue Verben.',
+ kompetenz:'Schreiben – Texte verfassen: Die Kinder verfassen eine Vorgangsbeschreibung in sinnvoller Reihenfolge mit treffenden Verben.',
+ blocks:()=>[TX('Eine Anleitung erklärt Schritt für Schritt, wie man etwas macht.\n1. Schreibe zuerst auf, was man braucht (Material).\n2. Schreibe die Schritte in der richtigen Reihenfolge.\n3. Benutze Wörter wie: zuerst, dann, danach, zum Schluss.\n4. Wähle genaue Verben: schneiden, falten, kleben, rühren.','merk'),
+  TB('Bringe die Anleitung „Kresse säen“ in die richtige Reihenfolge.',['Schritt','Nr.'],[['Streue die Kressesamen auf die Watte.','?3'],['Lege Watte in eine Schale.','?1'],['Stelle die Schale an einen hellen Ort.','?4'],['Mache die Watte mit Wasser feucht.','?2'],['Nach einigen Tagen kannst du die Kresse ernten.','?5']]),
+  GP('Setze die Wörter ein.','*Zuerst* legst du die Watte in die Schale. *Dann* machst du sie feucht. *Danach* streust du die Samen darauf. *Zum Schluss* stellst du die Schale ans Fenster.'),
+  LN('Schreibe eine Anleitung für etwas, das du gut kannst, zum Beispiel ein Brot schmieren.',6),
+  SC('Ich schreibe die Schritte in der richtigen Reihenfolge.','Ich benutze genaue Verben.')],
+ reihe:[['Was ist eine Anleitung?','Bastel- und Spielanleitungen untersuchen'],['Die richtige Reihenfolge','Schritte ordnen'],['Genaue Verben','Wortfeld basteln'],['Eigene Anleitung','Schreiben'],['Anleitung testen','Partner probiert aus']],
+ stunde:{thema:'Die richtige Reihenfolge',ziel:'Die Kinder können die Schritte einer Anleitung ordnen und mit passenden Verbindungswörtern verknüpfen.',
+  rows:ST('Lehrkraft macht etwas nach einer falsch geordneten Anleitung vor, es klappt nicht.','Anleitung ordnen, Lückentext, eigene Anleitung beginnen.','Merkmale einer Anleitung als Plakat.','Ein Kind liest seine Anleitung, ein anderes führt sie aus.',['Material zum Vormachen','Arbeitsblatt','Plakat','–'])}},
+
+/* -------- Englisch -------- */
+{id:'e-fruit',fach:'en',titel:'Fruit and vegetables',bereich:EM,kl:[3,4],mon:[9,10],desc:'Obst und Gemüse benennen und auf dem Markt einkaufen: Can I have …?',
+ kompetenz:'Verfügen über sprachliche Mittel – Wortschatz: Die Kinder benennen Obst und Gemüse und führen einfache Einkaufsgespräche.',
+ blocks:()=>[MA('vokabel',1,{thema:'fruit',mode:'bild'},9),MA('vokabel',2,{thema:'fruit',mode:'verbinden'},6),
+  TX('At the market:\nA: Hello! Can I have three apples, please?\nB: Here you are.\nA: Thank you. Goodbye!','plain'),
+  LN('What do you like? Write: I like … I don’t like …',2),
+  SC('I can name fruit and vegetables.','I can ask for something at the market.')],
+ reihe:[['Fruit and vegetables','Wörter einführen'],['I like … / I don’t like …','Vorlieben'],['At the market','Rollenspiel'],['A fruit salad','Rezept lesen'],['The Very Hungry Caterpillar','Bilderbuch']],
+ stunde:{thema:'At the market',ziel:'Die Kinder können auf Englisch einfache Einkaufsgespräche führen.',
+  rows:ST('Obstkorb: Lehrkraft zieht Obst heraus, „What’s this?“','Wörter üben, Arbeitsblatt, Dialog lesen.','Rollenspiel Marktstand mit Spielgeld.','Lied.',['Obstkorb','Arbeitsblatt','Marktstand, Spielgeld','Lied'])}},
+
+{id:'e-sports',fach:'en',titel:'Sports',bereich:EM,kl:[3,4],mon:[6,7],desc:'Sportarten benennen und sagen, was man kann: I can swim.',
+ kompetenz:'Verfügen über sprachliche Mittel – Wortschatz: Die Kinder benennen Sportarten und sagen, was sie können und gern tun.',
+ blocks:()=>[MA('vokabel',1,{thema:'sports',mode:'bild'},8),MA('vokabel',2,{thema:'sports',mode:'deutsch'},6),
+  TB('Ask your friends: Can you swim? Can you ride a bike?',['Name','swim','ride a bike','play tennis'],4),
+  SC('I can name sports.','I can say what I can do.')],
+ reihe:[['Sports words','Pantomime'],['I can … / I can’t …','Fähigkeiten'],['Can you …?','Klassenumfrage'],['My favourite sport','Kurzvortrag'],['Sports day','Bewegungsspiele auf Englisch']],
+ stunde:{thema:'Can you swim?',ziel:'Die Kinder können fragen und antworten, welche Sportarten jemand kann.',
+  rows:ST('Pantomime: Lehrkraft macht eine Sportart vor, Kinder raten.','Wörter üben, Arbeitsblatt, Klassenumfrage.','Ergebnisse der Umfrage vorstellen.','Bewegungsspiel „Simon says“.',['–','Arbeitsblatt','Tafel','–'])}},
+
+{id:'e-town',fach:'en',titel:'In town',bereich:EM,kl:[4],mon:[2,3],desc:'Orte in der Stadt benennen und einfache Wegbeschreibungen verstehen.',
+ kompetenz:'Verfügen über sprachliche Mittel – Wortschatz: Die Kinder benennen Orte in der Stadt und verstehen einfache Wegbeschreibungen.',
+ blocks:()=>[MA('vokabel',1,{thema:'town',mode:'bild'},9),MA('vokabel',2,{thema:'town',mode:'verbinden'},6),
+  MT('Match. Verbinde.',['Go straight on. = Geh geradeaus.','Turn left. = Bieg links ab.','Turn right. = Bieg rechts ab.','Stop! = Bleib stehen!']),
+  SC('I can name places in town.','I understand simple directions.')],
+ reihe:[['Places in town','Wörter einführen'],['Where is the …?','Fragen stellen'],['Directions','left, right, straight on'],['A town map','Wege beschreiben'],['My town','Eigenen Stadtplan malen']],
+ stunde:{thema:'Directions',ziel:'Die Kinder können einfache Wegbeschreibungen auf Englisch verstehen und befolgen.',
+  rows:ST('Bewegungsspiel: „Turn left! Turn right! Go straight on!“','Wörter üben, Arbeitsblatt, Zuordnung.','Partnerarbeit am Stadtplan: Ein Kind beschreibt, das andere zeigt.','Lied.',['–','Arbeitsblatt, Stadtplan','Stadtplan','Lied'])}},
+
+{id:'e-time',fach:'en',titel:'What’s the time?',bereich:EK,kl:[4],mon:[4,5],desc:'Volle Stunden auf Englisch: It’s seven o’clock.',
+ kompetenz:'Kommunikation – sprachliches Handeln: Die Kinder fragen nach der Uhrzeit und nennen volle Stunden.',
+ blocks:()=>[MA('vokabel',1,{thema:'time',mode:'bild'},8),MA('vokabel',2,{thema:'time',mode:'deutsch'},6),
+  TB('My day. When do you …?',['What?','Time'],[['get up'],['go to school'],['have lunch'],['go to bed']]),
+  SC('I can say the time.','I can ask: What’s the time?')],
+ reihe:[['Numbers 1 to 12','Wiederholung'],['What’s the time?','Volle Stunden'],['My day','Tagesablauf'],['What’s the time, Mr Wolf?','Spiel'],['Clock song','Lied']],
+ stunde:{thema:'What’s the time?',ziel:'Die Kinder können nach der Uhrzeit fragen und volle Stunden auf Englisch angeben.',
+  rows:ST('Lernuhr: „What’s the time?“ – Lehrkraft stellt volle Stunden ein.','Wörter üben, Arbeitsblatt, Tagesablauf ausfüllen.','Partnerarbeit mit Lernuhren.','Spiel „What’s the time, Mr Wolf?“',['Lernuhr','Arbeitsblatt','Lernuhren','Schulhof'])}}
+);
 
 window.addEventListener('hashchange',route);
 route();
