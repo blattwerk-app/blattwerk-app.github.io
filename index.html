@@ -4302,6 +4302,12 @@ document.addEventListener('keydown',e=>{if($('#beamer').hidden)return;if(e.key==
 window.addEventListener('resize',()=>{if(!$('#beamer').hidden)bmRender()});
 const _routeBm=route;route=function(){if(!$('#beamer').hidden)bmClose();_routeBm()};
 
+/* Einfügen-Fenster: Reiter „Englisch“ und „Lernspiele“ zeigen ihre eigenen Bausteine */
+const _rpkFix=renderPick;renderPick=function(){_rpkFix();const t=S.pickTab;if(t!=='e'&&t!=='s')return;
+  const list=t==='e'?EN_ORDER:SPIEL_ORDER,ic=t==='e'?'globe':'dice';
+  $('#pick-grid').innerHTML=list.map(k=>`<button class="pick ${t}" data-pick="math:${k}"><span class="tile">${icon(ic)}</span><span><b>${GEN[k].name}</b><span>${GEN[k].short}</span></span></button>`).join('');
+  if(t==='s')$('#pick-note').textContent='Spiele und Rätsel zum Ausdrucken. Auf dem Lösungsblatt stehen die richtigen Paare, die Aufrufliste oder die Lösungswörter.'};
+
 window.addEventListener('hashchange',route);
 route();
 
