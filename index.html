@@ -4727,6 +4727,24 @@ if(EN.birthday)EN.birthday=EN.birthday.filter(x=>x[0]!=='party hat');
 /* „Draw a grey shoes“: bei Mehrzahl-Wörtern kein a/an */
 (()=>{const g=GEN.vokabel,_r=g.render;g.render=function(b,L,R){return _r.call(this,b,L,R).replace(/Draw an? (\w+) (shoes|socks|trousers|gloves|boots|grapes|sweets|games|cherries)\b/g,'Draw $1 $2')}})();
 
+/* teil:p36_neu_klasse.js */
+
+/* =========================================================
+   Paket 21: „Neu“-Schild auf Themenkarten, überall „Klasse 3/4“ statt „Klasse 3 + 4“
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+.chip.neu{background:#f3c93f;color:#3d2e00;border-color:#f3c93f;font-weight:800}
+</style>`);
+function klasseEinheitlich(root){if(!root)return;root.querySelectorAll('.chip, small, .tmeta span').forEach(el=>{
+  if(el.children.length===0&&/Klasse \d \+ \d/.test(el.textContent))el.textContent=el.textContent.replace(/Klasse (\d) \+ (\d)/g,'Klasse $1/$2')})}
+function neuSchilder(){if(!Array.isArray(UI.seenT))return;const seen=new Set(UI.seenT);
+  document.querySelectorAll('#th-cards .tcard[data-topic]').forEach(c=>{if(seen.has(c.dataset.topic)||c.querySelector('.chip.neu'))return;
+    const m=c.querySelector('.tmeta');m&&m.insertAdjacentHTML('afterbegin','<span class="chip neu">Neu</span>')})}
+const _rtNK=renderThemen;renderThemen=function(){_rtNK();klasseEinheitlich($('#th-cards'));neuSchilder()};
+const _rsNK=renderStart;renderStart=function(){_rsNK();klasseEinheitlich($('#season'))};
+const _otNK=openTopic;openTopic=function(id){_otNK(id);klasseEinheitlich($('#dt-info'));
+  const c=document.querySelector(`#th-cards .tcard[data-topic="${id}"] .chip.neu`);c&&c.remove()};
+
 window.addEventListener('hashchange',route);
 route();
 
