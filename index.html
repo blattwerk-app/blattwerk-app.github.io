@@ -4451,6 +4451,17 @@ fitPrintRoot=function(){$('#print-root').querySelectorAll(':scope > .paper').for
     if(!m.off)b.insertAdjacentHTML('beforebegin',pgHead(p,m.n,r.n))});
   growLast(p,pos,r)})};
 
+/* teil:p23_sterne.js */
+
+/* =========================================================
+   Paket 8: Schalter „Schwierigkeit mit Sternen zeigen“ nur, wenn das Blatt automatische Aufgaben hat
+   (nur diese haben eine Schwierigkeitsstufe)
+   ========================================================= */
+const _rsSterne=renderSide;renderSide=function(){_rsSterne();const sh=curSheet();if(!sh||selBlock())return;
+  if(sh.blocks.some(b=>b.type==='math'))return;
+  const sw=$('#b-side input[data-sh="showStars"]');const lab=sw&&sw.closest('label');if(lab)lab.hidden=true;
+  const sm=$('#sh-set summary small');if(sm)sm.textContent=sm.textContent.replace(' · Sterne','')};
+
 window.addEventListener('hashchange',route);
 route();
 
