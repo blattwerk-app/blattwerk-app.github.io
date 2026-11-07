@@ -4711,6 +4711,22 @@ SCHNELL.ma='Erfinde selbst eine Aufgabe zum Thema und löse sie. Tausche dann mi
   $('#print-root').querySelectorAll('.paper[data-fach="ma"] .schnell').forEach(s=>{const wl=[...s.querySelectorAll('.wl')];if(!wl.length)return;
     const h=wl.length*9.5;wl.forEach(x=>x.remove());s.insertAdjacentHTML('beforeend',`<div class="kast" style="height:${h}mm;margin:1mm 0 2mm"></div>`)})}})();
 
+/* teil:p35_deutsch_englisch.js */
+
+/* =========================================================
+   Paket 20: Ergebnisse der Durchsicht Deutsch und Englisch
+   ========================================================= */
+(()=>{const fix=(id,f)=>{const t=TOPICS.find(x=>x.id===id);if(!t)return;const o=t.blocks;t.blocks=()=>f(o());try{PV.delete(id)}catch(e){}};
+  /* „vorlesen“ ist trennbar: „Mama vorliest“ ist falsch */
+  fix('d-v',bs=>bs.map(b=>b.type==='gap'?{...b,source:b.source.replace('Mama *vor*liest eine Geschichte.','Mama hat eine Geschichte *vor*gelesen.')}:b));
+  /* Englischer Text mit englischen Anführungszeichen */
+  const q=s=>typeof s==='string'?s.replace(/„([^“]*)“/g,'“$1”'):s;
+  fix('e-festivals',bs=>bs.map(b=>b.type==='text'?{...b,text:q(b.text)}:b.type==='truefalse'?{...b,items:b.items.map(x=>({...x,s:q(x.s)}))}:b))})();
+/* „party hat“ (🥳) ist neben „party“ (🎉) nicht eindeutig */
+if(EN.birthday)EN.birthday=EN.birthday.filter(x=>x[0]!=='party hat');
+/* „Draw a grey shoes“: bei Mehrzahl-Wörtern kein a/an */
+(()=>{const g=GEN.vokabel,_r=g.render;g.render=function(b,L,R){return _r.call(this,b,L,R).replace(/Draw an? (\w+) (shoes|socks|trousers|gloves|boots|grapes|sweets|games|cherries)\b/g,'Draw $1 $2')}})();
+
 window.addEventListener('hashchange',route);
 route();
 
