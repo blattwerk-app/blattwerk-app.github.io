@@ -4681,6 +4681,15 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
     SC('Ich kann den Flächeninhalt mit Kästchen bestimmen.','Ich kann den Umfang einer Figur messen.')];
   try{PV.delete('flaeche')}catch(e){}})();
 
+/* teil:p33_laenge.js */
+
+/* Paket 18: Zwei Themen werden in einer Schwierigkeitsstufe sonst 3 Seiten lang
+   - Wortarten (Stufe ★★★): weniger Wörter pro Aufgabe
+   - Days and months (Stufe ★, Safari): 9 Monate und Tabelle mit 3 Zeilen */
+(()=>{const fix=(id,f)=>{const t=TOPICS.find(x=>x.id===id);if(!t)return;const orig=t.blocks;t.blocks=()=>f(orig());try{PV.delete(id)}catch(e){}};
+  fix('d-wortarten',bs=>{let k=0;return bs.map(b=>b.type==='math'&&b.gen==='wortarten'?{...b,count:[6,6,4][k++]??b.count}:b)});
+  fix('e-days',bs=>bs.map(b=>b.type==='table'?{...b,rows:b.rows.slice(0,3)}:b.type==='math'&&b.opts&&b.opts.thema==='months'?{...b,count:9}:b))})();
+
 window.addEventListener('hashchange',route);
 route();
 
