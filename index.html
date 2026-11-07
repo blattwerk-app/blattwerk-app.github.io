@@ -4528,6 +4528,17 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
     const free=(cap-used-24)/s;if(free<15*MM)return;
     growArea(blks.slice(st,en),free)})};
 
+/* teil:p27_schrift.js */
+
+/* =========================================================
+   Paket 12: Vor dem Drucken sicherstellen, dass die Blatt-Schrift geladen ist
+   (sonst stimmen die berechneten Seitenumbrüche nicht mit dem Ausdruck überein)
+   ========================================================= */
+printHTML=function(html){$('#print-root').innerHTML=html;const go=()=>{fitPrintRoot();setTimeout(()=>window.print(),80)};
+  let ok=true;try{ok=!document.fonts||(document.fonts.check('12pt Andika')&&document.fonts.check('bold 12pt Andika'))}catch(e){}
+  if(ok)return go();
+  Promise.race([Promise.all([document.fonts.load('12pt Andika'),document.fonts.load('bold 12pt Andika')]),new Promise(r=>setTimeout(r,2500))]).then(go,go)};
+
 window.addEventListener('hashchange',route);
 route();
 
