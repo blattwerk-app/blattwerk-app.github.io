@@ -4480,6 +4480,23 @@ document.head.insertAdjacentHTML('beforeend',`<style>
 #sh-set>.fld+.sw,#sh-set>.fld+.sw[hidden]+.sw{padding-top:16px;border-top:1px solid var(--line)}
 </style>`);
 
+/* teil:p25_safari_seiten.js */
+
+/* =========================================================
+   Paket 10: Safari hat beim Drucken weniger Platz pro Seite als Chrome
+   (gemessen: etwa 256 mm statt 273 mm bei 12 mm Rand). Blattwerk rechnet in Safari mit der kleineren Seite,
+   damit die Anzeige im Editor, die Kopfzeile ab Seite 2 und der echte Ausdruck übereinstimmen.
+   ========================================================= */
+const istSafari=()=>{if(window.BW_SAFARI!==undefined)return!!window.BW_SAFARI;const ua=navigator.userAgent;
+  return/Safari/.test(ua)&&/Apple/.test(navigator.vendor||'')&&!/CriOS|FxiOS|EdgiOS|Chrome|Chromium|Edg\//.test(ua)};
+const SAFARI_H=256*MM-4;
+paginate=function(pos,s){const H=istSafari()?SAFARI_H*0.96:PH_SAFE;let pageTop=0,cap=H,n=1;const marks=[];const CAP2=H-HEAD_H;
+  pos.forEach((b,i)=>{const top=b.top*s,bot=b.bot*s;
+    if(b.pb){n++;marks.push({i,at:'after',n});pageTop=bot;cap=CAP2;return}
+    if(bot-pageTop>cap&&top>pageTop+1){n++;marks.push({i,off:0,n});pageTop=top;cap=CAP2}
+    while(bot-pageTop>cap){n++;marks.push({i,off:(pageTop+cap-top)/s,n});pageTop+=cap;cap=CAP2}});
+  return{n,marks,lastTop:pageTop,lastCap:cap}};
+
 window.addEventListener('hashchange',route);
 route();
 
