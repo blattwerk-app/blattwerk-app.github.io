@@ -4398,6 +4398,59 @@ document.head.insertAdjacentHTML('beforeend',`<style>
   tip.insertAdjacentHTML('afterend',`<div class="ptip" id="p-safari"><b>Safari druckt oben Datum und Uhrzeit und unten den Link mit?</b> Einmal abschalten, Safari merkt es sich:
     <ol><li>Auf <b>Jetzt drucken</b> klicken.</li><li>Im Druckfenster, falls nötig, unten links auf <b>Details einblenden</b> klicken.</li><li>Das Häkchen bei <b>Kopf- und Fußzeilen drucken</b> entfernen.</li></ol></div>`)})();
 
+/* teil:p22_seiten.js */
+
+/* =========================================================
+   Paket 7: Bessere Seitenaufteilung beim Drucken
+   - ab Seite 2 eine schmale Kopfzeile (Thema, Seite x von y, Name)
+   - auf der letzten Seite werden Schreiblinien und Malkästen größer, statt dass die Seite halb leer bleibt
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+.pghead{display:none}
+@media print{
+  #print-root .pghead{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;break-before:page;page-break-before:always;
+    height:6mm;margin:0 0 4mm;border-bottom:1px solid #c3cad8;font:600 9.5pt var(--sheet);color:#4a5263}
+  #print-root .pghead .nm{font-weight:400}
+}
+</style>`);
+const HEAD_H=11*MM;
+/* Seiten simulieren: ab Seite 2 ist oben Platz für die Kopfzeile reserviert */
+/* 5 % Reserve: Beim Drucken setzen Browser Text minimal anders als am Bildschirm */
+const PH_SAFE=PAGE_H*0.95;
+paginate=function(pos,s){let pageTop=0,cap=PH_SAFE,n=1;const marks=[];const CAP2=PH_SAFE-HEAD_H;
+  pos.forEach((b,i)=>{const top=b.top*s,bot=b.bot*s;
+    if(b.pb){n++;marks.push({i,at:'after',n});pageTop=bot;cap=CAP2;return}
+    if(bot-pageTop>cap&&top>pageTop+1){n++;marks.push({i,off:0,n});pageTop=top;cap=CAP2}
+    while(bot-pageTop>cap){n++;marks.push({i,off:(pageTop+cap-top)/s,n});pageTop+=cap;cap=CAP2}});
+  return{n,marks,lastTop:pageTop,lastCap:cap}};
+
+function pgHead(p,k,n){const t=(p.querySelector('.sh-title')||{}).textContent||'';const sol=p.classList.contains('show-sol');
+  return`<div class="pghead"><span>${esc(t)} · Seite ${k} von ${n}</span><span class="nm">${sol?'Lösung':'Name: ______________________'}</span></div>`}
+
+/* Platz auf der letzten Seite an Schreib- und Malflächen verteilen */
+function growLast(p,pos,r){const s=r.s||1;if(!pos.length)return;
+  const lastBot=pos[pos.length-1].bot*s;let free=(r.lastCap-(lastBot-r.lastTop)-24)/s;if(free<15*MM)return;
+  const blks=[...p.querySelectorAll(':scope > .blk')];
+  const onLast=blks.filter((b,i)=>pos[i]&&pos[i].top*s>=r.lastTop-1);
+  const draws=onLast.flatMap(b=>[...b.querySelectorAll(':scope > .draw, :scope > .kast')]);
+  const lines=onLast.filter(b=>b.querySelector(':scope > .wl'));
+  if(!draws.length&&!lines.length)return;
+  const dShare=draws.length?(lines.length?free*0.6:free):0,lShare=free-dShare;
+  const toPx=v=>{const n=parseFloat(v)||0;return /cm$/.test(v)?n*10*MM:/mm$/.test(v)?n*MM:n};
+  draws.forEach(d=>{const add=Math.min(dShare/draws.length,80*MM);d.dataset.h0=d.dataset.h0||d.style.height;d.style.height=(toPx(d.dataset.h0)+add).toFixed(1)+'px'});
+  const LH=9.5*MM;let extra=Math.floor(lShare/LH);
+  for(let k=0;extra>0&&k<40;k++){const b=lines[k%lines.length];if(b.querySelectorAll(':scope > .wl.grow').length>=8)break;b.insertAdjacentHTML('beforeend','<div class="wl grow"></div>');extra--}}
+
+fitPrintRoot=function(){$('#print-root').querySelectorAll(':scope > .paper').forEach(p=>{
+  if(!p.querySelector(':scope > .blk'))return;
+  p.querySelectorAll(':scope > .pghead, .wl.grow').forEach(x=>x.remove());p.style.zoom='';
+  const pos=measurePaper(p.outerHTML);const r=fitScale(pos);if(r.s<1)p.style.zoom=r.s;
+  const blks=[...p.querySelectorAll(':scope > .blk')];
+  r.marks.forEach(m=>{const b=blks[m.i];if(!b)return;
+    if(m.at==='after'){const nx=blks[m.i+1];nx&&nx.insertAdjacentHTML('beforebegin',pgHead(p,m.n,r.n));return}
+    if(!m.off)b.insertAdjacentHTML('beforebegin',pgHead(p,m.n,r.n))});
+  growLast(p,pos,r)})};
+
 window.addEventListener('hashchange',route);
 route();
 
