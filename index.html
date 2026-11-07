@@ -4381,6 +4381,23 @@ if(S.view==='start')zeigeNeu();
     det('Kann ich Blattwerk auf dem Handy oder Tablet benutzen?','Ja. Auf dem Handy sind die Bereiche unten in einer Leiste. Wenn du auf dem Blatt eine Aufgabe antippst, kommen die Einstellungen von unten. Mit <b>Größer</b> kannst du das Blatt vergrößern und seitlich schieben. Für größere Arbeitsblätter und zum Drucken ist ein Computer aber bequemer. Wichtig: Jedes Gerät speichert seine eigenen Blätter. Mit <b>Sicherung herunterladen</b> und <b>Sicherung laden</b> unter <b>Meine Sachen</b> nimmst du sie mit.')+
     det('Kommen neue Themen dazu?','Ja, regelmäßig. Neue Themen erscheinen automatisch, du musst nichts tun. Auf der Startseite steht dann <b>Neue Themen seit deinem letzten Besuch</b>. Klicke ein Thema an, um es anzusehen, oder auf <b>Alles klar</b>, um den Hinweis auszublenden.'))})();
 
+/* teil:p21_druck_safari.js */
+
+/* =========================================================
+   Paket 6: Safari-Hinweis im Druckfenster
+   Safari lässt Webseiten seine Kopf- und Fußzeilen (Datum, Uhrzeit, Titel, Link) nicht zuverlässig abschalten.
+   Ein Seitenrand von 0 würde sie zwar entfernen, aber dann bricht Safari die Seiten selbst um und Text kann
+   ohne Rand an der Blattkante landen. Deshalb: deutlicher Hinweis auf das Häkchen, das Safari sich merkt.
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#p-safari{background:var(--mark-soft);border:1.5px solid var(--mark);border-radius:10px;padding:10px 12px;color:var(--ink)}
+#p-safari ol{margin:6px 0 0;padding-left:20px}
+</style>`);
+(()=>{const ua=navigator.userAgent;const safari=/Safari/.test(ua)&&/Apple/.test(navigator.vendor||'')&&!/CriOS|FxiOS|EdgiOS|Chrome|Chromium|Edg\//.test(ua);
+  const tip=$('#dlg-print .ptip');if(!safari||!tip||$('#p-safari'))return;
+  tip.insertAdjacentHTML('afterend',`<div class="ptip" id="p-safari"><b>Safari druckt oben Datum und Uhrzeit und unten den Link mit?</b> Einmal abschalten, Safari merkt es sich:
+    <ol><li>Auf <b>Jetzt drucken</b> klicken.</li><li>Im Druckfenster, falls nötig, unten links auf <b>Details einblenden</b> klicken.</li><li>Das Häkchen bei <b>Kopf- und Fußzeilen drucken</b> entfernen.</li></ol></div>`)})();
+
 window.addEventListener('hashchange',route);
 route();
 
