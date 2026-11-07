@@ -4131,6 +4131,177 @@ TOPICS.push(
   rows:ST('Lernuhr: „What’s the time?“ – Lehrkraft stellt volle Stunden ein.','Wörter üben, Arbeitsblatt, Tagesablauf ausfüllen.','Partnerarbeit mit Lernuhren.','Spiel „What’s the time, Mr Wolf?“',['Lernuhr','Arbeitsblatt','Lernuhren','Schulhof'])}}
 );
 
+/* teil:p19_extras.js */
+
+/* =========================================================
+   Paket 4: Papier sparen (2 × A5), Beamer-Modus, Suchsel und Kreuzworträtsel
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+/* Suchsel */
+.ss{border-collapse:collapse;margin:1mm auto 3mm}
+.ss td{width:7.6mm;height:7.6mm;padding:0;text-align:center;vertical-align:middle;font:700 12.5pt var(--sheet);border:1px solid #c3cad8;color:var(--p-ink)}
+.show-sol .ss td.ssh{background:#fde4e4;color:#c62828}
+.sswords{display:flex;flex-wrap:wrap;gap:2mm 3mm;justify-content:center}
+.sswords span{border:1.2px solid #c3cad8;border-radius:99px;padding:0 3mm;font-size:11.5pt}
+/* Kreuzworträtsel */
+.kw{border-collapse:collapse;margin:1mm auto 4mm}
+.kw td{width:7.8mm;height:7.8mm;padding:0;position:relative;text-align:center;vertical-align:middle}
+.kw td.kc{border:1.3px solid #3d4556;background:#fff}
+.kw td.kc i{position:absolute;left:.5mm;top:0;font:700 6.5pt var(--ui);font-style:normal;color:#3d4556;line-height:1}
+.kw td.kc .sol{font:700 12.5pt var(--sheet)}
+.kwclues{display:grid;grid-template-columns:1fr 1fr;gap:2mm 8mm}
+.kwclues h4{margin:0 0 1.5mm;font-size:11.5pt}
+.kwclues div div{margin:0 0 1.2mm;font-size:11.5pt}
+.kwclues .em{font-size:15pt;line-height:1;vertical-align:-1mm}
+/* Beamer */
+#beamer{position:fixed;inset:0;z-index:200;background:#1d2230;display:flex;flex-direction:column}
+#beamer[hidden]{display:none}
+.bm-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:#11151f;color:#fff}
+.bm-bar b{flex:1;min-width:120px;font:700 16px var(--ui)}
+.bm-bar .btn{background:#2a3142;color:#fff;border-color:#3a4358}
+.bm-bar .btn[aria-pressed="true"]{background:#c62828;border-color:#c62828}
+.bm-stage{flex:1;overflow:auto;padding:20px}
+.bm-stage .paper{margin:0 auto;box-shadow:0 10px 40px rgba(0,0,0,.5);min-height:0}
+/* A5-Hinweis im Druckfenster */
+.popt.off{opacity:.55}
+</style>`);
+
+/* ---------- Suchsel und Kreuzworträtsel ---------- */
+const PUZ_LISTS=[['animals','Tiere'],['food','Essen'],['fruit','Obst und Gemüse'],['clothes','Kleidung'],['school','Schulsachen'],['body','Körper'],['transport','Verkehrsmittel'],['toys','Spielsachen'],['house','Haus und Wohnung'],['weather','Wetter'],['sports','Sport'],['town','In der Stadt'],['festivals','Feste']];
+const PUZ_INHALT=[['blatt','Wörter aus diesem Blatt (Lückentext)'],...PUZ_LISTS.map(([k,l])=>['de:'+k,l+' (deutsch, mit Bildern)']),...PUZ_LISTS.map(([k,l])=>['en:'+k,l+' (englisch)']),['eigene','Eigene Wörter (selbst eintippen)']];
+const KW_INHALT=PUZ_INHALT.filter(x=>x[0]!=='blatt');
+const puzUp=w=>w.toUpperCase().replace(/ß/g,'SS');
+const puzOk=w=>/^[A-Za-zÄÖÜäöüß]{3,13}$/.test(w);
+/* Wörter, die gerade auf dem Blatt stehen (Lückentext-Lösungen) */
+const _rsPuz=renderSheet;renderSheet=function(sh,o){const p=window._rsh;window._rsh=sh;try{return _rsPuz(sh,o)}finally{window._rsh=p}};
+function puzWords(b,R,n,needClue){const src=b.opts.inhalt;let list=[];
+  if(src==='eigene'){list=(b.custom??GEN[b.gen].customDefault).split('\n').map(s=>{const i=s.indexOf('=');return i<0?[s.trim(),'']:[s.slice(0,i).trim(),s.slice(i+1).trim()]})}
+  else if(src==='blatt'){const sh=window._rsh;const seen=new Set();
+    (sh?sh.blocks:[]).forEach(x=>{if(x.type==='gap')(x.source.match(/\*([^*]+)\*/g)||[]).forEach(m=>{const w=m.slice(1,-1).trim();if(!seen.has(w.toLowerCase())){seen.add(w.toLowerCase());list.push([w,''])}})})}
+  else{const[lang,k]=src.split(':');(EN[k]||[]).forEach(([en,de,em])=>{if(lang==='de'){if(em)list.push([de,em])}else list.push([en,(em?em+' ':'')+de])})}
+  list=list.filter(([w,c])=>puzOk(w)&&(!needClue||c));
+  const seen=new Set();list=list.filter(([w])=>{const u=puzUp(w);if(seen.has(u))return false;seen.add(u);return true});
+  return R.shuffle(list).slice(0,n)}
+const PUZ_TOO_FEW=src=>src==='blatt'?'<p class="hint">Auf diesem Blatt gibt es zu wenige Lückenwörter. Wähle rechts unter „Inhalt“ eine Wortliste oder trage eigene Wörter ein.</p>':'<p class="hint">Es werden mindestens drei Wörter mit 3 bis 13 Buchstaben gebraucht. Wähle eine andere Wortliste oder trage mehr Wörter ein.</p>';
+
+GEN.suchsel={fach:'spiel',custom:true,name:'Suchsel (Wortgitter)',short:'Wörter im Buchstabengitter finden',defaults:{count:8,level:1,opts:{inhalt:'de:animals'}},
+  options:[{k:'inhalt',l:'Wörter',c:PUZ_INHALT}],
+  customLabel:'Eigene Wörter',customHint:'Ein Wort pro Zeile, 3 bis 13 Buchstaben, ohne Leerzeichen.',customDefault:'Igel\nStacheln\nLaub\nWinterschlaf\nKäfer\nSchnecke\nNest\nHecke',
+  instr:(b,L)=>L===3?'Finde die versteckten Wörter. Sie stehen waagerecht, senkrecht, schräg und auch rückwärts. Kreise sie ein.':L===2?'Finde die Wörter. Sie stehen waagerecht, senkrecht und schräg. Kreise sie ein.':'Finde die Wörter. Sie stehen waagerecht → und senkrecht ↓. Kreise sie ein.',
+  render(b,L,R){const N=L===1?9:L===2?11:13;const words=puzWords(b,R,Math.min(b.count,14)).map(([w])=>w).filter(w=>puzUp(w).length<=N);
+    if(words.length<3)return PUZ_TOO_FEW(b.opts.inhalt);
+    const dirs=L===1?[[0,1],[1,0]]:L===2?[[0,1],[1,0],[1,1]]:[[0,1],[1,0],[1,1],[0,-1],[-1,0],[-1,1],[1,-1],[-1,-1]];
+    const g=Array.from({length:N},()=>Array(N).fill('')),hit=new Set(),placed=[];
+    words.sort((a,b)=>puzUp(b).length-puzUp(a).length).forEach(w=>{const u=[...puzUp(w)];
+      for(let t=0;t<300;t++){const[dr,dc]=R.pick(dirs),r=R.int(0,N-1),c=R.int(0,N-1);const er=r+dr*(u.length-1),ec=c+dc*(u.length-1);
+        if(er<0||er>=N||ec<0||ec>=N)continue;let ok=true;for(let i=0;i<u.length;i++){const x=g[r+dr*i][c+dc*i];if(x&&x!==u[i]){ok=false;break}}
+        if(!ok)continue;for(let i=0;i<u.length;i++){g[r+dr*i][c+dc*i]=u[i];hit.add((r+dr*i)+','+(c+dc*i))}placed.push(w);break}});
+    const AB='ABCDEEEFGHIIKLLMNNOPRRSSTTUUWZ';
+    const rows=g.map((row,r)=>`<tr>${row.map((x,c)=>`<td${hit.has(r+','+c)?' class="ssh"':''}>${x||AB[Math.floor(R.r()*AB.length)]}</td>`).join('')}</tr>`).join('');
+    const list=L===3?`<p style="text-align:center">Es sind <b>${placed.length} Wörter</b> versteckt.</p><div class="solblock"><div class="sswords">${placed.map(w=>`<span>${esc(w)}</span>`).join('')}</div></div>`
+      :`<div class="sswords">${placed.map(w=>`<span>${esc(w)}</span>`).join('')}</div>`;
+    return`<table class="ss">${rows}</table>${list}`}};
+
+/* Kreuzworträtsel: Wörter über gemeinsame Buchstaben verbinden */
+function kwLayout(items,R){const cells=new Map(),key=(r,c)=>r+','+c,out=[];
+  const fits=(u,r,c,d)=>{const[dr,dc]=d?[1,0]:[0,1];let cross=0;
+    if(cells.has(key(r-dr,c-dc))||cells.has(key(r+dr*u.length,c+dc*u.length)))return-1;
+    for(let i=0;i<u.length;i++){const rr=r+dr*i,cc=c+dc*i,x=cells.get(key(rr,cc));
+      if(x){if(x.ch!==u[i]||x.d.has(d))return-1;cross++}
+      else if(cells.has(key(rr+dc,cc+dr))||cells.has(key(rr-dc,cc-dr)))return-1}
+    return cross};
+  const put=(it,u,r,c,d)=>{const[dr,dc]=d?[1,0]:[0,1];for(let i=0;i<u.length;i++){const k=key(r+dr*i,c+dc*i);const x=cells.get(k)||{ch:u[i],d:new Set()};x.d.add(d);cells.set(k,x)}out.push({...it,u,r,c,d})};
+  const bounds=()=>{let a=1e9,b=-1e9,c=1e9,e=-1e9;cells.forEach((_,k)=>{const[r,cc]=k.split(',').map(Number);a=Math.min(a,r);b=Math.max(b,r);c=Math.min(c,cc);e=Math.max(e,cc)});return[a,b,c,e]};
+  const list=items.map(it=>({...it,u:[...puzUp(it.w)]})).sort((x,y)=>y.u.length-x.u.length);
+  put(list[0],list[0].u,0,0,0);
+  let rest=list.slice(1);
+  for(let pass=0;pass<2;pass++){const left=[];
+    rest.forEach(it=>{let best=null;
+      cells.forEach((x,k)=>{const[r0,c0]=k.split(',').map(Number);it.u.forEach((ch,i)=>{if(ch!==x.ch)return;[0,1].forEach(d=>{const r=d?r0-i:r0,c=d?c0:c0-i;const cr=fits(it.u,r,c,d);if(cr<1)return;
+        const[a,b,cc,e]=bounds();const h=Math.max(b,d?r+it.u.length-1:r)-Math.min(a,r)+1,wd=Math.max(e,d?c:c+it.u.length-1)-Math.min(cc,c)+1;
+        const score=cr*40-h*wd-(wd>20?1e4:0)-(h>24?1e4:0)+R.r();if(!best||score>best.s)best={s:score,r,c,d}})})});
+      if(best&&best.s>-5000)put(it,it.u,best.r,best.c,best.d);else left.push(it)});
+    rest=left}
+  return out}
+GEN.kreuzwort={fach:'spiel',custom:true,name:'Kreuzworträtsel',short:'Wörter zu Bildern oder Hinweisen eintragen',defaults:{count:8,level:1,opts:{inhalt:'de:animals'}},
+  options:[{k:'inhalt',l:'Wörter',c:KW_INHALT}],
+  customLabel:'Eigene Wörter mit Hinweis',customHint:'Ein Wort pro Zeile, dann = und der Hinweis. Zum Beispiel: Igel = Tier mit Stacheln.',customDefault:'Igel = Tier mit Stacheln\nLaub = Blätter auf dem Boden\nNest = Bett des Igels\nKäfer = Futter mit sechs Beinen\nWinterschlaf = so verbringt der Igel den Winter\nHecke = viele Sträucher in einer Reihe',
+  instr:(b,L)=>L===1?'Was ist das? Trage die Wörter ein. Die Kästchen zeigen dir, wie viele Buchstaben das Wort hat.':'Löse das Kreuzworträtsel. Schreibe in jedes Kästchen einen Buchstaben.',
+  render(b,L,R){const it=puzWords(b,R,Math.min(b.count,12),true).map(([w,c])=>({w,cl:c}));if(it.length<3)return PUZ_TOO_FEW(b.opts.inhalt);
+    const pl=kwLayout(it,R);if(pl.length<2)return PUZ_TOO_FEW(b.opts.inhalt);
+    let a=1e9,bb=-1e9,c=1e9,e=-1e9;pl.forEach(p=>{const[dr,dc]=p.d?[1,0]:[0,1];a=Math.min(a,p.r);c=Math.min(c,p.c);bb=Math.max(bb,p.r+dr*(p.u.length-1));e=Math.max(e,p.c+dc*(p.u.length-1))});
+    const starts=[...new Set(pl.map(p=>p.r+','+p.c))].map(s=>s.split(',').map(Number)).sort((x,y)=>x[0]-y[0]||x[1]-y[1]);
+    const num=new Map(starts.map((s,i)=>[s.join(','),i+1]));const grid=new Map();
+    pl.forEach(p=>{const[dr,dc]=p.d?[1,0]:[0,1];p.n=num.get(p.r+','+p.c);p.u.forEach((ch,i)=>grid.set((p.r+dr*i)+','+(p.c+dc*i),ch))});
+    let rows='';for(let r=a;r<=bb;r++){rows+='<tr>';for(let cc=c;cc<=e;cc++){const ch=grid.get(r+','+cc);const n=num.get(r+','+cc);
+      rows+=ch?`<td class="kc">${n?`<i>${n}</i>`:''}<span class="sol">${ch}</span></td>`:'<td></td>'}rows+='</tr>'}
+    const clue=p=>{const q=p.cl||'';const em=/^\p{Extended_Pictographic}/u.test(q);const t=em?`<span class="em">${esc(q.split(' ')[0])}</span>${q.includes(' ')?' '+esc(q.slice(q.indexOf(' ')+1)):''}`:esc(q);
+      return`<div><b>${p.n}</b> ${t}${L===1?` <small>(${p.u.length})</small>`:''}</div>`};
+    const ac=pl.filter(p=>!p.d).sort((x,y)=>x.n-y.n),dn=pl.filter(p=>p.d).sort((x,y)=>x.n-y.n);
+    return`<table class="kw">${rows}</table><div class="kwclues"><div><h4>Waagerecht →</h4>${ac.map(clue).join('')}</div><div><h4>Senkrecht ↓</h4>${dn.map(clue).join('')}</div></div>`}};
+SPIEL_ORDER.push('suchsel','kreuzwort');
+
+/* Eigene Wörter: passende Beschriftung im Einstellungsfeld */
+const _rsPz=renderSide;renderSide=function(){_rsPz();const b=selBlock();if(!b||b.type!=='math')return;const g=GEN[b.gen];if(!g||!g.customLabel)return;
+  const ta=$('#b-side textarea[data-k="custom"]');if(!ta)return;const lab=ta.closest('label');
+  if(lab&&lab.firstChild&&lab.firstChild.nodeType===3)lab.firstChild.textContent=g.customLabel;const h=lab&&lab.querySelector('.hint');if(h)h.textContent=g.customHint;
+  if(b.custom==null)ta.value=g.customDefault};
+
+/* ---------- Papier sparen: zwei A5-Blätter auf einer A4-Seite (quer) ---------- */
+(()=>{const box=$('#dlg-print .popts');if(!box||$('#p-a5'))return;
+  box.insertAdjacentHTML('beforeend','<label class="popt" id="p-a5-wrap"><input type="checkbox" id="p-a5"><div><b>Papier sparen: 2 auf 1 Seite</b><span>Das Blatt kommt zweimal verkleinert (A5) auf eine Seite. Kopieren und in der Mitte durchschneiden.</span></div></label>');
+  ['#p-a5','#p-ws','#p-sol','#p-lv'].forEach(x=>$(x).addEventListener('change',()=>updPrintSum()))})();
+const A5_W=132.5*MM,A5_H=194*MM;
+const a5Zoom=html=>{const pos=measurePaper(html);const H=pos.length?Math.max(...pos.map(p=>p.bot)):0;return Math.min(A5_W/(182*MM),H?A5_H/H:1)};
+let _a5Fit=null;
+const _ops=openPrint;openPrint=function(){const sh=curSheet();if(!sh)return;
+  const z=a5Zoom(renderSheet(sh,{}));_a5Fit=z;const ok=z>=0.55,w=$('#p-a5-wrap');
+  if(w){w.classList.toggle('off',!ok);$('#p-a5').disabled=!ok;if(!ok)$('#p-a5').checked=false;
+    w.querySelector('span').textContent=ok?`Das Blatt kommt zweimal verkleinert (A5, ${Math.round(z*100)} %) auf eine Seite. Kopieren und in der Mitte durchschneiden.`:'Dieses Blatt ist zu lang für A5. Es passt nur auf ganze A4-Seiten.'}
+  _ops()};
+$('#b-print').onclick=()=>openPrint();
+const _ups=updPrintSum;updPrintSum=function(){_ups();const a=$('#p-a5');if(!a||!a.checked)return;
+  const ws=$('#p-ws').checked,so=$('#p-sol').checked,lv=$('#p-lv').checked,k=lv?3:1;const pages=(ws?k:0)+(so?Math.ceil(k/2):0);
+  if(pages)$('#p-sum').textContent=`Es ${pages===1?'wird 1 Seite':'werden '+pages+' Seiten'} quer gedruckt. ${ws?'Jedes Arbeitsblatt steht zweimal darauf.':''}`};
+function a5Cell(html){const z=a5Zoom(html);return`<div class="a5cell">${html.replace('<div class="paper','<div style="zoom:'+z.toFixed(3)+'" class="paper')}</div>`}
+$('#p-go').onclick=()=>{const sh=curSheet();const ws=$('#p-ws').checked,so=$('#p-sol').checked,lv=$('#p-lv').checked,a5=$('#p-a5')&&$('#p-a5').checked&&!$('#p-a5').disabled;
+  const levels=lv?[1,2,3]:[null];$('#dlg-print').close();
+  if(!a5){let h='';if(ws)levels.forEach(l=>h+=renderSheet(sh,{level:l}));if(so)levels.forEach(l=>h+=renderSheet(sh,{level:l,solution:true}));if(h)printHTML(h);return}
+  const rows=[];if(ws)levels.forEach(l=>{const x=renderSheet(sh,{level:l});rows.push([x,x])});
+  if(so){const s=levels.map(l=>renderSheet(sh,{level:l,solution:true}));for(let i=0;i<s.length;i+=2)rows.push([s[i],s[i+1]||''])}
+  if(!rows.length)return;
+  const st=document.createElement('style');st.id='a5-style';st.textContent=`@page{size:A4 landscape;margin:0}
+    @media print{#print-root .a5row{display:flex;width:297mm;height:209.4mm;overflow:hidden;break-after:page}
+    #print-root .a5row:last-child{break-after:auto}
+    #print-root .a5cell{width:148.5mm;height:209.4mm;padding:8mm;box-sizing:border-box;overflow:hidden}
+    #print-root .a5cell+.a5cell{border-left:1px dashed #9aa3b5}
+    #print-root .a5cell .paper{width:182mm!important;min-height:0!important;padding:0!important;margin:0!important;box-shadow:none;break-after:auto!important}}`;
+  $('#a5-style')&&$('#a5-style').remove();document.head.appendChild(st);
+  $('#print-root').innerHTML=rows.map(([x,y])=>`<div class="a5row">${a5Cell(x)}${y?a5Cell(y):'<div class="a5cell"></div>'}</div>`).join('');
+  const done=()=>{st.remove();window.removeEventListener('afterprint',done)};window.addEventListener('afterprint',done);
+  setTimeout(()=>window.print(),80)};
+
+/* ---------- Beamer-Modus: Blatt groß zeigen ---------- */
+(()=>{const sp=$('svg symbol');if(sp&&!$('#i-screen'))sp.parentNode.insertAdjacentHTML('beforeend','<symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></symbol>');
+  const p=$('#b-print');if(p&&!$('#b-show'))p.insertAdjacentHTML('beforebegin','<button class="btn" id="b-show" title="Blatt groß am Whiteboard oder Beamer zeigen"><svg class="ic"><use href="#i-screen"/></svg>Zeigen</button>');
+  document.body.insertAdjacentHTML('beforeend',`<div id="beamer" hidden role="dialog" aria-label="Blatt zeigen"><div class="bm-bar"><b id="bm-t"></b>
+    <button class="btn" id="bm-sol" aria-pressed="false">Lösungen</button><button class="btn" id="bm-minus" aria-label="Kleiner">A −</button><button class="btn" id="bm-plus" aria-label="Größer">A +</button>
+    <button class="btn" id="bm-x"><svg class="ic"><use href="#i-x"/></svg>Schließen</button></div><div class="bm-stage" id="bm-stage"></div></div>`)})();
+const BM={sol:false,f:1};
+function bmRender(){const sh=curSheet();if(!sh)return;const st=$('#bm-stage');st.innerHTML=renderSheet(sh,{solution:BM.sol});
+  const p=st.querySelector('.paper');const base=Math.max(.3,(st.clientWidth-40)/p.offsetWidth);p.style.zoom=(base*BM.f).toFixed(3);
+  $('#bm-t').textContent=sh.title;$('#bm-sol').setAttribute('aria-pressed',BM.sol);$('#bm-sol').textContent=BM.sol?'Lösungen ausblenden':'Lösungen zeigen'}
+function bmOpen(){if(!curSheet())return;BM.sol=false;BM.f=1;$('#beamer').hidden=false;bmRender();
+  const el=$('#beamer');if(el.requestFullscreen&&!isPhone())el.requestFullscreen().then(()=>setTimeout(bmRender,150)).catch(()=>{})}
+function bmClose(){$('#beamer').hidden=true;$('#bm-stage').innerHTML='';if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
+$('#b-show').onclick=bmOpen;$('#bm-x').onclick=bmClose;
+$('#bm-sol').onclick=()=>{BM.sol=!BM.sol;const p=$('#bm-stage .paper');p&&p.classList.toggle('show-sol',BM.sol);$('#bm-sol').setAttribute('aria-pressed',BM.sol);$('#bm-sol').textContent=BM.sol?'Lösungen ausblenden':'Lösungen zeigen'};
+$('#bm-plus').onclick=()=>{BM.f=Math.min(2.5,BM.f+.15);bmRender()};$('#bm-minus').onclick=()=>{BM.f=Math.max(.5,BM.f-.15);bmRender()};
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&!$('#beamer').hidden)bmClose()});
+document.addEventListener('keydown',e=>{if($('#beamer').hidden)return;if(e.key==='Escape')bmClose();else if(e.key==='l'||e.key==='L')$('#bm-sol').click();else if(e.key==='+')$('#bm-plus').click();else if(e.key==='-')$('#bm-minus').click()});
+window.addEventListener('resize',()=>{if(!$('#beamer').hidden)bmRender()});
+const _routeBm=route;route=function(){if(!$('#beamer').hidden)bmClose();_routeBm()};
+
 window.addEventListener('hashchange',route);
 route();
 
