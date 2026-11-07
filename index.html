@@ -4672,6 +4672,15 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
 (()=>{const t=TOPICS.find(x=>x.id==='flaeche');if(!t)return;const orig=t.blocks;
   t.blocks=()=>orig().filter(b=>b.type!=='selfcheck');try{PV.delete('flaeche')}catch(e){}})();
 
+/* teil:p32_flaeche2.js */
+
+/* Paket 17: „Fläche und Umfang“ kürzer (je 2 Figuren in ★ und ★★; alle drei Stufen gibt es weiterhin über „Alle 3 Schwierigkeitsstufen“ beim Drucken), damit es auch in Safari auf 2 Seiten passt; Selbsteinschätzung wieder dabei */
+(()=>{const t=TOPICS.find(x=>x.id==='flaeche');if(!t)return;
+  t.blocks=()=>[TX('Der Flächeninhalt sagt, wie groß eine Fläche ist. Du zählst die Kästchen, die die Figur bedecken.\nDer Umfang ist die Länge des Randes rund um die Figur. Du zählst alle Kästchenseiten am Rand.','merk'),
+    MA('flaeche',1,{},2),MA('flaeche',2,{},2),DR('Zeichne zwei verschiedene Figuren mit je 12 Kästchen. Haben sie den gleichen Umfang?',5,'kaestchen'),
+    SC('Ich kann den Flächeninhalt mit Kästchen bestimmen.','Ich kann den Umfang einer Figur messen.')];
+  try{PV.delete('flaeche')}catch(e){}})();
+
 window.addEventListener('hashchange',route);
 route();
 
