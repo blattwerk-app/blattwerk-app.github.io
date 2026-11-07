@@ -4666,6 +4666,12 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
     if(SCX[t.id]){const orig=t.blocks;t.blocks=()=>{const b=orig();return b.some(x=>x.type==='selfcheck')?b:[...b,SC(...SCX[t.id])]};
       try{PV.delete(t.id)}catch(e){}}})})();
 
+/* teil:p31_flaeche.js */
+
+/* Paket 16: „Fläche und Umfang“ bleibt ohne Selbsteinschätzung, sonst wird es in Safari 3 Seiten lang */
+(()=>{const t=TOPICS.find(x=>x.id==='flaeche');if(!t)return;const orig=t.blocks;
+  t.blocks=()=>orig().filter(b=>b.type!=='selfcheck');try{PV.delete('flaeche')}catch(e){}})();
+
 window.addEventListener('hashchange',route);
 route();
 
