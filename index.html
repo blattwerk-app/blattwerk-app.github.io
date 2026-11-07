@@ -4462,6 +4462,24 @@ const _rsSterne=renderSide;renderSide=function(){_rsSterne();const sh=curSheet()
   const sw=$('#b-side input[data-sh="showStars"]');const lab=sw&&sw.closest('label');if(lab)lab.hidden=true;
   const sm=$('#sh-set summary small');if(sm)sm.textContent=sm.textContent.replace(' · Sterne','')};
 
+/* teil:p24_abstand.js */
+
+/* =========================================================
+   Paket 9: Abstände im Bereich „Einstellungen für das Blatt“
+   Safari ignoriert flex-Abstände in <details>. Deshalb feste Abstände.
+   Schalter stehen bündig mit der ersten Textzeile.
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#sh-set{display:block}
+#sh-set>summary+*{margin-top:18px}
+#sh-set>*:not(summary)+*:not(summary){margin-top:16px}
+#sh-set>*[hidden]{display:none}
+#b-side .sw{align-items:flex-start;line-height:1.35}
+#b-side .sw input{margin-top:0}
+#b-side .sw small{margin-top:3px;line-height:1.45}
+#sh-set>.fld+.sw,#sh-set>.fld+.sw[hidden]+.sw{padding-top:16px;border-top:1px solid var(--line)}
+</style>`);
+
 window.addEventListener('hashchange',route);
 route();
 
