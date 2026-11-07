@@ -4604,6 +4604,43 @@ fitScale=function(pos){const base=paginate(pos,1);if(base.n<2)return{s:1,...base
   for(let s=0.99;s>=min-1e-9;s-=0.01){const r=paginate(pos,s);if(r.n<base.n)return{s:Math.round(s*100)/100,...r}}
   return{s:1,...base}};
 
+/* teil:p29_safari_reserve.js */
+
+/* =========================================================
+   Paket 14: Mehr Reserve in Safari
+   Safari rechnet beim Drucken zusätzlich die Ränder des gewählten Druckers ab.
+   Deshalb plant Blattwerk in Safari mit höchstens 232 mm Inhalt pro Seite.
+   ========================================================= */
+const SAFARI_CAP=232*MM;
+paginate=function(pos,s){const H=istSafari()?SAFARI_CAP:PH_SAFE;let pageTop=0,cap=H,n=1;const marks=[];const CAP2=H-HEAD_H;
+  pos.forEach((b,i)=>{const top=b.top*s,bot=b.bot*s;
+    if(b.pb){n++;marks.push({i,at:'after',n});pageTop=bot;cap=CAP2;return}
+    if(bot-pageTop>cap&&top>pageTop+1){n++;marks.push({i,off:0,n});pageTop=top;cap=CAP2}
+    while(bot-pageTop>cap){n++;marks.push({i,off:(pageTop+cap-top)/s,n});pageTop+=cap;cap=CAP2}});
+  return{n,marks,lastTop:pageTop,lastCap:cap}};
+/* Seiten füllen mit derselben Safari-Seitenhöhe */
+growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
+  if(r.marks.some(m=>m.off))return;
+  const H=istSafari()?SAFARI_CAP:PH_SAFE,CAP2=H-HEAD_H;
+  const blks=[...p.querySelectorAll(':scope > .blk')];
+  const starts=[0];r.marks.forEach(m=>{if(m.at==='after')starts.push(m.i+1);else starts.push(m.i)});
+  const fach=(curSheet&&curSheet()&&curSheet().fach)||'';
+  starts.forEach((st,k)=>{const en=k+1<starts.length?starts[k+1]:pos.length;if(en<=st)return;
+    const last=k===starts.length-1,top=k===0?0:pos[st].top*s,cap=k===0?H:CAP2,used=pos[en-1].bot*s-top;
+    let free=(cap-used-24)/s;if(free<15*MM)return;
+    const page=blks.slice(st,en);
+    free-=growAreaUsed(page,free);
+    /* Zusatzfeld auf der letzten Seite, nicht bei Lernzielkontrollen und nicht auf Lösungsblättern mit Punkten */
+    const isLzk=!!p.querySelector('.pts');
+    if(last&&!isLzk&&free>=40*MM){const LH=9.5*MM;const n=Math.min(10,Math.floor((free-6.5*MM-12*MM)/LH));
+      if(n>=2){const f=p.dataset.fach||fach||'x';const anchor=page[page.length-1];const before=anchor&&/schätze ich mich ein/.test(anchor.textContent)?anchor:null;
+        const html=`<div class="blk schnell"><div class="sh">★ Für Schnelle <small>(freiwillig)</small></div><div style="font-size:11.5pt">${esc(SCHNELL[f]||SCHNELL.x)}</div>${'<div class="wl"></div>'.repeat(n)}</div>`;
+        if(before)before.insertAdjacentHTML('beforebegin',html);else anchor.insertAdjacentHTML('afterend',html);
+        free-=6.5*MM+12*MM+n*LH}}
+    /* Rest gleichmäßig zwischen die Aufgaben verteilen (höchstens 20 mm je Abstand) */
+    const gaps=page.length-1;if(gaps>0&&free>8*MM){const g=Math.min(20*MM,free/gaps);
+      page.slice(1).forEach(b=>{b.style.marginTop=(6.5*MM+g).toFixed(1)+'px'}) /* Ränder fallen zusammen, daher 6,5 mm + Zusatz */}})};
+
 window.addEventListener('hashchange',route);
 route();
 
