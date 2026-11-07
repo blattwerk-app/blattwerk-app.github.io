@@ -4308,6 +4308,23 @@ const _rpkFix=renderPick;renderPick=function(){_rpkFix();const t=S.pickTab;if(t!
   $('#pick-grid').innerHTML=list.map(k=>`<button class="pick ${t}" data-pick="math:${k}"><span class="tile">${icon(ic)}</span><span><b>${GEN[k].name}</b><span>${GEN[k].short}</span></span></button>`).join('');
   if(t==='s')$('#pick-note').textContent='Spiele und Rätsel zum Ausdrucken. Auf dem Lösungsblatt stehen die richtigen Paare, die Aufrufliste oder die Lösungswörter.'};
 
+/* teil:2026-11-07_e-birthday.js */
+Object.assign(EN,{
+  birthday:[['cake','Kuchen','🎂'],['present','Geschenk','🎁'],['balloon','Luftballon','🎈'],['candle','Kerze','🕯️'],['party','Party','🎉'],['card','Karte','💌'],['sweets','Süßigkeiten','🍬'],['music','Musik','🎵'],['games','Spiele','🎲'],['party hat','Partyhut','🥳']]});
+EN_TOPICS.push(['birthday','Birthday (Geburtstag)']);
+
+TOPICS.push(
+{id:'e-birthday',fach:'en',titel:'Happy birthday!',bereich:EK,kl:[3,4],mon:[11,1],desc:'Geburtstag feiern auf Englisch: gratulieren, Alter nennen, Geburtstagsmonat erfragen.',
+ kompetenz:'Kommunikation – sprachliches Handeln: Die Kinder gratulieren zum Geburtstag, nennen ihr Alter und fragen nach dem Geburtstagsmonat.',
+ blocks:()=>[MA('vokabel',1,{thema:'birthday',mode:'bild'},8),MA('vokabel',2,{thema:'birthday',mode:'verbinden'},6),
+  TX('A: Happy birthday, Tom!\nB: Thank you!\nA: How old are you?\nB: I am nine.\nA: This is for you.\nB: Oh, a present! Thank you very much.','plain'),
+  TB('Ask your friends: When is your birthday?',['Name','My birthday is in …'],5),
+  SC('I can say happy birthday.','I can say how old I am.')],
+ reihe:[['Birthday words','Wörter einführen'],['How old are you?','Alter nennen'],['When is your birthday?','Monate wiederholen, Klassenumfrage'],['A birthday card','Glückwunschkarte schreiben'],['Happy birthday song','Lied und kleines Rollenspiel']],
+ stunde:{thema:'How old are you?',ziel:'Die Kinder können auf Englisch gratulieren und ihr Alter nennen.',
+  rows:ST('Geburtstagstorte (Bild), Lehrkraft singt „Happy birthday“.','Wörter üben, Arbeitsblatt, Dialog mit dem Partner lesen.','Rollenspiel: gratulieren und Geschenk überreichen.','Klassenumfrage: Wer hat in welchem Monat Geburtstag?',['Bild','Arbeitsblatt','Rollenspiel','Tafel'])}}
+);
+
 window.addEventListener('hashchange',route);
 route();
 
