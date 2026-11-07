@@ -4745,6 +4745,75 @@ const _rsNK=renderStart;renderStart=function(){_rsNK();klasseEinheitlich($('#sea
 const _otNK=openTopic;openTopic=function(id){_otNK(id);klasseEinheitlich($('#dt-info'));
   const c=document.querySelector(`#th-cards .tcard[data-topic="${id}"] .chip.neu`);c&&c.remove()};
 
+/* teil:p37_sachen_filter.js */
+
+/* =========================================================
+   Paket 37: „Meine Sachen“ filtern, sortieren und mit Stern merken
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#sa-filter{display:flex;gap:10px 14px;align-items:center;flex-wrap:wrap;margin:-4px 0 16px}
+#sa-filter .ftabs{margin:0}
+#sa-filter .ftabs button{padding:6px 13px;font-size:14px}
+#sa-filter .sa-opt{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-left:auto}
+#sa-filter label{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--muted);font-weight:700}
+#sa-filter select{border:1.5px solid var(--line2);border-radius:9px;padding:6px 8px;background:var(--surface);color:var(--ink);font-size:14px}
+#sa-filter .sa-staronly[aria-pressed="true"]{background:#f3c93f;border-color:#f3c93f;color:#3d2e00}
+.dcard .btn.star{font-size:17px;line-height:1;padding-left:9px;padding-right:9px}
+.dcard .btn.star[aria-pressed="true"]{color:#b8860b;border-color:#f3c93f;background:#fff8df}
+.dcard .dt-t b .st{color:#d4a017;margin-right:4px}
+@media screen and (max-width:760px){#sa-filter .sa-opt{margin-left:0}}
+</style>`);
+$('.sa-bar').insertAdjacentHTML('afterend',`<div id="sa-filter">
+  <div class="ftabs" id="sa-ftabs" role="group" aria-label="Fach"></div>
+  <div class="sa-opt">
+    <label>Klasse <select id="sa-kl"><option value="alle">alle</option><option value="3">3</option><option value="4">4</option></select></label>
+    <label>Sortieren <select id="sa-sort"><option value="neu">zuletzt bearbeitet</option><option value="az">Titel A–Z</option><option value="fach">Fach</option></select></label>
+    <button class="btn sm sa-staronly" id="sa-staronly" aria-pressed="false">★ Nur mit Stern</button>
+  </div></div>`);
+UI.sa=Object.assign({fach:'alle',kl:'alle',sort:'neu',star:false},UI.sa||{});
+const SA_FN={mathematik:'ma',mathe:'ma',sachunterricht:'su',deutsch:'de',englisch:'en'};
+function saFach(o,kind){if(kind==='sheet')return o.fach||'x';const f=String((kind==='ent'?o.meta&&o.meta.fach:o.fach)||'').trim().toLowerCase();
+  return SA_FN[f]||Object.keys(SA_FN).find(k=>f.startsWith(k))&&SA_FN[Object.keys(SA_FN).find(k=>f.startsWith(k))]||'x'}
+function saKlasse(o,kind){return String((kind==='ent'?o.meta&&o.meta.klasse:o.klasse)||'')}
+function saStore(k){return k==='sheet'?DB.sheets:k==='ent'?DB.entwuerfe:DB.plans}
+const SA_ORDER={su:0,ma:1,de:2,en:3,x:4};
+renderSachen=function(){renderMeter();const q=S.saq.toLowerCase(),F=UI.sa;
+  const sh=Object.values(DB.sheets),pl=Object.values(DB.plans),en=Object.values(DB.entwuerfe||{});
+  const tabs=$$('#sa-tabs button');tabs[0].querySelector('span').textContent=`(${sh.length})`;tabs[1].querySelector('span').textContent=`(${pl.length})`;if(tabs[2])tabs[2].querySelector('span').textContent=`(${en.length})`;
+  tabs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===S.tab));
+  const all=S.tab==='sheet'?sh:S.tab==='ent'?en:pl;
+  /* alle Filter außer Fach, damit die Zahlen an den Fach-Knöpfen stimmen */
+  const base=all.filter(o=>(!q||(o.title||'').toLowerCase().includes(q))
+    &&(F.kl==='alle'||saKlasse(o,S.tab).includes(F.kl))&&(!F.star||o.star));
+  const cnt=v=>v==='alle'?base.length:base.filter(o=>saFach(o,S.tab)===v).length;
+  if(F.fach!=='alle'&&!all.some(o=>saFach(o,S.tab)===F.fach))F.fach='alle';
+  $('#sa-ftabs').innerHTML=FTABS.filter(([v])=>v==='alle'||all.some(o=>saFach(o,S.tab)===v))
+    .map(([v,l])=>`<button data-saf="${v}" aria-pressed="${F.fach===v}">${l} <span>${cnt(v)}</span></button>`).join('');
+  $('#sa-kl').value=F.kl;$('#sa-sort').value=F.sort;$('#sa-staronly').setAttribute('aria-pressed',!!F.star);
+  $('#sa-filter').hidden=!all.length;
+  const tt=o=>(o.title||'').toLocaleLowerCase('de');
+  const cmp={neu:(a,b)=>b.updated-a.updated,az:(a,b)=>tt(a).localeCompare(tt(b),'de'),
+    fach:(a,b)=>SA_ORDER[saFach(a,S.tab)]-SA_ORDER[saFach(b,S.tab)]||tt(a).localeCompare(tt(b),'de')}[F.sort]||((a,b)=>b.updated-a.updated);
+  const list=base.filter(o=>F.fach==='alle'||saFach(o,S.tab)===F.fach).sort((a,b)=>(b.star?1:0)-(a.star?1:0)||cmp(a,b));
+  const filtered=q||F.fach!=='alle'||F.kl!=='alle'||F.star;
+  $('#sa-list').innerHTML=list.length?list.map(o=>docCard(o,S.tab)).join(''):`<div class="empty-note">${filtered?(F.star&&!all.some(o=>o.star)?'Du hast noch nichts mit Stern markiert. Tippe bei einem Blatt auf ☆.':'Nichts gefunden. Ändere die Auswahl oben.'):S.tab==='sheet'?'Noch keine Arbeitsblätter. Such dir unter „Themen“ eins aus.':'Noch keine Stundenplanungen. Unter „Themen“ gibt es zu jedem Thema eine Vorlage.'}</div>`};
+/* Stern-Knopf auf jeder Karte */
+const _dcSA=docCard;docCard=function(o,kind){let h=_dcSA(o,kind);const on=!!o.star;
+  h=h.replace('<div class="acts">',`<div class="acts"><button class="btn sm star" data-star="${kind}:${o.id}" aria-pressed="${on}" aria-label="${on?'Stern entfernen':'Mit Stern merken'}" title="${on?'Stern entfernen':'Mit Stern merken (steht dann oben)'}">${on?'★':'☆'}</button>`);
+  if(on)h=h.replace('<div class="dt-t"><b>','<div class="dt-t"><b><span class="st" aria-hidden="true">★</span>');
+  return h};
+document.addEventListener('click',e=>{const t=e.target;
+  const s=t.closest('[data-star]');if(s){e.stopPropagation();const[k,id]=s.dataset.star.split(':');const o=saStore(k)[id];if(!o)return;
+    if(o.star)delete o.star;else o.star=true;touch();S.view==='start'?renderStart():renderSachen();return}
+  const f=t.closest('[data-saf]');if(f){UI.sa.fach=f.dataset.saf;saveUI();renderSachen();return}
+  if(t.closest('#sa-staronly')){UI.sa.star=!UI.sa.star;saveUI();renderSachen()}},true);
+$('#sa-kl').addEventListener('change',e=>{UI.sa.kl=e.target.value;saveUI();renderSachen()});
+$('#sa-sort').addEventListener('change',e=>{UI.sa.sort=e.target.value;saveUI();renderSachen()});
+/* Kopien bekommen keinen Stern */
+document.addEventListener('click',e=>{const cp=e.target.closest('[data-copy]');if(!cp)return;const[k,id]=cp.dataset.copy.split(':');const st=saStore(k);
+  setTimeout(()=>{const c=Object.values(st).filter(x=>x.star&&x.id!==id).sort((a,b)=>b.updated-a.updated)[0];
+    if(c&&Date.now()-c.updated<2000&&c.title===((st[id]||{}).title||'')+' (Kopie)'){delete c.star;touch();S.view==='start'?renderStart():renderSachen()}},0)});
+
 window.addEventListener('hashchange',route);
 route();
 
