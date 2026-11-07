@@ -4539,6 +4539,71 @@ printHTML=function(html){$('#print-root').innerHTML=html;const go=()=>{fitPrintR
   if(ok)return go();
   Promise.race([Promise.all([document.fonts.load('12pt Andika'),document.fonts.load('bold 12pt Andika')]),new Promise(r=>setTimeout(r,2500))]).then(go,go)};
 
+/* teil:p28_seite_fuellen.js */
+
+/* =========================================================
+   Paket 13: Keine halb leeren Seiten mehr
+   1. Schreib-, Mal- und Rechenflächen wachsen (wie bisher)
+   2. Bleibt auf der letzten Seite viel Platz: Zusatzfeld „Für Schnelle“ mit Schreiblinien
+   3. Sonst: Platz gleichmäßig zwischen die Aufgaben verteilen
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+.schnell{border:1.5px dashed #9aa3b5;border-radius:2mm;padding:2.5mm 4mm 1mm;margin-bottom:6.5mm}
+.schnell .sh{font-weight:700;font-size:11.5pt;margin-bottom:1mm}
+.schnell .sh small{font-weight:400;color:#5b6475}
+</style>`);
+const SCHNELL={
+  su:'Was war für dich heute neu oder besonders spannend? Schreibe es auf.',
+  ma:'Erfinde selbst eine Aufgabe zum Thema. Tausche mit deinem Nachbarn und rechnet.',
+  de:'Schreibe drei Wörter von diesem Blatt auf und bilde mit jedem einen Satz.',
+  en:'Write three English words from this sheet. Draw a small picture for each word.',
+  x:'Schreibe auf, was du heute gelernt hast.'};
+/* wie growArea, gibt aber den genutzten Platz zurück */
+function growAreaUsed(onPage,free){
+  const areas=onPage.flatMap(b=>[...b.querySelectorAll(':scope > .draw, :scope > .kast')].map(el=>({el,max:80*MM}))
+    .concat([...b.querySelectorAll('.sach .kast')].map(el=>({el,max:30*MM}))));
+  const lines=onPage.filter(b=>b.querySelector(':scope > .wl'));
+  if(!areas.length&&!lines.length)return 0;
+  const toPx=v=>{const n=parseFloat(v)||0;return /cm$/.test(v)?n*10*MM:/mm$/.test(v)?n*MM:n};
+  const aShare=areas.length?(lines.length?free*0.6:free):0,lShare=free-aShare;let used=0;
+  let rest=aShare,open=areas.slice();
+  while(rest>1&&open.length){const each=rest/open.length;rest=0;open=open.filter(a=>{const room=a.max-(a.add||0);const g=Math.min(each,room);a.add=(a.add||0)+g;rest+=each-g;return room-g>1})}
+  areas.forEach(a=>{if(!a.add)return;const el=a.el;el.dataset.h0=el.dataset.h0||el.style.height||'';
+    const base=el.dataset.h0?toPx(el.dataset.h0):15*MM;el.style.height=(base+a.add).toFixed(1)+'px';used+=a.add});
+  const LH=9.5*MM;let extra=lines.length?Math.floor(lShare/LH):0;
+  for(let k=0;extra>0&&k<40;k++){const b=lines[k%lines.length];if(b.querySelectorAll(':scope > .wl.grow').length>=8)break;b.insertAdjacentHTML('beforeend','<div class="wl grow"></div>');extra--;used+=LH}
+  return used}
+growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
+  if(r.marks.some(m=>m.off))return;
+  const H=istSafari()?SAFARI_H*0.96:PH_SAFE,CAP2=H-HEAD_H;
+  const blks=[...p.querySelectorAll(':scope > .blk')];
+  const starts=[0];r.marks.forEach(m=>{if(m.at==='after')starts.push(m.i+1);else starts.push(m.i)});
+  const fach=(curSheet&&curSheet()&&curSheet().fach)||'';
+  starts.forEach((st,k)=>{const en=k+1<starts.length?starts[k+1]:pos.length;if(en<=st)return;
+    const last=k===starts.length-1,top=k===0?0:pos[st].top*s,cap=k===0?H:CAP2,used=pos[en-1].bot*s-top;
+    let free=(cap-used-24)/s;if(free<15*MM)return;
+    const page=blks.slice(st,en);
+    free-=growAreaUsed(page,free);
+    /* Zusatzfeld auf der letzten Seite, nicht bei Lernzielkontrollen und nicht auf Lösungsblättern mit Punkten */
+    const isLzk=!!p.querySelector('.pts');
+    if(last&&!isLzk&&free>=40*MM){const LH=9.5*MM;const n=Math.min(10,Math.floor((free-6.5*MM-12*MM)/LH));
+      if(n>=2){const f=p.dataset.fach||fach||'x';const anchor=page[page.length-1];const before=anchor&&/schätze ich mich ein/.test(anchor.textContent)?anchor:null;
+        const html=`<div class="blk schnell"><div class="sh">★ Für Schnelle <small>(freiwillig)</small></div><div style="font-size:11.5pt">${esc(SCHNELL[f]||SCHNELL.x)}</div>${'<div class="wl"></div>'.repeat(n)}</div>`;
+        if(before)before.insertAdjacentHTML('beforebegin',html);else anchor.insertAdjacentHTML('afterend',html);
+        free-=6.5*MM+12*MM+n*LH}}
+    /* Rest gleichmäßig zwischen die Aufgaben verteilen (höchstens 20 mm je Abstand) */
+    const gaps=page.length-1;if(gaps>0&&free>8*MM){const g=Math.min(20*MM,free/gaps);
+      page.slice(1).forEach(b=>{b.style.marginTop=(6.5*MM+g).toFixed(1)+'px'}) /* Ränder fallen zusammen, daher 6,5 mm + Zusatz */}})};
+/* Fach des Blatts merken, damit das Zusatzfeld passt */
+const _rsFach=renderSheet;renderSheet=function(sh,o){const h=_rsFach(sh,o);return sh&&sh.fach?h.replace(/^<div class="paper[^"]*"/,m=>m+' data-fach="'+sh.fach+'"'):h};
+
+/* Rutscht nur ein kleiner Rest (unter einem Drittel Seite) auf die nächste Seite, darf das Blatt bis 85 % kleiner werden */
+fitScale=function(pos){const base=paginate(pos,1);if(base.n<2)return{s:1,...base};
+  const lastBot=pos.length?pos[pos.length-1].bot:0,fill=(lastBot-base.lastTop)/base.lastCap;
+  const min=fill<1/3?0.85:MIN_FIT;
+  for(let s=0.99;s>=min-1e-9;s-=0.01){const r=paginate(pos,s);if(r.n<base.n)return{s:Math.round(s*100)/100,...r}}
+  return{s:1,...base}};
+
 window.addEventListener('hashchange',route);
 route();
 
