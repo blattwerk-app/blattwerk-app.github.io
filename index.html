@@ -4690,6 +4690,27 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
   fix('d-wortarten',bs=>{let k=0;return bs.map(b=>b.type==='math'&&b.gen==='wortarten'?{...b,count:[6,6,4][k++]??b.count}:b)});
   fix('e-days',bs=>bs.map(b=>b.type==='table'?{...b,rows:b.rows.slice(0,3)}:b.type==='math'&&b.opts&&b.opts.thema==='months'?{...b,count:9}:b))})();
 
+/* teil:p34_mathe_durchsicht.js */
+
+/* =========================================================
+   Paket 19: Ergebnisse der Durchsicht aller Mathe-Arbeitsblätter
+   ========================================================= */
+/* 1. Schriftliche Addition auf Stufe ★ hat keinen Übertrag: Auftrag ohne „Denke an den Übertrag“ */
+(()=>{const g=GEN.schriftlich,_i=g.instr;g.instr=(b,L)=>b.opts.op==='+'&&L===1?'Rechne schriftlich.':_i(b,L)})();
+/* 2. „ein halbes kg + 2 kg“ klingt holprig: daraus wird „2½ kg“ */
+(()=>{const g=GEN.groessen,_r=g.render;g.render=function(b,L,R){return _r.call(this,b,L,R).replace(/ein halbes kg \+ (\d+) kg/g,'$1½ kg')}})();
+/* 3. + 4. Themen anpassen */
+(()=>{const fix=(id,f)=>{const t=TOPICS.find(x=>x.id===id);if(!t)return;const o=t.blocks;t.blocks=()=>f(o());try{PV.delete(id)}catch(e){}};
+  /* Geld: Die Selbsteinschätzung nannte Rückgeld, das auf dem Blatt nicht vorkommt */
+  fix('geld',bs=>bs.map(b=>b.type==='selfcheck'?{...b,items:b.items.map(x=>{const s=typeof x==='string'?x:x.t||x.s||x.text;return /Rückgeld/.test(s)?(typeof x==='string'?'Ich kann Euro und Cent umrechnen.':{...x,[x.t!==undefined?'t':x.s!==undefined?'s':'text']:'Ich kann Euro und Cent umrechnen.'}):x})}:b));
+  /* Ergänzen: Aufgaben in der Reihenfolge leicht – mittel – schwer */
+  fix('ergaenzen',bs=>{const m=bs.filter(b=>b.type==='math').sort((a,b)=>a.level-b.level);let k=0;return bs.map(b=>b.type==='math'?m[k++]:b)})})();
+/* 5. „Für Schnelle“ in Mathe: Rechenkästchen statt Linien und passender Auftrag */
+SCHNELL.ma='Erfinde selbst eine Aufgabe zum Thema und löse sie. Tausche dann mit deinem Nachbarn.';
+(()=>{const _fp=fitPrintRoot;fitPrintRoot=function(){_fp();
+  $('#print-root').querySelectorAll('.paper[data-fach="ma"] .schnell').forEach(s=>{const wl=[...s.querySelectorAll('.wl')];if(!wl.length)return;
+    const h=wl.length*9.5;wl.forEach(x=>x.remove());s.insertAdjacentHTML('beforeend',`<div class="kast" style="height:${h}mm;margin:1mm 0 2mm"></div>`)})}})();
+
 window.addEventListener('hashchange',route);
 route();
 
