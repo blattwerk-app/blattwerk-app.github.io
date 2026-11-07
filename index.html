@@ -4325,6 +4325,62 @@ TOPICS.push(
   rows:ST('Geburtstagstorte (Bild), Lehrkraft singt „Happy birthday“.','Wörter üben, Arbeitsblatt, Dialog mit dem Partner lesen.','Rollenspiel: gratulieren und Geschenk überreichen.','Klassenumfrage: Wer hat in welchem Monat Geburtstag?',['Bild','Arbeitsblatt','Rollenspiel','Tafel'])}}
 );
 
+/* teil:p20_neu_hilfe.js */
+
+/* =========================================================
+   Paket 5: Hinweis „Neue Themen“ auf der Startseite, Hilfe für neue Funktionen
+   ========================================================= */
+document.head.insertAdjacentHTML('beforeend',`<style>
+#neu-ban{background:var(--pri-soft);border-color:var(--pri)}
+#neu-ban .tile{color:var(--pri)}
+.neu-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.neu-list button{border:1.5px solid var(--line2);background:var(--surface);color:var(--ink);border-radius:99px;padding:4px 12px;font:600 14px var(--ui);cursor:pointer}
+.neu-list button:hover{border-color:var(--pri);color:var(--pri)}
+.neu-list button small{color:var(--muted);font-weight:400;margin-left:4px}
+.neu-list .more{border-style:dashed;color:var(--pri)}
+@media screen and (max-width:760px){#neu-ban{grid-template-columns:1fr}#neu-ban .tile{display:none}}
+</style>`);
+
+/* Themen, die vor diesem Paket ganz neu waren (für alle, die Blattwerk schon vorher benutzt haben) */
+const NEU_SEIT_START=['fledermaus','atmung','klima','schall','waerme','karte','medien','taschengeld','schulefrueher','kinderwelt','runden','stellenwert','platzhalter','wuerfelnetze','massstab','parkette','d-dehnungsh','d-ableiten','d-ae','d-v','d-pronomen','d-wortbausteine','d-anleitung','e-fruit','e-sports','e-town','e-time','e-birthday'];
+function neueThemen(){
+  if(!Array.isArray(UI.seenT)){
+    let alt=false;try{alt=!!(UI.name||UI.lastFach||UI.lastBackup||UI.hideTips||Object.keys(DB.sheets||{}).length||Object.keys(DB.plans||{}).length)}catch(e){}
+    UI.seenT=TOPICS.map(t=>t.id).filter(id=>!alt||!NEU_SEIT_START.includes(id));saveUI()}
+  const seen=new Set(UI.seenT);return TOPICS.filter(t=>!seen.has(t.id))}
+function alleGesehen(){UI.seenT=TOPICS.map(t=>t.id);saveUI();const b=$('#neu-ban');b&&b.remove()}
+const FACH_KURZ={su:'Sachunterricht',ma:'Mathe',de:'Deutsch',en:'Englisch'};
+function zeigeNeu(){const old=$('#neu-ban');old&&old.remove();const neu=neueThemen();const anker=$('#bk-start');if(!neu.length||!anker)return;
+  const chip=t=>`<button type="button" data-neu="${esc(t.id)}">${esc(t.titel)}<small>${FACH_KURZ[t.fach]||''}</small></button>`;
+  const N=6,erst=neu.slice(0,N),rest=neu.slice(N);
+  anker.insertAdjacentHTML('beforebegin',`<div id="neu-ban" class="bkban"><span class="tile">${icon('book')}</span><div>
+    <b>${neu.length===1?'1 neues Thema':neu.length+' neue Themen'} seit deinem letzten Besuch</b><span>Klicke ein Thema an, um es anzusehen.</span>
+    <div class="neu-list">${erst.map(chip).join('')}${rest.length?`<button type="button" class="more" data-neu-mehr>+ ${rest.length} weitere</button>`:''}</div></div>
+    <div class="bkacts"><button class="btn" data-neu-ok>Alles klar</button></div></div>`);
+  const ban=$('#neu-ban');
+  ban.addEventListener('click',e=>{const t=e.target.closest('[data-neu]');if(t){openTopic(t.dataset.neu);return}
+    if(e.target.closest('[data-neu-mehr]')){const l=ban.querySelector('.neu-list');l.innerHTML=neu.map(chip).join('');return}
+    if(e.target.closest('[data-neu-ok]'))alleGesehen()})}
+const _rsNeu=renderStart;renderStart=function(){_rsNeu();zeigeNeu()};
+/* angesehene Themen gelten als gesehen */
+const _otNeu=openTopic;openTopic=function(id){_otNeu(id);try{if(Array.isArray(UI.seenT)&&!UI.seenT.includes(id)){UI.seenT.push(id);saveUI()}}catch(e){}};
+if(S.view==='start')zeigeNeu();
+
+/* ---------- Hilfe: neue Funktionen ---------- */
+(()=>{const faq=$('#v-hilfe .faq');if(!faq||faq.dataset.p20)return;faq.dataset.p20='1';
+  const det=(q,a)=>`<details><summary>${q}</summary><div>${a}</div></details>`;
+  const nach=(start,html)=>{const d=[...faq.querySelectorAll('details')].find(x=>x.querySelector('summary').textContent.startsWith(start));
+    (d||faq.lastElementChild).insertAdjacentHTML('afterend',html)};
+  nach('Beim Drucken fehlen',
+    det('Wie spare ich beim Drucken Papier?','Im Druckfenster <b>Papier sparen: 2 auf 1 Seite</b> anhaken. Dann kommt das Arbeitsblatt zweimal verkleinert (A5) nebeneinander auf eine Seite im Querformat. Einmal kopieren, in der Mitte an der gestrichelten Linie durchschneiden, fertig. Bei Lösungsblättern kommen zwei verschiedene Lösungen auf eine Seite. Ist ein Blatt zu lang für A5, steht das im Druckfenster und die Option ist ausgegraut.')+
+    det('Wie zeige ich ein Blatt am Whiteboard oder Beamer?','Öffne das Blatt und klicke oben auf <b>Zeigen</b>. Das Blatt erscheint groß über den ganzen Bildschirm. Mit <b>Lösungen zeigen</b> blendest du die Lösungen in Rot ein, zum Beispiel zum gemeinsamen Vergleichen. Mit <b>A −</b> und <b>A +</b> machst du alles kleiner oder größer. Mit <b>Schließen</b> oder der Taste <span class="kbd">Esc</span> kommst du zurück.')+
+    det('Was bedeutet „1 Seite“ oder „2 Seiten“ oben im Blatt?','Das zeigt, auf wie viele Seiten das Blatt beim Drucken kommt. Eine orange gestrichelte Linie auf dem Blatt zeigt, wo eine neue Seite beginnt. Rutscht nur ein kleiner Rest auf eine neue Seite, verkleinert Blattwerk das Blatt beim Drucken etwas, damit es passt. Dann steht dort zum Beispiel „1 Seite · 94 %“.'));
+  nach('Wie mache ich ein Domino',
+    det('Wie mache ich ein Suchsel oder Kreuzworträtsel?','Klicke auf dem Blatt auf <b>+ Text, Aufgabe oder Bild hinzufügen</b>, dann auf den Reiter <b>Lernspiele</b> und wähle <b>Suchsel</b> oder <b>Kreuzworträtsel</b>. Rechts stellst du ein, woher die Wörter kommen: aus dem Lückentext auf deinem Blatt, aus einer fertigen Wortliste mit Bildern (deutsch oder englisch) oder aus eigenen Wörtern. Beim Kreuzworträtsel schreibst du eigene Wörter so: <b>Igel = Tier mit Stacheln</b>. Die drei Sterne machen das Rätsel leichter oder schwerer. Auf dem Lösungsblatt sind alle Wörter rot eingetragen.'));
+  nach('Der Speicher ist voll',
+    det('Kann ich Blattwerk auf dem Handy oder Tablet benutzen?','Ja. Auf dem Handy sind die Bereiche unten in einer Leiste. Wenn du auf dem Blatt eine Aufgabe antippst, kommen die Einstellungen von unten. Mit <b>Größer</b> kannst du das Blatt vergrößern und seitlich schieben. Für größere Arbeitsblätter und zum Drucken ist ein Computer aber bequemer. Wichtig: Jedes Gerät speichert seine eigenen Blätter. Mit <b>Sicherung herunterladen</b> und <b>Sicherung laden</b> unter <b>Meine Sachen</b> nimmst du sie mit.')+
+    det('Kommen neue Themen dazu?','Ja, regelmäßig. Neue Themen erscheinen automatisch, du musst nichts tun. Auf der Startseite steht dann <b>Neue Themen seit deinem letzten Besuch</b>. Klicke ein Thema an, um es anzusehen, oder auf <b>Alles klar</b>, um den Hinweis auszublenden.'))})();
+
 window.addEventListener('hashchange',route);
 route();
 
