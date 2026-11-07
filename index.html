@@ -4641,6 +4641,31 @@ growLast=function(p,pos,r){const s=r.s||1;if(!pos.length)return;
     const gaps=page.length-1;if(gaps>0&&free>8*MM){const g=Math.min(20*MM,free/gaps);
       page.slice(1).forEach(b=>{b.style.marginTop=(6.5*MM+g).toFixed(1)+'px'}) /* Ränder fallen zusammen, daher 6,5 mm + Zusatz */}})};
 
+/* teil:p30_feinschliff.js */
+
+/* =========================================================
+   Paket 15: Ergebnisse der automatischen Prüfung
+   - fehlende Monate für die Jahresübersicht
+   - fehlende Selbsteinschätzung bei 12 Mathe-Themen
+   ========================================================= */
+(()=>{const MON={mauern:[9,10],uhr:[1,2],groessen:[3,4],sach:[11,3],spiegel:[6,7],folgen:[10,11]};
+  const SCX={
+    mauern:['Ich kann Zahlenmauern ausrechnen.','Ich kann fehlende Steine finden.'],
+    sach:['Ich finde heraus, was gefragt ist.','Ich schreibe Frage, Rechnung und Antwort auf.'],
+    spiegel:['Ich kann Figuren an einer Achse spiegeln.','Ich erkenne, ob eine Figur symmetrisch ist.'],
+    folgen:['Ich finde die Regel einer Zahlenfolge.','Ich kann eine Zahlenfolge fortsetzen.'],
+    flaeche:['Ich kann den Flächeninhalt mit Kästchen bestimmen.','Ich kann den Umfang einer Figur messen.'],
+    liter:['Ich kenne Liter und Milliliter.','Ich kann Liter in Milliliter umrechnen.'],
+    teiler:['Ich kann Teiler einer Zahl finden.','Ich erkenne Vielfache in den Einmaleinsreihen.'],
+    kombi:['Ich finde alle Möglichkeiten.','Ich gehe beim Kombinieren geordnet vor.'],
+    wuerfel:['Ich kann Würfel in einem Gebäude zählen.','Ich kann einen Bauplan lesen.'],
+    zeit:['Ich kann Zeitspannen berechnen.','Ich finde mich im Kalender zurecht.'],
+    doppelhalb:['Ich kann Zahlen verdoppeln.','Ich kann Zahlen halbieren.'],
+    zehnermal:['Ich kann mit Zehnerzahlen malnehmen.','Ich nutze dabei das kleine Einmaleins.']};
+  TOPICS.forEach(t=>{if(MON[t.id]&&(!t.mon||!t.mon.length))t.mon=MON[t.id];
+    if(SCX[t.id]){const orig=t.blocks;t.blocks=()=>{const b=orig();return b.some(x=>x.type==='selfcheck')?b:[...b,SC(...SCX[t.id])]};
+      try{PV.delete(t.id)}catch(e){}}})})();
+
 window.addEventListener('hashchange',route);
 route();
 
