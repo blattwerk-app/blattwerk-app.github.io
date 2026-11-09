@@ -4814,6 +4814,22 @@ document.addEventListener('click',e=>{const cp=e.target.closest('[data-copy]');i
   setTimeout(()=>{const c=Object.values(st).filter(x=>x.star&&x.id!==id).sort((a,b)=>b.updated-a.updated)[0];
     if(c&&Date.now()-c.updated<2000&&c.title===((st[id]||{}).title||'')+' (Kopie)'){delete c.star;touch();S.view==='start'?renderStart():renderSachen()}},0)});
 
+/* teil:2026-11-09_wolle.js */
+TOPICS.push(
+{id:'wolle',fach:'su',titel:'Vom Schaf zum Pullover',bereich:'Technik und Arbeitswelt',kl:[3],mon:[11,12],desc:'Wie aus dem Fell eines Schafes Garn und ein warmer Pullover wird.',
+ kompetenz:'Technik und Arbeitswelt – Herstellung: Die Kinder beschreiben den Weg von der Schafwolle zum Kleidungsstück und unterscheiden Naturfasern und künstliche Fasern.',
+ blocks:()=>[TX('Schafe haben ein dichtes, lockiges Fell. Es heißt Vlies. Einmal im Jahr, meist im Frühling, wird das Fell abgeschoren. Das tut dem Schaf nicht weh. Es ist wie Haareschneiden bei uns.\n\nDie frische Wolle ist schmutzig und fettig. Deshalb wird sie zuerst gewaschen. Danach wird sie gekämmt. Dabei ordnen sich die Fasern. Beim Spinnen werden die Fasern zu einem langen Faden gedreht. Diesen Faden nennt man Garn. Früher spann man mit einem Spinnrad. Heute machen das meist Maschinen. Aus dem Garn wird zum Beispiel ein Pullover gestrickt oder ein Stoff gewebt.\n\nWolle hält warm. Zwischen den gekräuselten Fasern ist viel Luft. Die Luft hält die Wärme am Körper fest.\n\nWolle kommt vom Tier. Baumwolle wächst an einer Pflanze. Beides sind Naturfasern. Andere Fasern werden in der Fabrik hergestellt, zum Beispiel aus Erdöl.','info'),
+  TB('Bringe die Schritte in die richtige Reihenfolge. Schreibe die Zahlen 1 bis 5.',['Schritt','Nummer'],[['Die Wolle wird gekämmt.','?3'],['Das Schaf wird geschoren.','?1'],['Aus dem Garn wird ein Pullover gestrickt.','?5'],['Die schmutzige Wolle wird gewaschen.','?2'],['Die Fasern werden zu Garn gesponnen.','?4']]),
+  GP('Setze die fehlenden Wörter ein.','Das Fell des Schafes heißt *Vlies*. Beim *Spinnen* werden die Fasern zu einem Faden gedreht. Diesen Faden nennt man *Garn*. Wolle hält warm, weil zwischen den Fasern viel *Luft* ist.'),
+  TF('Richtig oder falsch? Kreuze an.',['+Schafe werden meist einmal im Jahr geschoren.','-Das Scheren tut dem Schaf weh.','+Die frische Wolle wird zuerst gewaschen.','-Baumwolle kommt vom Schaf.']),
+  MT('Was passt zusammen? Verbinde.',['Vlies = das Fell des Schafes','Garn = ein langer Faden aus Fasern','Spinnrad = damit spann man früher Garn','Baumwolle = eine Naturfaser von einer Pflanze']),
+  LN('Warum hält eine Wollmütze im Winter warm? Erkläre.',2),
+  SC('Ich kann den Weg vom Schaf zum Pullover beschreiben.','Ich weiß, warum Wolle warm hält.')],
+ reihe:[['Das Schaf und sein Fell','Rohwolle fühlen, riechen und betrachten'],['Waschen und Kämmen','Rohwolle waschen und mit einer Bürste kämmen'],['Vom Vlies zum Garn','Spinnen mit einer einfachen Handspindel'],['Stricken und Weben','Mit einem kleinen Webrahmen weben'],['Naturfasern und künstliche Fasern','Etiketten in Kleidung untersuchen'],['Warum Wolle warm hält','Versuch: Glas mit warmem Wasser mit und ohne Wollsocke']],
+ stunde:{thema:'Vom Vlies zum Garn',ziel:'Die Kinder können beschreiben, wie aus Schafwolle Garn und Kleidung wird.',
+  rows:ST('Wollpullover und ein Stück Rohwolle im Sitzkreis: „Wie wird aus diesem Fell ein Pullover?“','Lesetext lesen, Schritte ordnen. Rohwolle zupfen und zu einem Faden drehen.','Bildkarten der Arbeitsschritte an der Tafel ordnen, Arbeitsblatt vergleichen.','Ausblick: Wir weben mit einem kleinen Webrahmen.',['Pullover, Rohwolle','Arbeitsblatt, Rohwolle','Tafel, Bildkarten','–'])}}
+);
+
 window.addEventListener('hashchange',route);
 route();
 
