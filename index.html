@@ -4876,6 +4876,25 @@ TOPICS.push(
   rows:ST('Bild von einem Fenster mit Fensterkreuz an der Tafel: „Was fällt euch an den Linien auf?“','Lesetext lesen, Linien mit dem Geodreieck prüfen, Arbeitsblatt bearbeiten.','Ergebnisse vergleichen, Fachbegriffe und Zeichen ⊥ und ∥ an der Tafel festhalten.','Linien-Detektive: senkrechte und parallele Linien im Klassenzimmer zeigen.',['Bild Fenster, Tafel','Arbeitsblatt, Geodreieck','Tafel','Klassenzimmer'])}}
 );
 
+/* teil:2026-11-20_e-shopping.js */
+Object.assign(EN,{
+  shopping:[['shop','Laden','🏪'],['money','Geld','💶'],['purse','Geldbörse','👛'],['basket','Korb','🧺'],['bag','Tasche','👜'],['shopping trolley','Einkaufswagen','🛒'],['price','Preis','🏷️'],['receipt','Kassenzettel','🧾'],['shopping list','Einkaufszettel','📝']]});
+EN_TOPICS.push(['shopping','Shopping (Einkaufen)']);
+
+TOPICS.push(
+{id:'e-shopping',fach:'en',titel:'Shopping',bereich:EK,kl:[4],mon:[11,12],desc:'Einkaufen auf Englisch: um etwas bitten, nach dem Preis fragen, bezahlen.',
+ kompetenz:'Kommunikation – sprachliches Handeln: Die Kinder führen ein einfaches Einkaufsgespräch, bitten höflich um etwas und fragen nach dem Preis.',
+ blocks:()=>[MA('vokabel',1,{thema:'shopping',mode:'bild'},6),MA('vokabel',2,{thema:'shopping',mode:'verbinden'},5),
+  TX('A: Hello. Can I help you?\nB: Yes, please. Can I have three apples, please?\nA: Here you are.\nB: How much is it?\nA: It’s two euros.\nB: Here you are. Thank you. Goodbye!\nA: Goodbye!','plain'),
+  TF('Richtig oder falsch? Lies den Dialog und kreuze an.',['+B wants apples.','-B wants bananas.','+The apples are two euros.','-The apples are five euros.']),
+  MT('Match. Verbinde.',['Can I help you? = Kann ich dir helfen?','Can I have …, please? = Kann ich … haben, bitte?','How much is it? = Wie viel kostet das?','It’s two euros. = Es kostet zwei Euro.','Here you are. = Hier, bitte.']),
+  TB('My shopping list. Write and draw.',['What?','How many?'],3),
+  SC('I can ask: Can I have …, please?','I can ask: How much is it?')],
+ reihe:[['Shopping words','Wörter einführen'],['Can I have …, please?','Höflich um etwas bitten'],['How much is it?','Preise in Euro nennen'],['My shopping list','Einkaufszettel schreiben'],['At the market','Rollenspiel am Marktstand']],
+ stunde:{thema:'At the market',ziel:'Die Kinder können ein einfaches Einkaufsgespräch auf Englisch führen.',
+  rows:ST('Korb mit Obst und Spielgeld: Lehrkraft spielt „Shop assistant“ und fragt „Can I help you?“.','Wörter üben, Dialog lesen, Arbeitsblatt bearbeiten.','Partnerarbeit: Einkaufsgespräch mit Obst und Spielgeld üben.','Zwei Paare spielen ihr Gespräch vor.',['Obstkorb, Spielgeld','Arbeitsblatt','Spielgeld, Bildkarten','Rollenspiel'])}}
+);
+
 window.addEventListener('hashchange',route);
 route();
 
