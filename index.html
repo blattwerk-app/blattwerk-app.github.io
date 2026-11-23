@@ -4895,6 +4895,23 @@ TOPICS.push(
   rows:ST('Korb mit Obst und Spielgeld: Lehrkraft spielt „Shop assistant“ und fragt „Can I help you?“.','Wörter üben, Dialog lesen, Arbeitsblatt bearbeiten.','Partnerarbeit: Einkaufsgespräch mit Obst und Spielgeld üben.','Zwei Paare spielen ihr Gespräch vor.',['Obstkorb, Spielgeld','Arbeitsblatt','Spielgeld, Bildkarten','Rollenspiel'])}}
 );
 
+/* teil:2026-11-23_tierewinter.js */
+TOPICS.push(
+{id:'tierewinter',fach:'su',titel:'Wie Tiere den Winter überstehen',bereich:'Natur und Leben',kl:[3,4],mon:[12,1],
+ desc:'Winterschlaf, Winterruhe, Winterstarre oder wach bleiben: So kommen heimische Tiere durch die kalte Zeit.',
+ kompetenz:'Natur und Leben – Tiere und ihre Lebensräume: Die Kinder unterscheiden, wie heimische Tiere an den Winter angepasst sind, und ordnen Tiere den Überwinterungsformen zu.',
+ blocks:()=>[
+  TX('Im Winter ist es kalt und es gibt wenig Futter. Tiere überstehen diese Zeit auf verschiedene Weise.\n\nWinterschlaf: Igel, Fledermaus und Siebenschläfer fressen sich im Herbst eine dicke Fettschicht an. Im Winter schlafen sie tief. Ihr Körper wird viel kälter und das Herz schlägt langsam. So sparen sie Energie.\n\nWinterruhe: Eichhörnchen und Dachs schlafen viel, aber ihr Körper bleibt warm. Sie wachen immer wieder auf und fressen.\n\nWinterstarre: Frösche, Eidechsen und Marienkäfer sind wechselwarm. Das heißt: Ihr Körper ist ungefähr so warm wie ihre Umgebung. Bei Kälte werden sie starr und können sich nicht mehr bewegen. Erst wenn es wärmer wird, werden sie wieder munter.\n\nWinteraktiv: Reh, Fuchs und Wildschwein bleiben den ganzen Winter wach. Ein dichtes Winterfell hält sie warm. Sie suchen auch im Schnee nach Futter.\n\nStöre Tiere im Winter nicht. Jedes Aufwachen kostet sie viel Energie.','info'),
+  MT('Was passt zusammen? Verbinde.',['Winterschlaf = tief schlafen, der Körper wird viel kälter','Winterruhe = viel schlafen, aufwachen und fressen','Winterstarre = starr vor Kälte, keine Bewegung','winteraktiv = den ganzen Winter wach bleiben']),
+  TB('Wie überwintert das Tier? Kreuze an.',['Tier','Winterschlaf','Winterruhe','Winterstarre','winteraktiv'],[['Igel','?✗','','',''],['Eichhörnchen','','?✗','',''],['Frosch','','','?✗',''],['Fuchs','','','','?✗'],['Fledermaus','?✗','','',''],['Dachs','','?✗','',''],['Marienkäfer','','','?✗',''],['Reh','','','','?✗']]),
+  TF('Richtig oder falsch? Kreuze an.',['+Im Winterschlaf schlägt das Herz langsam.','-Eichhörnchen wachen im Winter nie auf.','+Frösche sind wechselwarm.','-Der Fuchs hält Winterstarre.','+Ein dichtes Winterfell hält das Reh warm.']),
+  LN('Warum solltest du ein schlafendes Tier im Winter nicht wecken? Erkläre.',2),
+  SC('Ich kann Winterschlaf, Winterruhe und Winterstarre unterscheiden.','Ich weiß, warum man Tiere im Winter nicht stören soll.')],
+ reihe:[['Wo sind die Tiere im Winter?','Vorwissen sammeln, Tierbilder betrachten'],['Winterschlaf','Igel, Fledermaus und Siebenschläfer'],['Winterruhe und Winterstarre','Unterschiede herausarbeiten'],['Wach im Winter','Versuch: Wie gut hält eine Hülle aus Wolle warmes Wasser warm?'],['Tiere im Winter schützen','Regeln für Garten, Park und Wald']],
+ stunde:{thema:'Vier Wege durch den Winter',ziel:'Die Kinder können Winterschlaf, Winterruhe, Winterstarre und winteraktive Tiere unterscheiden und Tiere zuordnen.',
+  rows:ST('Tierbilder an der Tafel und Impulsfrage: „Was machen diese Tiere, wenn es draußen friert?“','Lesetext in Partnerarbeit, Begriffe verbinden und Tiere in der Tabelle zuordnen.','Tierbilder gemeinsam in vier Spalten ordnen und die Zuordnung begründen.','Richtig-oder-falsch-Runde und Selbsteinschätzung.',['Tierbilder, Tafel','Arbeitsblatt','Tafel, Tierbilder','Arbeitsblatt'])}}
+);
+
 window.addEventListener('hashchange',route);
 route();
 
